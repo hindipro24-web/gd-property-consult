@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="description" content="GD Property Consult — residential, commercial, rental and property advisory services across Surat, Gujarat." />
+  <meta name="theme-color" content="#07131a" />
+  <title>GD Property Consult | Buy • Sell • Rent in Surat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="responsive-fix.css" />
+  <link rel="preload" as="image" href="assets/gd-property-consult/gd-hero-wide.jpg">
+  <link rel="preload" as="image" href="assets/gd-property-consult/gd-about-dhoot-brothers.jpg">
+  <script>
+    window.__revealGDWebsite = function () {
+      document.body?.classList.remove('cms-pending');
+      document.getElementById('gdSiteLoader')?.classList.add('finished');
+    };
+    window.addEventListener('keyassets:cms-ready', window.__revealGDWebsite, { once:true });
+    window.setTimeout(window.__revealGDWebsite, 2300);
+  </script>
+</head>
+<body class="cms-pending">
+  <div class="gd-site-loader" id="gdSiteLoader" role="status" aria-live="polite">
+    <div class="gd-site-loader-card">
+      <img src="assets/gd-property-consult/gd-logo.png" alt="GD Property Consult">
+      <strong>GD Property Consult</strong>
+      <span>Preparing your property experience…</span>
+      <i aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="page-progress" aria-hidden="true"><span id="pageProgress"></span></div>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+  <div class="site-noise" aria-hidden="true"></div>
+
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="GD Property Consult home">
+        <span class="brand-mark has-logo"><img src="assets/gd-property-consult/gd-logo.png" alt="GD Property Consult logo"></span>
+        <span class="brand-text"><strong>GD Property</strong><small>CONSULT</small></span>
+      </a>
+
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="mainNav" aria-label="Primary navigation">
+        <a href="#properties">Properties</a>
+        <a href="#market">Market</a>
+        <a href="#services">Process</a>
+        <a href="#emi">EMI</a>
+        <a href="#about">About</a>
+        <button class="btn btn-small btn-luminous magnetic open-lead-form" type="button">Book consultation</button>
+      </nav>
+    </div>
+  </header>
+  <button class="nav-backdrop" id="navBackdrop" type="button" aria-label="Close menu" tabindex="-1"></button>
+
+  <main>
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-image"></div>
+        <div class="hero-grid-lines"></div>
+        <div class="hero-orb orb-one"></div>
+        <div class="hero-orb orb-two"></div>
+      </div>
+
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <div class="hero-kicker reveal" id="cmsHeroKicker" style="--delay:.05s">
+            <span class="live-dot"></span>
+            Surat property experts • 15 years of experience
+          </div>
+          <h1 id="heroTitle" class="hero-title reveal" style="--delay:.12s">
+            <span id="heroTitleMain">Your trusted partner for</span><br>
+            <span class="gradient-text" id="heroTitleHighlight">buy, sell & rent in Surat.</span>
+          </h1>
+          <p class="hero-sub reveal" id="cmsHeroSubtitle" style="--delay:.2s">
+            Explore residential, commercial and rental opportunities with experienced property consultants across Vesu, Parvat Patiya, Godadara and key Surat locations.
+          </p>
+
+          <div class="hero-actions reveal" style="--delay:.28s">
+            <a class="btn btn-luminous btn-large magnetic" id="cmsHeroPrimaryLink" href="#heroSearchForm" data-scroll-to-property-match><span id="cmsHeroPrimary">Start property match</span> <span>↗</span></a>
+            <a class="btn btn-glass btn-large magnetic" id="cmsHeroSecondaryLink" href="#properties"><span id="cmsHeroSecondary">Explore collection</span></a>
+          </div>
+
+          <div class="hero-proof reveal" style="--delay:.36s">
+            <div><span class="proof-icon">15+</span><strong>Years of experience</strong><small>Local Surat property guidance</small></div>
+            <div><span class="proof-icon">5K+</span><strong>Clients served</strong><small>Residential and commercial</small></div>
+            <div><span class="proof-icon">30K</span><strong>Property connections</strong><small>Buy • Sell • Rent network</small></div>
+          </div>
+        </div>
+
+        <div class="hero-console reveal" style="--delay:.18s" data-tilt>
+          <div class="console-topbar">
+            <div class="console-status"><span></span> Property Match Console</div>
+            <div class="console-code">GD / 01</div>
+          </div>
+
+          <div class="console-visual" id="heroFeaturedVisual">
+            <img id="cmsHeroImage" src="assets/gd-property-consult/gd-hero-wide.jpg" alt="GD Vesu Heights demo property in Vesu, Surat" />
+            <div class="visual-overlay"></div>
+            <div class="visual-badge">
+              <span id="heroFeaturedTag">Featured project</span>
+              <strong id="heroFeaturedTitle">GD Vesu Heights</strong>
+              <small id="heroFeaturedLocation">Vesu, Surat</small>
+            </div>
+            <div class="visual-price">
+              <small id="heroFeaturedPriceCaption">Sale price</small>
+              <strong id="heroFeaturedPrice">₹1.65 Cr</strong>
+            </div>
+            <a class="hero-featured-details" id="heroFeaturedDetails" href="property-details.html?property=GD%20Vesu%20Heights">
+              View property <span>↗</span>
+            </a>
+          </div>
+
+          <form class="search-console" id="heroSearchForm">
+            <label>
+              <span>Preferred location</span>
+              <input name="location" type="text" minlength="2" autocomplete="address-level2" placeholder="Vesu, Parvat Patiya, Godadara..." required />
+            </label>
+            <div class="search-row">
+              <label>
+                <span>Property type</span>
+                <select name="propertyType" required>
+                  <option value="">Any type</option>
+                  <option>Apartment</option>
+                  <option>Villa</option>
+                  <option>Plot</option>
+                  <option>Commercial</option>
+                </select>
+              </label>
+              <label>
+                <span>Budget</span>
+                <select name="budget" required>
+                  <option value="">Select range</option>
+                  <option>Below ₹50 Lakh</option>
+                  <option>₹50–75 Lakh</option>
+                  <option>₹75 Lakh–₹1 Crore</option>
+                  <option>₹1–2 Crore</option>
+                  <option>₹2–5 Crore</option>
+                  <option>Above ₹5 Crore</option>
+                </select>
+              </label>
+            </div>
+            <button class="btn btn-luminous btn-full" type="submit">Find matching properties <span>→</span></button>
+          </form>
+        </div>
+      </div>
+
+      <div class="hero-scroll" aria-hidden="true"><span></span> Scroll to explore</div>
+    </section>
+
+    <section class="trust-rail" aria-label="Service strengths">
+      <div class="trust-track">
+        <span>15+ YEARS EXPERIENCE</span><i></i><span>SURAT PROPERTY NETWORK</span><i></i><span>RESIDENTIAL &amp; COMMERCIAL</span><i></i><span>BUY • SELL • RENT</span><i></i><span>SITE VISIT SUPPORT</span><i></i><span>5K+ CLIENTS</span><i></i><span>30K CONNECTIONS</span><i></i><span>LOCAL MARKET GUIDANCE</span>
+      </div>
+    </section>
+
+    <section class="section properties-section" id="properties">
+      <div class="section-aura aura-right" aria-hidden="true"></div>
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <span class="eyebrow" id="cmsPropertiesEyebrow">CURATED COLLECTION</span>
+            <h2 id="cmsPropertiesHeading">Surat properties matched to your requirement.</h2>
+          </div>
+          <div class="section-sidecopy">
+            <p id="cmsPropertiesDescription">Explore residential homes, premium projects, commercial spaces and rental options across Surat. The GD team can build a custom shortlist for your budget.</p>
+            <a href="#contact" class="text-link open-lead-form">Request a custom shortlist <span>↗</span></a>
+          </div>
+        </div>
+
+        <div class="filter-shell reveal property-filter-shell">
+          <div class="property-filter-stack">
+            <div class="filter-row" role="group" aria-label="Filter by property type">
+              <button class="filter active" data-filter="all">All types</button>
+              <button class="filter" data-filter="apartment">Apartments</button>
+              <button class="filter" data-filter="villa">Villas</button>
+              <button class="filter" data-filter="plot">Plots</button>
+              <button class="filter" data-filter="commercial">Commercial</button>
+            </div>
+            <div class="purpose-filter-row" role="group" aria-label="Filter by listing purpose">
+              <button class="purpose-filter active" data-purpose-filter="all">All listings</button>
+              <button class="purpose-filter" data-purpose-filter="sale">For Sale</button>
+              <button class="purpose-filter" data-purpose-filter="rent">For Rent</button>
+            </div>
+          </div>
+          <span class="inventory-status"><i></i> Live inventory enabled</span>
+        </div>
+
+        <div class="property-grid" id="propertyGrid">
+          <article class="property-card property-card-featured reveal" data-category="apartment" data-property-name="GD Vesu Heights" data-property-price="₹1.65 Cr" data-property-price-amount="16500000" data-property-bhk="3 BHK" data-property-type="Apartment" data-property-location="Vesu, Surat" data-property-area="1,850 sq.ft." data-property-configurations="[]" data-listing-purpose="Sale" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/gd-hero-wide.jpg" alt="GD Vesu Heights, Vesu, Surat" loading="lazy" />
+              <div class="property-shade"></div>
+              <div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge sale">For Sale</span><span>Demo Listing</span></div>
+              <button class="wishlist-btn" type="button" aria-label="Save GD Vesu Heights">♡</button>
+              <div class="property-index">01</div>
+            </div>
+            <div class="property-body">
+              <div class="property-heading"><div><small class="property-location">Vesu, Surat</small><h3>GD Vesu Heights</h3></div><div class="property-price"><span>Sale price</span><strong>₹1.65 Cr</strong></div></div>
+              <div class="property-meta"><span>3 BHK</span><span>1,850 sq.ft.</span><span>Apartment</span></div>
+              <div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="GD Vesu Heights">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div>
+            </div>
+          </article>
+
+          <article class="property-card reveal" data-category="apartment" data-property-name="GD Royal Avenue" data-property-price="₹2.75 Cr" data-property-price-amount="27500000" data-property-bhk="4 BHK" data-property-type="Apartment" data-property-location="Vesu, Surat" data-property-area="2,650 sq.ft." data-property-configurations="[]" data-listing-purpose="Sale" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/premium-2-3-bhk-bamroli.jpg" alt="GD Royal Avenue, Vesu, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge sale">For Sale</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save GD Royal Avenue">♡</button><div class="property-index">02</div>
+            </div>
+            <div class="property-body"><small class="property-location">Vesu, Surat</small><h3>GD Royal Avenue</h3><div class="property-meta"><span>4 BHK</span><span>2,650 sq.ft.</span><span>Apartment</span></div><div class="property-price inline-price"><span>Sale price</span><strong>₹2.75 Cr</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="GD Royal Avenue">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+
+          <article class="property-card reveal" data-category="apartment" data-property-name="Skyview Residency" data-property-price="₹58 Lakh" data-property-price-amount="5800000" data-property-bhk="2 BHK" data-property-type="Apartment" data-property-location="Godadara, Surat" data-property-area="1,250 sq.ft." data-property-configurations="[]" data-listing-purpose="Sale" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/client-success-sky-heaven.jpg" alt="Skyview Residency, Godadara, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge sale">For Sale</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save Skyview Residency">♡</button><div class="property-index">03</div>
+            </div>
+            <div class="property-body"><small class="property-location">Godadara, Surat</small><h3>Skyview Residency</h3><div class="property-meta"><span>2 BHK</span><span>1,250 sq.ft.</span><span>Apartment</span></div><div class="property-price inline-price"><span>Sale price</span><strong>₹58 Lakh</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Skyview Residency">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+
+          <article class="property-card reveal" data-category="apartment" data-property-name="Shakti Gold Homes" data-property-price="₹82 Lakh" data-property-price-amount="8200000" data-property-bhk="3 BHK" data-property-type="Apartment" data-property-location="Godadara, Surat" data-property-area="1,650 sq.ft." data-property-configurations="[]" data-listing-purpose="Sale" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/client-success-shree-shakti-gold.jpg" alt="Shakti Gold Homes, Godadara, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge sale">For Sale</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save Shakti Gold Homes">♡</button><div class="property-index">04</div>
+            </div>
+            <div class="property-body"><small class="property-location">Godadara, Surat</small><h3>Shakti Gold Homes</h3><div class="property-meta"><span>3 BHK</span><span>1,650 sq.ft.</span><span>Apartment</span></div><div class="property-price inline-price"><span>Sale price</span><strong>₹82 Lakh</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Shakti Gold Homes">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+
+          <article class="property-card reveal" data-category="apartment" data-property-name="Shivanta Luxuria" data-property-price="₹95 Lakh" data-property-price-amount="9500000" data-property-bhk="3 BHK" data-property-type="Apartment" data-property-location="Parvat–Godadara, Surat" data-property-area="1,780 sq.ft." data-property-configurations="[]" data-listing-purpose="Sale" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/gd-client-success-collage.jpg" alt="Shivanta Luxuria, Parvat–Godadara, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge sale">For Sale</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save Shivanta Luxuria">♡</button><div class="property-index">05</div>
+            </div>
+            <div class="property-body"><small class="property-location">Parvat–Godadara, Surat</small><h3>Shivanta Luxuria</h3><div class="property-meta"><span>3 BHK</span><span>1,780 sq.ft.</span><span>Apartment</span></div><div class="property-price inline-price"><span>Sale price</span><strong>₹95 Lakh</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Shivanta Luxuria">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+
+          <article class="property-card reveal" data-category="commercial" data-property-name="Maruti Business Hub" data-property-price="₹72 Lakh" data-property-price-amount="7200000" data-property-bhk="Office" data-property-type="Commercial" data-property-location="Parvat Patiya, Surat" data-property-area="850 sq.ft." data-property-configurations="[]" data-listing-purpose="Sale" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/premium-2-3-bhk-bamroli.jpg" alt="Maruti Business Hub, Parvat Patiya, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge sale">For Sale</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save Maruti Business Hub">♡</button><div class="property-index">06</div>
+            </div>
+            <div class="property-body"><small class="property-location">Parvat Patiya, Surat</small><h3>Maruti Business Hub</h3><div class="property-meta"><span>Office</span><span>850 sq.ft.</span><span>Commercial</span></div><div class="property-price inline-price"><span>Sale price</span><strong>₹72 Lakh</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Maruti Business Hub">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+
+          <article class="property-card reveal" data-category="commercial" data-property-name="VIP Plaza Office" data-property-price="₹42,000/month" data-property-price-amount="42000" data-property-bhk="Office" data-property-type="Office" data-property-location="Vesu, Surat" data-property-area="650 sq.ft." data-property-configurations="[]" data-listing-purpose="Rent" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/gd-hero-wide.jpg" alt="VIP Plaza Office, Vesu, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge rent">For Rent</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save VIP Plaza Office">♡</button><div class="property-index">07</div>
+            </div>
+            <div class="property-body"><small class="property-location">Vesu, Surat</small><h3>VIP Plaza Office</h3><div class="property-meta"><span>Office</span><span>650 sq.ft.</span><span>Office</span></div><div class="property-price inline-price"><span>Monthly rent</span><strong>₹42,000/month</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="VIP Plaza Office">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+
+          <article class="property-card reveal" data-category="villa" data-property-name="Green Valley Villa" data-property-price="₹1.25 Cr" data-property-price-amount="12500000" data-property-bhk="3 BHK Villa" data-property-type="Villa" data-property-location="Dindoli, Surat" data-property-area="2,200 sq.ft." data-property-configurations="[]" data-listing-purpose="Sale" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/client-success-shree-shakti-gold.jpg" alt="Green Valley Villa, Dindoli, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge sale">For Sale</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save Green Valley Villa">♡</button><div class="property-index">08</div>
+            </div>
+            <div class="property-body"><small class="property-location">Dindoli, Surat</small><h3>Green Valley Villa</h3><div class="property-meta"><span>3 BHK Villa</span><span>2,200 sq.ft.</span><span>Villa</span></div><div class="property-price inline-price"><span>Sale price</span><strong>₹1.25 Cr</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Green Valley Villa">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+
+          <article class="property-card reveal" data-category="apartment" data-property-name="Althan Urban Homes" data-property-price="₹28,000/month" data-property-price-amount="28000" data-property-bhk="2 BHK" data-property-type="Apartment" data-property-location="Althan, Surat" data-property-area="1,300 sq.ft." data-property-configurations="[]" data-listing-purpose="Rent" data-tilt>
+            <div class="property-media">
+              <img src="assets/gd-property-consult/client-success-sky-heaven.jpg" alt="Althan Urban Homes, Althan, Surat" loading="lazy" />
+              <div class="property-shade"></div><div class="property-labels"><span class="verified-badge">✓ GD Demo</span><span class="listing-purpose-badge rent">For Rent</span><span>Demo Listing</span></div><button class="wishlist-btn" type="button" aria-label="Save Althan Urban Homes">♡</button><div class="property-index">09</div>
+            </div>
+            <div class="property-body"><small class="property-location">Althan, Surat</small><h3>Althan Urban Homes</h3><div class="property-meta"><span>2 BHK</span><span>1,300 sq.ft.</span><span>Apartment</span></div><div class="property-price inline-price"><span>Monthly rent</span><strong>₹28,000/month</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Althan Urban Homes">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
+          </article>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section market-section" id="market">
+      <div class="container market-layout">
+        <div class="market-copy reveal">
+          <span class="eyebrow" id="cmsMarketEyebrow">MARKET INTELLIGENCE</span>
+          <h2 id="cmsMarketHeading">Local knowledge.<br><em>Better property choices.</em></h2>
+          <p id="cmsMarketDescription">GD Property Consult connects your location, budget and purpose with suitable residential, commercial and rental options across Surat.</p>
+          <div class="market-points">
+            <div><span>01</span><strong>Location fit</strong><small>Vesu, Parvat Patiya, Godadara, Bamroli and nearby Surat locations.</small></div>
+            <div><span>02</span><strong>Project fit</strong><small>Residential, commercial, buy, sell and rental requirements.</small></div>
+            <div><span>03</span><strong>Financial fit</strong><small>Budget alignment, project comparison and site-visit coordination.</small></div>
+          </div>
+          <button class="btn btn-outline-light open-lead-form magnetic" type="button">Build my shortlist <span>↗</span></button>
+        </div>
+
+        <div class="market-interface reveal" data-tilt>
+          <div class="interface-header"><span><i></i> <b id="cmsIntelligenceTitle">GD Intelligence</b></span><small class="live-status"><i></i><b id="cmsIntelligenceStatus">LIVE INVENTORY SYNCED</b></small></div>
+          <div class="radar-wrap">
+            <div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-ring ring-3"></div><div class="radar-sweep"></div>
+            <div class="radar-core">GD</div>
+            <div id="cmsIntelligenceNodes" class="intelligence-nodes"></div>
+          </div>
+          <div class="interface-footer">
+            <div><small id="cmsListingsLabel">Active listings</small><strong id="marketActiveListings">Loading…</strong></div>
+            <div><small id="cmsAverageLabel">Average price</small><strong id="marketAveragePrice">Loading…</strong></div>
+            <div><small id="cmsTopLocationLabel">Top location</small><strong id="marketTopLocation">Loading…</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section process-section" id="services">
+      <div class="container">
+        <div class="section-head centered reveal">
+          <span class="eyebrow">A CLEARER BUYING JOURNEY</span>
+          <h2>From requirement to possession,<br><em>one connected process.</em></h2>
+          <p>Every stage is organized to keep decisions transparent, fast and focused.</p>
+        </div>
+
+        <div class="process-grid">
+          <article class="process-card reveal" style="--delay:.05s"><div class="process-number">01</div><div class="process-icon">◎</div><h3>Requirement mapping</h3><p>We understand budget, location, configuration, purpose and purchase timeline.</p><span class="process-line"></span></article>
+          <article class="process-card reveal" style="--delay:.12s"><div class="process-number">02</div><div class="process-icon">◇</div><h3>Verified shortlisting</h3><p>Only relevant options are shared with clear comparisons and project context.</p><span class="process-line"></span></article>
+          <article class="process-card reveal" style="--delay:.19s"><div class="process-number">03</div><div class="process-icon">⌖</div><h3>Guided site visits</h3><p>Visits are coordinated around your availability with the right project contact.</p><span class="process-line"></span></article>
+          <article class="process-card reveal" style="--delay:.26s"><div class="process-number">04</div><div class="process-icon">✓</div><h3>Decision support</h3><p>Get assistance with comparison, negotiation, loan coordination and documentation.</p><span class="process-line"></span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section emi-section" id="emi">
+      <div class="section-aura aura-left" aria-hidden="true"></div>
+      <div class="container calculator-grid">
+        <div class="calculator-copy reveal">
+          <span class="eyebrow">SMART EMI PLANNER</span>
+          <h2>Know your monthly<br><em>comfort zone.</em></h2>
+          <p>Adjust the loan amount, interest rate and tenure to estimate a practical monthly EMI before shortlisting.</p>
+          <div class="calc-result">
+            <div class="calc-result-top"><small>Estimated monthly EMI</small><span>Indicative</span></div>
+            <strong id="emiResult">₹82,694</strong>
+            <span id="emiSummary">Loan ₹90,00,000 • 8.5% • 20 years</span>
+          </div>
+          <button class="btn btn-luminous magnetic open-lead-form" type="button">Find properties in this range <span>↗</span></button>
+        </div>
+
+        <div class="calculator-card reveal" data-tilt>
+          <div class="calculator-card-head"><span>FINANCE SIMULATOR</span><small>01 / 03</small></div>
+          <label>Loan amount <output id="loanOut">₹90,00,000</output><input id="loanAmount" type="range" min="500000" max="50000000" step="100000" value="9000000" /></label>
+          <label>Interest rate <output id="rateOut">8.5%</output><input id="interestRate" type="range" min="6" max="15" step="0.1" value="8.5" /></label>
+          <label>Loan tenure <output id="tenureOut">20 years</output><input id="loanTenure" type="range" min="5" max="30" step="1" value="20" /></label>
+          <div class="calc-disclaimer">This calculator provides an estimate. Final bank terms may vary.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="container about-grid">
+        <div class="about-visual gd-about-founders reveal" aria-label="Founders Gopal and Aakash Dhoot of GD Property Consult">
+          <div class="gd-about-grid-lines" aria-hidden="true"></div>
+
+          <div class="gd-about-founder-chip">DHOOT BROTHERS</div>
+
+          <figure class="gd-about-founder-card">
+            <img
+              id="cmsAboutOwnerImage"
+              src="assets/gd-property-consult/gd-about-dhoot-brothers.jpg"
+              alt="Gopal and Aakash Dhoot, owners of GD Property Consult"
+              loading="lazy"
+            >
+            <figcaption>
+              <small>FOUNDERS • OWNERS</small>
+              <strong>Gopal &amp; Aakash Dhoot</strong>
+              <span>GD Property Consult • Surat</span>
+            </figcaption>
+          </figure>
+
+          <div class="gd-about-founder-badge">
+            <strong>15+</strong>
+            <span>Years in Surat real-estate</span>
+          </div>
+
+          <div class="about-coordinate">SURAT<br>GUJARAT</div>
+        </div>
+        <div class="about-copy reveal">
+          <span class="eyebrow">ABOUT GD PROPERTY CONSULT</span>
+          <h2 id="cmsAboutHeading">Property advice built around your objective.</h2>
+          <p id="cmsAboutText1">Led by Gopal and Aakash Dhoot, GD Property Consult supports buyers, sellers, tenants and investors across Surat with residential and commercial property services.</p>
+          <p id="cmsAboutText2">With 15 years of experience, 5K+ clients and a 30K property network, the team focuses on local guidance, responsive coordination and practical property options.</p>
+          <div class="about-values">
+            <div><span>01</span><strong>15+ years experience</strong></div>
+            <div><span>02</span><strong>5K+ clients served</strong></div>
+            <div><span>03</span><strong>30K property connections</strong></div>
+            <div><span>04</span><strong>Buy • Sell • Rent</strong></div>
+          </div>
+          <button class="btn btn-dark open-lead-form magnetic" type="button">Speak with an advisor <span>↗</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section confidence-section gd-testimonial-section" id="testimonials">
+      <div class="container">
+        <div class="confidence-top reveal">
+          <span class="eyebrow">REAL CLIENT SUCCESS</span>
+          <h2 id="cmsTestimonialsHeading">Trusted property relationships across Surat.</h2>
+          <p class="testimonial-section-intro">Successful property handovers and new beginnings with GD Property Consult.</p>
+        </div>
+
+        <div class="testimonial-gallery-shell">
+          <button class="testimonial-gallery-nav previous" id="testimonialGalleryPrevious" type="button" aria-label="Previous testimonials">←</button>
+          <div class="testimonial-poster-grid" id="testimonialPosterGrid">
+          <button
+            class="testimonial-poster-card reveal"
+            type="button"
+            data-testimonial-poster="assets/gd-property-consult/testimonials/rahul-champalalji-chandak-success.png"
+            data-testimonial-title="Rahul Champalalji Chandak"
+            aria-label="Open Rahul Champalalji Chandak client success poster"
+          >
+            <img
+              src="assets/gd-property-consult/testimonials/rahul-champalalji-chandak-success.png"
+              alt="GD Property Consult client success poster for Rahul Champalalji Chandak at Shree Shakti Gold, Godadara, Surat"
+              loading="lazy"
+            >
+            <span class="testimonial-poster-action">
+              <span><small>CLIENT SUCCESS</small><strong>Shree Shakti Gold, Godadara</strong></span>
+              <b>View full image ↗</b>
+            </span>
+          </button>
+
+          <button
+            class="testimonial-poster-card reveal"
+            type="button"
+            data-testimonial-poster="assets/gd-property-consult/testimonials/rajendraji-jayeshji-maniyar-success.png"
+            data-testimonial-title="Rajendraji Jayeshji Maniyar"
+            aria-label="Open Rajendraji Jayeshji Maniyar client success poster"
+          >
+            <img
+              src="assets/gd-property-consult/testimonials/rajendraji-jayeshji-maniyar-success.png"
+              alt="GD Property Consult client success poster for Rajendraji Jayeshji Maniyar at Sky Heaven, Godadara, Surat"
+              loading="lazy"
+            >
+            <span class="testimonial-poster-action">
+              <span><small>CLIENT SUCCESS</small><strong>Sky Heaven, Godadara</strong></span>
+              <b>View full image ↗</b>
+            </span>
+          </button>
+          </div>
+          <button class="testimonial-gallery-nav next" id="testimonialGalleryNext" type="button" aria-label="Next testimonials">→</button>
+        </div>
+
+        <div class="testimonial-gallery-status">
+          <span id="testimonialGalleryCount">2 client stories</span>
+          <span>Click any image to view full size</span>
+        </div>
+
+        <div class="testimonial-gallery-dots" id="testimonialGalleryDots" aria-label="Testimonial slider pages"></div>
+
+        <div class="testimonial-swipe-hint" aria-hidden="true">
+          <span>Swipe to explore</span><i>→</i>
+        </div>
+
+        <div class="testimonial-trust-strip reveal">
+          <div><strong>15+</strong><span>Years Experience</span></div>
+          <div><strong>5K+</strong><span>Clients Served</span></div>
+          <div><strong>30K+</strong><span>Property Connections</span></div>
+          <div><strong>8</strong><span>Client Success Stories</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section insights-section" id="blog">
+      <div class="container">
+        <div class="section-head reveal"><div><span class="eyebrow" id="cmsInsightsEyebrow">PROPERTY INSIGHTS</span><h2 id="cmsInsightsHeading">Smarter guidance for confident property decisions.</h2></div><div class="section-sidecopy"><p id="cmsInsightsDescription">Explore location insights, buying guidance and investment perspectives curated for today’s property buyers.</p></div></div>
+        <div class="insight-grid" id="blogGrid">
+          <article class="insight-card reveal"><div class="insight-media"><img src="assets/gd-property-consult/gd-hero-wide.jpg" alt="Property buying guidance" loading="lazy"></div><div class="insight-body"><small>BUYER GUIDE</small><h3>How to shortlist the right property</h3><p>Compare location, budget, builder credibility and long-term suitability before scheduling a site visit.</p></div></article>
+          <article class="insight-card reveal"><div class="insight-media"><img src="assets/gd-property-consult/premium-2-3-bhk-bamroli.jpg" alt="Surat property market" loading="lazy"></div><div class="insight-body"><small>LOCATION INSIGHT</small><h3>Choosing the right location in Surat</h3><p>Compare Vesu, Parvat Patiya, Godadara, Bamroli and other Surat locations based on your purpose and budget.</p></div></article>
+          <article class="insight-card reveal"><div class="insight-media"><img src="assets/gd-property-consult/gd-hero-wide.jpg" alt="Property investment planning" loading="lazy"></div><div class="insight-body"><small>INVESTMENT PLANNING</small><h3>Balance price, possession and returns</h3><p>Evaluate total cost, delivery timeline and expected demand instead of comparing only the headline price.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+      <div class="container faq-grid">
+        <div class="faq-copy reveal">
+          <span class="eyebrow">COMMON QUESTIONS</span>
+          <h2 id="cmsFaqHeading">Start with clarity.</h2>
+          <p>Share your requirement and an advisor can explain the next practical step.</p>
+          <button class="btn btn-outline-light open-lead-form magnetic" type="button">Ask an advisor <span>↗</span></button>
+        </div>
+        <div class="accordion reveal">
+          <details open><summary>Is the initial consultation free?<span>+</span></summary><p>Yes. The first requirement discussion and initial property shortlisting are provided without consultation charges for buyers.</p></details>
+          <details><summary>Which locations do you cover?<span>+</span></summary><p>The current focus is Surat, including Vesu, Parvat Patiya, Godadara, Bamroli and other residential and commercial locations.</p></details>
+          <details><summary>Can you coordinate a site visit?<span>+</span></summary><p>Yes. Preferred date and time can be shared through the enquiry form and the team can coordinate the visit.</p></details>
+          <details><summary>Can you assist with home loans and documents?<span>+</span></summary><p>The team can guide buyers on the process and coordinate with relevant banking or project partners where available.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" id="contact">
+      <div class="cta-grid-lines" aria-hidden="true"></div>
+      <div class="container cta-box reveal">
+        <div>
+          <span class="eyebrow">YOUR SEARCH CAN START TODAY</span>
+          <h2 id="cmsCtaHeading">Tell us what you need. We will organize the next step.</h2>
+        </div>
+        <div class="cta-actions">
+          <button class="btn btn-luminous btn-large open-lead-form magnetic" type="button"><span id="cmsCtaButton">Get a property shortlist</span> <span>↗</span></button>
+          <small>Usually takes less than 2 minutes</small>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-identity">
+        <a class="brand footer-brand" href="#top"><span class="brand-mark has-logo"><img src="assets/gd-property-consult/gd-logo.png" alt="GD Property Consult logo"></span><span class="brand-text"><strong>GD Property</strong><small>CONSULT</small></span></a>
+        <p id="cmsFooterDescription">Residential and commercial property consultation for buying, selling and renting across Surat, Gujarat.</p>
+        <div class="social-row" aria-label="Social media">
+          <a id="cmsInstagram" href="https://www.instagram.com/gd_property_consult/" target="_blank" rel="noopener" aria-label="Instagram">IG</a><a id="cmsFacebook" href="#" aria-label="Facebook">FB</a><a id="cmsX" href="#" aria-label="X">X</a><a id="cmsLinkedin" href="#" aria-label="LinkedIn">IN</a>
+        </div>
+      </div>
+      <div class="footer-links"><h4>Explore</h4><a href="#properties">Properties</a><a href="#market">Market intelligence</a><a href="#emi">EMI calculator</a><a href="property-details.html?property=GD%20Vesu%20Heights">Property details</a></div>
+      <div class="footer-links"><h4>Company</h4><a href="#about">About</a><a href="#services">Our process</a><a href="#faq">FAQs</a><button class="footer-button open-lead-form" type="button">Contact advisor</button></div>
+      <div class="footer-contact"><h4>Reach us</h4><a id="cmsFooterPhone" href="tel:+917405134000">+91 74051 34000</a><a id="cmsFooterEmail" href="" hidden></a><p id="cmsFooterAddress">G-35 VIP Plaza, Vesu • A-5 Maruti Complex, Parvat Patiya • G8-10 Sky View Heights, Godadara, Surat</p><small id="cmsFooterHours">Gopal: +91 74051 34000 • Aakash: +91 80001 07817</small></div>
+    </div>
+    <div class="container footer-bottom"><span>© <span id="year"></span> <span data-cms-site-name>GD Property Consult</span></span><span id="cmsFooterSlogan">15 years of trusted property service in Surat.</span><div><a href="#">Privacy</a><a href="#">Terms</a><a href="#">RERA</a></div></div>
+  </footer>
+
+  <a class="whatsapp-float" id="cmsWhatsapp"
+     href="https://wa.me/917405134000?text=Hello%20GD%20Property%20Consult%2C%20I%20am%20interested%20in%20a%20property%20in%20Surat."
+     target="_blank"
+     rel="noopener"
+     aria-label="Chat with GD Property Consult on WhatsApp at +91 74051 34000">
+    <span class="whatsapp-icon" aria-hidden="true">
+      <span class="whatsapp-ring"></span>
+      <svg viewBox="0 0 32 32" role="img" focusable="false">
+        <path d="M16 3.2A12.6 12.6 0 0 0 5.1 22.1L3.5 28.5l6.6-1.7A12.6 12.6 0 1 0 16 3.2Z" fill="currentColor"/>
+        <path d="M22.9 19.5c-.4-.2-2.3-1.1-2.7-1.2-.4-.1-.6-.2-.9.2-.3.4-1 1.2-1.2 1.5-.2.3-.5.3-.9.1-2.4-1.2-4-2.2-5.6-5-.4-.7.4-.7 1.2-1.7.2-.2.2-.4.3-.6.1-.2 0-.5-.1-.7-.1-.2-.9-2.2-1.3-3-.3-.8-.7-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.5 1.5-1.5 3.6s1.5 4.2 1.7 4.5c.2.3 3 4.6 7.3 6.5 1 .4 1.8.7 2.4.9 1 .3 1.9.3 2.7.2.8-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.4-.3-.8-.5Z" fill="#081f27"/>
+      </svg>
+    </span>
+    <span class="whatsapp-copy">
+      <small>WhatsApp</small>
+      <strong>Chat now</strong>
+    </span>
+  </a>
+  <button class="mobile-cta open-lead-form" type="button">Get property options</button>
+
+  <div class="modal" id="leadModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+      <button class="modal-close" data-close-modal aria-label="Close">×</button>
+      <div class="form-head"><span class="eyebrow">SMART SURAT PROPERTY MATCH</span><h2 id="leadFormTitle">Tell us what you are looking for</h2><p id="leadFormSubtitle">Complete three quick steps. It takes less than two minutes.</p></div>
+
+      <section class="property-enquiry-context" id="propertyEnquiryContext" hidden aria-live="polite">
+        <div class="property-enquiry-context-head">
+          <div class="property-enquiry-title">
+            <span class="property-selected-badge"><i aria-hidden="true">✓</i> SELECTED PROPERTY</span>
+            <strong id="contextPropertyName">—</strong>
+            <small>These property details will be attached automatically to your enquiry.</small>
+          </div>
+        </div>
+
+        <div class="property-enquiry-context-grid">
+          <div class="property-context-item property-context-price">
+            <small>PRICE</small>
+            <strong id="contextPropertyPrice">—</strong>
+          </div>
+          <div class="property-context-item">
+            <small>CONFIGURATION</small>
+            <strong id="contextPropertyBhk">—</strong>
+          </div>
+          <div class="property-context-item">
+            <small>PROPERTY TYPE</small>
+            <strong id="contextPropertyType">—</strong>
+          </div>
+          <div class="property-context-item">
+            <small>LOCATION</small>
+            <strong id="contextPropertyLocation">—</strong>
+          </div>
+        </div>
+
+        <label class="property-configuration-picker" id="propertyConfigurationPicker" hidden>
+          <span>Available configurations</span>
+          <div class="property-configuration-select-wrap">
+            <select id="propertyConfigurationSelect" aria-label="Choose property configuration"></select>
+            <i aria-hidden="true">⌄</i>
+          </div>
+          <small>Select a configuration to update its price and area automatically.</small>
+        </label>
+      </section>
+
+      <div class="progress"><div class="progress-meta"><span id="stepLabel">Step 1 of 3</span><span id="progressPercent">33%</span></div><div class="progress-track"><span id="progressBar"></span></div></div>
+
+      <form id="leadForm" novalidate>
+        <input type="hidden" name="propertyId">
+        <input type="hidden" name="propertyConfigurationId">
+        <input type="hidden" name="propertyName">
+        <input type="hidden" name="propertyPrice">
+        <input type="hidden" name="propertyArea">
+        <input type="hidden" name="selectedPropertyType">
+        <input type="hidden" name="selectedPropertyBhk">
+        <input type="hidden" name="selectedPropertyLocation">
+        <input type="hidden" name="selectedPropertyBudgetRange">
+        <input type="hidden" name="selectedListingPurpose">
+        <input type="hidden" name="enquirySource" value="General Website Enquiry">
+
+        <section class="form-step active" data-step="1">
+          <div class="field-grid">
+            <label class="field"><span>Full Name *</span><input type="text" name="fullName" minlength="2" autocomplete="name" placeholder="Enter your full name" required /><small class="error"></small></label>
+            <label class="field"><span>Mobile Number *</span><div class="phone-wrap"><span class="country">+91</span><input type="tel" name="mobile" inputmode="numeric" autocomplete="tel" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" placeholder="10-digit mobile number" required /></div><small class="error"></small></label>
+            <label class="field"><span>Email Address *</span><input type="email" name="email" autocomplete="email" placeholder="name@email.com" required /><small class="error"></small></label>
+            <label class="field"><span>Preferred Contact Method *</span><select name="contactMethod" required><option value="">Select contact method</option><option>WhatsApp</option><option>Phone Call</option><option>Email</option></select><small class="error"></small></label>
+          </div>
+        </section>
+
+        <section class="form-step" data-step="2">
+          <label class="field field-full" id="leadLookingForField"><span>Looking For *</span><div class="choice-grid three"><label><input type="radio" name="lookingFor" value="Buy" required><span>Buy</span></label><label><input type="radio" name="lookingFor" value="Rent"><span>Rent</span></label><label><input type="radio" name="lookingFor" value="Invest"><span>Invest</span></label></div><small class="error"></small></label>
+          <label class="field field-full" id="leadPropertyTypeField"><span>Property Type *</span><div class="choice-grid four"><label><input type="radio" name="propertyType" value="Apartment" required><span>Apartment</span></label><label><input type="radio" name="propertyType" value="Villa"><span>Villa</span></label><label><input type="radio" name="propertyType" value="Plot"><span>Plot</span></label><label><input type="radio" name="propertyType" value="Commercial"><span>Commercial</span></label></div><small class="error"></small></label>
+          <div class="field-grid" id="leadLockedDetailsGrid"><label class="field" id="leadLocationField"><span>Preferred Location *</span><input type="text" name="location" placeholder="e.g. Vesu, Parvat Patiya, Godadara" required /><small class="error"></small></label><label class="field" id="leadBhkField"><span>BHK / Configuration *</span><select name="bhk" required><option value="">Select</option><option>1 BHK</option><option>2 BHK</option><option>3 BHK</option><option>4 BHK</option><option>5+ BHK</option><option>Not Applicable</option></select></label></div>
+        </section>
+
+        <section class="form-step" data-step="3">
+          <div class="field-grid">
+            <label class="field" id="leadBudgetField"><span>Selected Price *</span><select name="budget" required><option value="">Select budget</option><option value="Below ₹50 Lakh">Below ₹50 Lakh</option><option value="₹50–75 Lakh">₹50–75 Lakh</option><option value="₹75 Lakh–₹1 Crore">₹75 Lakh–₹1 Crore</option><option value="₹1–2 Crore">₹1–2 Crore</option><option value="₹2–5 Crore">₹2–5 Crore</option><option value="Above ₹5 Crore">Above ₹5 Crore</option></select><small class="error"></small></label>
+            <label class="field"><span>Purchase Timeline *</span><select name="timeline" required><option value="">Select timeline</option><option>Immediately</option><option>Within 1 month</option><option>Within 3 months</option><option>Within 6 months</option><option>Just exploring</option></select><small class="error"></small></label>
+            <label class="field"><span>Loan Required? *</span><select name="loanRequired" required><option value="">Select answer</option><option>Not Sure</option><option>Yes</option><option>No</option></select><small class="error"></small></label>
+            <label class="field"><span>Preferred Contact Time *</span><select name="contactTime" required><option value="">Select contact time</option><option>Anytime</option><option>9 AM–12 PM</option><option>12 PM–4 PM</option><option>4 PM–8 PM</option></select><small class="error"></small></label>
+          </div>
+          <label class="field field-full"><span>Additional Requirements <small>(optional)</small></span><textarea name="requirements" maxlength="500" rows="4" placeholder="Amenities, possession date, parking, furnishing, preferred project, etc."></textarea><div class="textarea-meta"><span>Optional</span><span id="charCount">0/500</span></div></label>
+          <label class="consent"><input type="checkbox" name="consent" required /><span>I agree to be contacted about suitable property options and site visits.</span></label><small class="form-error" id="formError"></small>
+        </section>
+
+        <div class="form-actions"><button class="btn btn-ghost-dark" id="prevBtn" type="button">Back</button><button class="btn btn-luminous" id="nextBtn" type="button">Continue</button><button class="btn btn-luminous" id="submitBtn" type="submit">Submit enquiry</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="success-modal" id="successModal" aria-hidden="true">
+    <div class="success-card"><div class="success-icon">✓</div><span class="eyebrow">ENQUIRY RECEIVED</span><h2>Thank you.</h2><p>Your enquiry has been received. A property advisor will contact you soon.</p><div class="lead-id">Lead ID: <strong id="successLeadId">—</strong></div><button class="btn btn-luminous" id="successClose" type="button">Done</button></div>
+  </div>
+
+
+  <div class="match-modal" id="matchModal" aria-hidden="true">
+    <div class="match-panel">
+      <button class="modal-close" id="matchClose" type="button" aria-label="Close matching results">×</button>
+      <div class="match-head">
+        <span class="eyebrow">LIVE PROPERTY MATCH</span>
+        <h2>Your best available matches</h2>
+        <p id="matchSummary">Searching verified properties using your location, property type and budget…</p>
+      </div>
+      <div class="match-results" id="matchResults"></div>
+      <div class="match-empty" id="matchEmpty" hidden>
+        <h3>No exact property found</h3>
+        <p>Try another location, property type or budget range. Nothing has been saved to the CRM.</p>
+      </div>
+      <div class="match-actions">
+        <button class="btn btn-ghost-dark" id="matchDone" type="button">Close</button>
+        <a class="btn btn-luminous" id="matchWhatsapp" href="https://wa.me/917405134000" target="_blank" rel="noopener">Discuss on WhatsApp ↗</a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="testimonial-poster-lightbox" id="testimonialPosterLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Client success poster">
+    <button class="testimonial-poster-close" id="testimonialPosterClose" type="button" aria-label="Close testimonial image">×</button>
+    <div class="testimonial-poster-lightbox-inner">
+      <img id="testimonialPosterLightboxImage" src="" alt="">
+      <strong id="testimonialPosterLightboxTitle"></strong>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="backend/supabase-config.js"></script>
+  <script src="backend/cms.js"></script>
+  <script src="script.js"></script>
+  <script src="backend/properties.js"></script>
+  <script src="backend/intelligence.js"></script>
+  <script src="responsive-fix.js"></script>
+</body>
+</html>

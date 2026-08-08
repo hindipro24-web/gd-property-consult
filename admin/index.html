@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+  <meta name="theme-color" content="#07131a">
+  <title>GD Property Consult Super Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="responsive-admin.css">
+  <style>
+    body.auth-pending #authView,
+    body.auth-pending #dashboardView,
+    body.auth-pending #setupNotice {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="auth-pending">
+  <div id="setupNotice" class="setup-notice hidden">Run <code>backend/super-admin-schema.sql</code> in Supabase SQL Editor, then refresh this page.</div>
+
+  <div id="adminAuthLoader" class="admin-auth-loader" role="status" aria-live="polite">
+    <div class="admin-auth-loader-card">
+      <div class="admin-auth-loader-brand">
+        <span>GD</span>
+        <div><strong>GD Property</strong><small>SUPER ADMIN</small></div>
+      </div>
+      <div class="admin-auth-loader-ring" aria-hidden="true"><i></i></div>
+      <p id="adminAuthLoaderText">Checking secure admin session…</p>
+      <small>Please wait while your access is verified.</small>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="admin-noscript">JavaScript is required to open the GD Property Consult Admin Panel.</div>
+  </noscript>
+
+  <main class="auth-shell hidden" id="authView">
+    <section class="auth-card">
+      <div class="auth-orb"></div>
+      <div class="admin-brand"><span>GD</span><div><strong>GD Property</strong><small>SUPER ADMIN</small></div></div>
+      <p class="auth-kicker">CONTROL CENTER</p>
+      <h1>Full website command.</h1>
+      <p>Manage branding, logo, homepage, properties, leads, testimonials, blog, footer, SEO and media.</p>
+      <form id="loginForm">
+        <label>Email<input id="email" type="email" required autocomplete="email" placeholder="admin@email.com"></label>
+        <label>Password<input id="password" type="password" required autocomplete="current-password" placeholder="••••••••"></label>
+        <button type="submit">Enter Super Admin <span>↗</span></button>
+        <div id="loginMessage" class="message"></div>
+      </form>
+    </section>
+  </main>
+
+  <div id="dashboardView" class="dashboard hidden">
+    <aside class="sidebar">
+      <div class="admin-brand"><span>GD</span><div><strong>GD Property</strong><small>SUPER ADMIN</small></div></div>
+      <div class="role-pill"><i></i><span id="roleText">Super Admin</span></div>
+      <nav id="adminNav">
+        <button class="nav-active" data-panel="overview"><span>◈</span> Overview</button>
+        <button data-panel="branding"><span>◉</span> Branding & Theme</button>
+        <button data-panel="homepage"><span>⌂</span> Homepage</button>
+        <button data-panel="properties"><span>▦</span> Properties</button>
+        <button data-panel="leads"><span>◎</span> Leads CRM</button>
+        <button data-panel="testimonials"><span>✦</span> Testimonials</button>
+        <button data-panel="blog"><span>▤</span> Blog / Insights</button>
+        <button data-panel="footer"><span>⌁</span> Footer & Contact</button>
+        <button data-panel="seo"><span>⚙</span> SEO & Custom CSS</button>
+        <button data-panel="media"><span>▣</span> Media Library</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <a href="../index.html" target="_blank">View live website ↗</a>
+        <button id="logoutBtn">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar advanced-topbar">
+        <div class="topbar-title-block"><small id="panelKicker">COMMAND CENTER</small><h1 id="panelTitle">Overview</h1></div>
+        <button id="adminCommandButton" class="admin-command-trigger" type="button" aria-label="Open global search">
+          <span>⌕</span><b>Search leads, properties, pages…</b><kbd>Ctrl K</kbd>
+        </button>
+        <div class="topbar-actions advanced-topbar-actions">
+          <div class="admin-live-time"><strong id="adminClock">--:--</strong><small id="adminDate">Loading date</small></div>
+          <span id="saveStatus" class="save-status">Ready</span>
+          <a href="../index.html" target="_blank" class="preview-btn">Live website ↗</a>
+        </div>
+      </header>
+
+      <section class="admin-panel active" data-admin-panel="overview">
+        <section class="executive-command-hero">
+          <div class="executive-command-copy">
+            <span class="executive-eyebrow"><i></i> GD OPERATIONS CENTER</span>
+            <h2 id="adminGreeting">Good evening, Super Admin.</h2>
+            <p>Properties, enquiries, site visits and website control—organized in one live command center.</p>
+            <div class="executive-command-actions">
+              <button class="primary" type="button" data-go-panel="leads">Open Lead Command</button>
+              <button class="secondary" type="button" data-go-panel="properties" id="overviewAddProperty">+ Add property</button>
+            </div>
+          </div>
+          <div class="executive-system-panel">
+            <div><small>WEBSITE</small><strong id="statMode">LIVE</strong><span class="system-online"><i></i> Public system online</span></div>
+            <div><small>PUBLISHED INSIGHTS</small><strong id="statPosts">0</strong><span>Blog and guides</span></div>
+            <div><small>DATABASE</small><strong>SYNCED</strong><span id="overviewSystemText">Waiting for live data</span></div>
+          </div>
+        </section>
+
+        <div class="executive-kpi-grid">
+          <article class="executive-kpi-card inventory"><span>LIVE INVENTORY</span><strong id="statProperties">0</strong><small>Published and draft properties</small><i>▦</i></article>
+          <article class="executive-kpi-card leads"><span>ACTIVE LEADS</span><strong id="statLeads">0</strong><small>Needs follow-up or action</small><i>◎</i></article>
+          <article class="executive-kpi-card today"><span>NEW TODAY</span><strong id="statNewToday">0</strong><small>Fresh enquiries received</small><i>↗</i></article>
+          <article class="executive-kpi-card visits"><span>SITE VISITS</span><strong id="statVisits">0</strong><small>Visit requests in pipeline</small><i>⌖</i></article>
+          <article class="executive-kpi-card won"><span>DEALS WON</span><strong id="statWon">0</strong><small>Converted opportunities</small><i>✓</i></article>
+          <article class="executive-kpi-card conversion"><span>CONVERSION</span><strong id="statConversion">0%</strong><small>Won from active CRM records</small><i>◔</i></article>
+        </div>
+
+        <div class="executive-intelligence-grid">
+          <section class="card executive-pipeline-card">
+            <div class="card-head"><div><small>LIVE SALES FUNNEL</small><h2>CRM pipeline health</h2></div><button type="button" data-go-panel="leads">View pipeline ↗</button></div>
+            <div id="overviewPipeline" class="overview-pipeline"></div>
+          </section>
+          <section class="card executive-priority-card">
+            <div class="card-head"><div><small>PRIORITY QUEUE</small><h2>Leads requiring attention</h2></div><span class="priority-live"><i></i> Live</span></div>
+            <div id="priorityLeads" class="priority-lead-list"></div>
+          </section>
+        </div>
+
+        <div class="overview-grid advanced-overview-grid">
+          <section class="card"><div class="card-head"><div><small>RECENT ACTIVITY</small><h2>Latest CRM records</h2></div><button data-go-panel="leads">Open CRM</button></div><div id="recentLeads" class="activity-list advanced-activity-list"></div></section>
+          <section class="card quick-card"><div class="card-head"><div><small>QUICK CONTROL</small><h2>Website actions</h2></div></div><div class="quick-actions advanced-quick-actions"><button data-go-panel="branding"><span>◉</span>Brand system</button><button data-go-panel="homepage"><span>⌂</span>Homepage CMS</button><button data-go-panel="properties" id="quickAddProperty"><span>＋</span>Add property</button><button data-go-panel="footer"><span>◉</span>WhatsApp & contact</button><button data-go-panel="seo"><span>⚙</span>SEO controls</button><button data-go-panel="media"><span>▣</span>Media library</button></div></section>
+        </div>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="branding">
+        <form id="brandingForm" class="settings-grid">
+          <section class="card form-card"><div class="card-head"><div><small>IDENTITY</small><h2>Brand and logo</h2></div></div>
+            <div class="field-grid"><label>Brand name<input id="siteName" required></label><label>Suffix / category<input id="siteSuffix"></label><label class="wide">Tagline<input id="tagline"></label><label class="wide">Logo URL<input id="logoUrl" type="url" placeholder="Upload below or paste URL"></label><label class="upload-field wide">Upload logo<input id="logoFile" type="file" accept="image/*"><span>Select PNG, JPG, WebP or SVG</span></label><label class="wide">Favicon URL<input id="faviconUrl" type="url"></label><label class="upload-field wide">Upload favicon<input id="faviconFile" type="file" accept="image/*"><span>Select square icon</span></label></div>
+          </section>
+          <section class="card form-card"><div class="card-head"><div><small>VISUAL SYSTEM</small><h2>Theme colors</h2></div></div>
+            <div class="color-grid"><label>Primary<input id="primaryColor" type="color"></label><label>Secondary<input id="secondaryColor" type="color"></label><label>Dark background<input id="darkColor" type="color"></label><label>Light background<input id="lightColor" type="color"></label></div>
+            <div class="theme-preview" id="themePreview"><span>GD</span><div><strong>Live theme preview</strong><small>Colors update after save</small></div></div>
+          </section>
+          <div class="sticky-save"><button type="submit" class="primary">Save branding</button></div>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="homepage">
+        <form id="homepageForm" class="settings-grid single">
+          <section class="card form-card"><div class="card-head"><div><small>HERO SECTION</small><h2>Top of homepage</h2></div></div>
+            <div class="field-grid"><label class="wide">Kicker<input id="heroKicker"></label><label>Title first line<input id="heroTitle"></label><label>Highlighted line<input id="heroHighlight"></label><label class="wide">Subtitle<textarea id="heroSubtitle" rows="3"></textarea></label><label class="wide">Fallback hero image URL<input id="heroImageUrl" type="url"><small class="admin-field-help">Used only when no published property is available.</small></label><label class="upload-field wide">Upload fallback hero image<input id="heroImageFile" type="file" accept="image/*"><span>Recommended 1600×1000 or larger</span></label><label>Primary button label<input id="heroPrimaryLabel"></label><label>Primary button URL<input id="heroPrimaryUrl"></label><label>Secondary button label<input id="heroSecondaryLabel"></label><label>Secondary button URL<input id="heroSecondaryUrl"></label></div>
+
+            <section class="hero-property-manager">
+              <div class="hero-property-manager-head">
+                <div>
+                  <small>RIGHT-SIDE FEATURED PROPERTY</small>
+                  <h3>Hero property display</h3>
+                  <p>Auto mode shows every newly published property. Manual mode lets you choose one property. The same property is automatically placed first in the collection below.</p>
+                </div>
+                <span id="heroPropertyModeBadge">AUTO</span>
+              </div>
+
+              <div class="field-grid hero-property-controls">
+                <label>Display mode
+                  <select id="heroPropertyMode">
+                    <option value="auto">Auto — newest published property</option>
+                    <option value="manual">Manual — choose a property</option>
+                  </select>
+                </label>
+                <label id="heroPropertyManualField">Manual property
+                  <select id="heroPropertyId">
+                    <option value="">Select published property</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="hero-property-admin-preview" id="heroPropertyAdminPreview">
+                <img id="heroPropertyPreviewImage" alt="Selected hero property preview">
+                <div>
+                  <span id="heroPropertyPreviewTag">LATEST LISTING</span>
+                  <strong id="heroPropertyPreviewTitle">No published property</strong>
+                  <small id="heroPropertyPreviewMeta">Add and publish a property first.</small>
+                </div>
+                <b id="heroPropertyPreviewPrice">—</b>
+              </div>
+
+              <p class="hero-property-manager-note" id="heroPropertyManagerNote">
+                Auto mode is active. The newest published property will appear automatically.
+              </p>
+            </section>
+          </section>
+          <section class="card form-card"><div class="card-head"><div><small>SECTION CONTENT</small><h2>Headings and descriptions</h2></div></div>
+            <div class="field-grid"><label>Properties eyebrow<input id="propertiesEyebrow"></label><label>Properties heading<input id="propertiesHeading"></label><label class="wide">Properties description<textarea id="propertiesDescription" rows="2"></textarea></label><label class="wide">Market heading<input id="marketHeading"></label><label class="wide">Process heading<input id="servicesHeading"></label><label class="wide">About heading<input id="aboutHeading"></label><label class="wide">About paragraph 1<textarea id="aboutText1" rows="3"></textarea></label><label class="wide">About paragraph 2<textarea id="aboutText2" rows="3"></textarea></label><label class="wide">About owners image URL<input id="aboutImageUrl" placeholder="https://... or uploaded image URL"></label><label class="wide">About owners image upload<input id="aboutImageFile" type="file" accept="image/*"></label><label class="wide">Testimonials heading<input id="testimonialsHeading"></label><label>Insights eyebrow<input id="insightsEyebrow" placeholder="PROPERTY INSIGHTS"></label><label class="wide">Insights heading<input id="insightsHeading"></label><label class="wide">Insights description<textarea id="insightsDescription" rows="3"></textarea></label><label>FAQ heading<input id="faqHeading"></label><label>CTA heading<input id="ctaHeading"></label><label>CTA button label<input id="ctaButtonLabel"></label></div>
+          </section>
+          <section class="card form-card"><div class="card-head"><div><small>MARKET INTELLIGENCE MAP</small><h2>Edit homepage intelligence radar</h2></div></div>
+            <p class="help">Each marker should be on a new line in this format: <strong>Location | Category</strong>. You can keep 1–8 markers.</p>
+            <div class="field-grid">
+              <label>Section eyebrow<input id="marketEyebrow" placeholder="MARKET INTELLIGENCE"></label>
+              <label>Radar center text<input id="marketCoreText" maxlength="5" placeholder="GD"></label>
+              <label class="wide">Market description<textarea id="marketDescription" rows="3"></textarea></label>
+              <label>Interface title<input id="intelligenceTitle" placeholder="GD Property Intelligence"></label>
+              <label>Interface status<input id="intelligenceStatus" placeholder="LIVE MATCH MODEL"></label>
+              <label class="wide">Map markers<textarea id="intelligenceNodes" rows="8" placeholder="Wakad | Apartment
+Baner | Luxury
+Kharadi | Commercial
+Ravet | Value"></textarea></label>
+              <label>Listings label<input id="listingsLabel" placeholder="Active listings"></label>
+              <label>Listings value<input id="listingsValue" placeholder="3"></label>
+              <label>Average label<input id="averageLabel" placeholder="Average price"></label>
+              <label>Average price value<input id="averageValue" placeholder="₹2.0 CR"></label>
+              <label>Top-location label<input id="topLocationLabel" placeholder="Top location"></label>
+              <label>Top-location value<input id="topLocationValue" placeholder="BANER"></label>
+              <label class="check wide"><input id="marketStatsAuto" type="checkbox" checked> Auto-calculate values from published properties</label>
+              <label class="check"><input id="showIntelligenceRadar" type="checkbox" checked> Show radar/map panel</label>
+            </div>
+          </section>
+          <section class="card form-card"><div class="card-head"><div><small>SECTION VISIBILITY</small><h2>Show or hide website sections</h2></div></div><div class="toggle-grid" id="sectionToggles"></div></section>
+          <div class="sticky-save"><button type="submit" class="primary">Save homepage</button></div>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="properties">
+        <section class="card"><div class="card-head toolbar"><div><small>LIVE INVENTORY</small><h2>Properties</h2></div><div><input id="propertySearch" placeholder="Search property"><button id="addPropertyBtn" class="primary" type="button">+ Add property</button></div></div><div class="table-wrap"><table><thead><tr><th>Property</th><th>Listing</th><th>Type</th><th>Price</th><th>Status</th><th>Visibility</th><th>Actions</th></tr></thead><tbody id="propertyRows"></tbody></table></div><div id="propertyEmpty" class="empty hidden">No properties found.</div></section>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="leads">
+        <section class="crm-control-deck">
+          <div>
+            <span class="crm-control-eyebrow"><i></i> ADVANCED LEAD OPERATIONS</span>
+            <h2>CRM Intelligence Center</h2>
+            <p>Track, prioritize and convert property enquiries and site visits from one workspace.</p>
+          </div>
+          <div class="crm-view-switch" aria-label="CRM view">
+            <button class="active" type="button" data-crm-view="table">▤ Table</button>
+            <button type="button" data-crm-view="kanban">▦ Pipeline</button>
+          </div>
+        </section>
+
+        <div class="crm-intelligence-strip">
+          <article><small>NEW TODAY</small><strong id="crmTodayCount">0</strong><span>Fresh records</span></article>
+          <article><small>HIGH PRIORITY</small><strong id="crmHotCount">0</strong><span>Hot / score 70+</span></article>
+          <article><small>SITE VISITS</small><strong id="crmVisitPipelineCount">0</strong><span>Scheduled pipeline</span></article>
+          <article><small>WON</small><strong id="crmWonCount">0</strong><span>Converted deals</span></article>
+          <article><small>CONVERSION RATE</small><strong id="crmConversionRate">0%</strong><span>CRM performance</span></article>
+        </div>
+
+        <div class="crm-smart-filter-bar">
+          <span>SMART FILTERS</span>
+          <button class="active" type="button" data-crm-smart-filter="all">All records</button>
+          <button type="button" data-crm-smart-filter="today">Today</button>
+          <button type="button" data-crm-smart-filter="priority">High priority</button>
+          <button type="button" data-crm-smart-filter="visits">Site visits</button>
+          <button type="button" data-crm-smart-filter="won">Won deals</button>
+          <button type="button" data-crm-smart-filter="uncontacted">Needs contact</button>
+        </div>
+
+        <section class="crm-summary-grid crm-summary-grid-five">
+          <button class="crm-summary-card active" type="button" data-lead-type-filter="all"><span>ALL LEADS</span><strong id="crmAllCount">0</strong><small>Active enquiries and visits</small></button>
+          <button class="crm-summary-card" type="button" data-lead-type-filter="inquiry"><span>PROPERTY ENQUIRIES</span><strong id="crmInquiryCount">0</strong><small>Customer interest requests</small></button>
+          <button class="crm-summary-card visit" type="button" data-lead-type-filter="visit"><span>SITE VISITS</span><strong id="crmVisitCount">0</strong><small>Scheduled visit requests</small></button>
+          <button class="crm-summary-card trash" type="button" data-lead-type-filter="trash"><span>TRASH</span><strong id="crmTrashCount">0</strong><small>Restore or permanently delete</small></button>
+          <article class="crm-summary-card static"><span>HOT / ACTIVE</span><strong id="crmActiveCount">0</strong><small>Needs quick follow-up</small></article>
+        </section>
+
+        <section class="card crm-command-card" id="crmTableView">
+          <div class="card-head crm-command-head">
+            <div><small>LEAD COMMAND</small><h2>Enquiries & Site Visits</h2><p>Select records for bulk status changes, export, trash, restore or permanent deletion.</p></div>
+            <button id="exportLeads" class="secondary" type="button">Export current view</button>
+          </div>
+
+          <div class="crm-toolbar crm-toolbar-v157">
+            <div class="crm-type-tabs" role="tablist" aria-label="Lead type filter"><button class="active" type="button" data-lead-type-filter="all">All</button><button type="button" data-lead-type-filter="inquiry">Enquiries</button><button type="button" data-lead-type-filter="visit">Site visits</button><button type="button" data-lead-type-filter="trash">Trash</button></div>
+            <input id="leadSearch" type="search" placeholder="Search name, phone, property or Lead ID…">
+            <select id="leadFilter"><option value="all">All statuses</option><option>NEW</option><option>HOT</option><option>WARM</option><option>COLD</option><option>CONTACTED</option><option>VISIT BOOKED</option><option>WON</option><option>LOST</option></select>
+            <select id="leadSort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="score-high">Highest score</option><option value="score-low">Lowest score</option><option value="name-az">Name A–Z</option></select>
+          </div>
+
+          <div class="crm-bulkbar hidden" id="leadBulkBar">
+            <div class="crm-bulk-count"><strong id="leadSelectedCount">0 selected</strong><button id="selectAllFilteredLeads" type="button">Select all filtered</button><button id="clearLeadSelection" type="button">Clear</button></div>
+            <div class="crm-bulk-active-actions" id="leadBulkActiveActions"><select id="bulkLeadStatus"><option value="">Choose status</option><option>NEW</option><option>HOT</option><option>WARM</option><option>COLD</option><option>CONTACTED</option><option>VISIT BOOKED</option><option>WON</option><option>LOST</option></select><button id="applyBulkLeadStatus" class="secondary" type="button">Apply status</button><button id="moveSelectedToTrash" class="danger-soft" type="button">Move to trash</button></div>
+            <div class="crm-bulk-trash-actions hidden" id="leadBulkTrashActions"><button id="restoreSelectedLeads" class="secondary" type="button">Restore selected</button><button id="deleteSelectedForever" class="danger" type="button">Delete forever</button></div>
+            <button id="exportSelectedLeads" class="secondary" type="button">Export selected</button>
+          </div>
+
+          <div class="table-wrap crm-table-wrap"><table class="crm-table crm-select-table"><thead><tr><th class="crm-check-column"><input id="selectLeadPage" type="checkbox" aria-label="Select all leads on this page"></th><th>Type</th><th>Customer</th><th>Property</th><th>Request / Schedule</th><th>Status</th><th>Actions</th></tr></thead><tbody id="leadRows"></tbody></table></div>
+          <div id="leadEmpty" class="empty hidden">No matching enquiry or site-visit record found.</div>
+          <div class="crm-pagination"><label>Rows per page<select id="leadPageSize"><option value="10">10</option><option value="25">25</option><option value="50">50</option></select></label><span id="leadPageInfo">Page 1 of 1</span><div><button id="leadPreviousPage" class="secondary" type="button">← Previous</button><button id="leadNextPage" class="secondary" type="button">Next →</button></div></div>
+        </section>
+
+        <section class="crm-kanban-view hidden" id="crmKanbanView">
+          <div class="crm-kanban-head"><div><small>VISUAL PIPELINE</small><h2>Drag leads between stages</h2><p>Desktop: drag a card. Mobile: use the stage selector inside the card.</p></div><span id="crmKanbanCount">0 active cards</span></div>
+          <div class="crm-kanban-board" id="crmKanbanBoard">
+            <section class="crm-kanban-column" data-kanban-status="NEW"><header><span>NEW</span><strong id="kanbanNewCount">0</strong></header><div data-kanban-list="new"></div></section>
+            <section class="crm-kanban-column priority" data-kanban-status="HOT"><header><span>PRIORITY</span><strong id="kanbanPriorityCount">0</strong></header><div data-kanban-list="priority"></div></section>
+            <section class="crm-kanban-column followup" data-kanban-status="CONTACTED"><header><span>FOLLOW-UP</span><strong id="kanbanFollowupCount">0</strong></header><div data-kanban-list="followup"></div></section>
+            <section class="crm-kanban-column visits" data-kanban-status="VISIT BOOKED"><header><span>VISITS</span><strong id="kanbanVisitsCount">0</strong></header><div data-kanban-list="visits"></div></section>
+            <section class="crm-kanban-column closed" data-kanban-status="WON"><header><span>CLOSED</span><strong id="kanbanClosedCount">0</strong></header><div data-kanban-list="closed"></div></section>
+          </div>
+        </section>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="testimonials">
+        <div class="testimonial-admin-stats">
+          <article><small>LIVE POSTERS</small><strong id="testimonialPublishedCount">0</strong><span>Maximum 8 published</span></article>
+          <article><small>TOTAL RECORDS</small><strong id="testimonialTotalCount">0</strong><span>Published and hidden</span></article>
+          <article><small>FEATURED</small><strong id="testimonialFeaturedCount">0</strong><span>Priority testimonial</span></article>
+        </div>
+
+        <section class="card testimonial-manager-card">
+          <div class="card-head">
+            <div>
+              <small>CLIENT SUCCESS MANAGER</small>
+              <h2>Image Testimonials</h2>
+              <p>Add, replace, reorder, publish or hide up to 8 client-success posters on the website.</p>
+            </div>
+            <button id="addTestimonialBtn" class="primary" type="button">+ Add testimonial</button>
+          </div>
+
+          <div class="testimonial-manager-help">
+            <span>Recommended image: vertical 9:16 poster</span>
+            <span>Maximum live on website: 8</span>
+            <span>Use ↑ and ↓ to change order</span>
+          </div>
+
+          <div id="testimonialList" class="testimonial-admin-list"></div>
+        </section>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="blog">
+        <section class="card"><div class="card-head"><div><small>CONTENT ENGINE</small><h2>Blog and insights</h2></div><button id="addPostBtn" class="primary" type="button">+ Add post</button></div><div id="postList" class="content-list"></div></section>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="footer">
+        <form id="footerForm" class="settings-grid single">
+          <section class="card form-card"><div class="card-head"><div><small>CONTACT SYSTEM</small><h2>Footer, WhatsApp and social links</h2></div></div><div class="field-grid"><label>Phone<input id="phone"></label><label>WhatsApp number<input id="whatsappNumber" placeholder="917559262616"></label><label class="wide">WhatsApp opening message<input id="whatsappMessage"></label><label>Email<input id="contactEmail" type="email"></label><label>Business hours<input id="businessHours"></label><label class="wide">Address<input id="address"></label><label>Instagram URL<input id="instagramUrl" type="url"></label><label>Facebook URL<input id="facebookUrl" type="url"></label><label>X URL<input id="xUrl" type="url"></label><label>LinkedIn URL<input id="linkedinUrl" type="url"></label><label class="wide">Footer description<textarea id="footerDescription" rows="3"></textarea></label><label class="wide">Footer slogan<input id="footerSlogan"></label></div></section>
+          <div class="sticky-save"><button type="submit" class="primary">Save footer and contact</button></div>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="seo">
+        <form id="seoForm" class="settings-grid single">
+          <section class="card form-card"><div class="card-head"><div><small>SEARCH VISIBILITY</small><h2>SEO settings</h2></div></div><div class="field-grid"><label class="wide">Page title<input id="seoTitle"></label><label class="wide">Meta description<textarea id="seoDescription" rows="3"></textarea></label><label class="wide">Keywords<input id="seoKeywords"></label><label class="switch wide"><input id="maintenanceMode" type="checkbox"><span></span><div><strong>Maintenance mode</strong><small>Replace the public website with a temporary update screen.</small></div></label></div></section>
+          <section class="card form-card"><div class="card-head"><div><small>ADVANCED CONTROL</small><h2>Custom CSS</h2></div></div><p class="help">Use only CSS here. This gives you advanced visual control without exposing secret keys or unsafe admin JavaScript.</p><textarea id="customCss" class="code-editor" rows="16" placeholder="/* Example */\n.hero-title { letter-spacing: -0.05em; }"></textarea></section>
+          <div class="sticky-save"><button type="submit" class="primary">Save SEO and CSS</button></div>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-admin-panel="media">
+        <section class="media-dashboard-grid">
+          <article class="media-stat"><small>TOTAL FILES</small><strong id="mediaTotalFiles">0</strong><span>Current library</span></article>
+          <article class="media-stat"><small>STORAGE USED</small><strong id="mediaStorageUsed">0 MB</strong><span>Calculated from files</span></article>
+          <article class="media-stat"><small>STORAGE REMAINING</small><strong id="mediaStorageRemaining">—</strong><span>Based on configured limit</span></article>
+          <article class="media-stat"><small>RECENT UPLOADS</small><strong id="mediaRecentCount">0</strong><span>Last 7 days</span></article>
+        </section>
+
+        <section class="card form-card media-manager-card">
+          <div class="card-head"><div><small>PROFESSIONAL ASSET STORAGE</small><h2>Media Manager</h2></div><div class="media-view-buttons"><button id="mediaGridView" class="secondary active" type="button">Grid</button><button id="mediaListView" class="secondary" type="button">List</button><button id="refreshMedia" class="secondary" type="button">Refresh</button></div></div>
+
+          <div id="mediaDropZone" class="media-drop-zone">
+            <strong>Drag & drop multiple files here</strong><span>or choose files below</span>
+            <div class="media-uploader"><input id="mediaFile" type="file" accept="image/*,application/pdf" multiple><select id="mediaFolder"><option value="general">General</option><option value="logos">Logos</option><option value="hero">Hero</option><option value="properties">Properties</option><option value="properties/gallery">Property Gallery</option><option value="blog">Blog</option><option value="documents">Documents</option></select><button id="uploadMediaBtn" class="primary" type="button">Upload files</button></div>
+          </div>
+
+          <div class="media-toolbar">
+            <input id="mediaSearch" type="search" placeholder="Search file name…">
+            <select id="mediaFilter"><option value="all">All folders</option><option value="properties">Properties</option><option value="blog">Blog</option><option value="hero">Hero</option><option value="logos">Logos</option><option value="documents">Documents</option><option value="general">General</option><option value="trash">Recycle Bin</option></select>
+            <select id="mediaSort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="name-asc">Name A–Z</option><option value="name-desc">Name Z–A</option><option value="size-desc">Largest first</option><option value="size-asc">Smallest first</option></select>
+          </div>
+
+          <div class="media-bulkbar">
+            <label><input id="mediaSelectAll" type="checkbox"> Select all</label>
+            <button id="mediaDeselectAll" class="secondary" type="button">Deselect all</button>
+            <button id="mediaCopySelected" class="secondary" type="button">Copy URLs</button>
+            <button id="mediaDownloadSelected" class="secondary" type="button">Bulk download</button>
+            <select id="mediaMoveFolder"><option value="">Move to folder…</option><option value="general">General</option><option value="logos">Logos</option><option value="hero">Hero</option><option value="properties">Properties</option><option value="properties/gallery">Property Gallery</option><option value="blog">Blog</option><option value="documents">Documents</option></select>
+            <button id="mediaMoveSelected" class="secondary" type="button">Move</button>
+            <button id="mediaDeleteSelected" class="danger" type="button">Delete selected (0)</button>
+            <button id="mediaRestoreSelected" class="secondary hidden" type="button">Restore selected</button>
+            <button id="mediaPermanentDelete" class="danger hidden" type="button">Permanent delete</button>
+          </div>
+
+          <p id="mediaMessage" class="message"></p>
+          <div id="mediaGrid" class="media-grid professional-media-grid"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal hidden" id="propertyModal"><div class="modal-card wide-modal"><header><div><small>PROPERTY EDITOR</small><h2 id="propertyModalTitle">Add property</h2></div><button class="icon-btn" data-close="propertyModal">×</button></header><form id="propertyForm"><input id="propertyId" type="hidden"><div class="field-grid"><label class="wide">Project title<input id="propertyTitle" required></label><label>Slug<input id="propertySlug" required></label><label>Property type<select id="propertyType" required><option>Apartment</option><option>Villa</option><option>Plot</option><option>Commercial</option><option>Office</option></select></label><label>Listing purpose<select id="propertyListingPurpose" required><option value="Sale">For Sale</option><option value="Rent">For Rent</option></select><small class="admin-field-help">Choose whether this property is available for sale or monthly rent.</small></label><label>Location<input id="propertyLocation" required></label><label>City<input id="propertyCity" value="Surat"></label><section class="default-configuration-manager wide">
+  <input id="propertyDefaultConfigurationId" type="hidden">
+  <input id="propertyHadConfigurations" type="hidden" value="false">
+  <div class="default-configuration-head">
+    <div>
+      <small>CONFIGURATION 1 · MAIN / EXISTING</small>
+      <h3>Default property configuration</h3>
+      <p>Existing property ka current BHK, price aur area yahan automatically aayega. Bedrooms, bathrooms aur baaki details bhi yahin set karo.</p>
+    </div>
+    <span class="default-config-badge">Configuration 1</span>
+  </div>
+  <div class="configuration-editor-grid default-configuration-grid">
+    <label>Price / rent label<input id="propertyPriceLabel" required placeholder="₹95 Lakh"><small class="admin-field-help" id="propertyPricePurposeHint">Sale example: ₹95 Lakh or ₹1.35 Cr</small></label>
+    <label>Numeric price<input id="propertyPriceAmount" type="number" min="0" placeholder="9500000"></label>
+    <label>BHK / Configuration<input id="propertyBhk" placeholder="2 BHK"></label>
+    <label>Area<input id="propertyArea" placeholder="1,050 sq.ft."></label>
+    <label>Bedrooms<input id="propertyBedrooms" type="number" min="0" placeholder="2"></label>
+    <label>Bathrooms<input id="propertyBathrooms" type="number" min="0" placeholder="2"></label>
+    <label>Balconies<input id="propertyBalconies" type="number" min="0" placeholder="1"></label>
+    <label>Parking<input id="propertyParking" type="number" min="0" placeholder="1"></label>
+    <label>Furnishing<input id="propertyFurnishing" placeholder="Unfurnished"></label>
+    <label>Status label<input id="propertyStatus" value="Available"></label>
+    <label class="span-2">Floor-plan image URL<input id="propertyFloorPlanUrl" type="url" placeholder="https://..."></label>
+    <label class="span-4">Configuration 1 facilities<textarea id="propertyConfigurationFacilities" rows="2" placeholder="Modular kitchen, 1 parking, 1 balcony"></textarea></label>
+
+    <details class="configuration-overview-editor span-4" open>
+      <summary>
+        <div>
+          <strong>Website configuration overview</strong>
+          <small>Edit the two information cards shown on the property details page. This is a text overview, not the floor-plan image.</small>
+        </div>
+        <span>EDIT</span>
+      </summary>
+      <div class="configuration-overview-fields">
+        <label class="check span-4"><input id="propertyShowFloorOverview" type="checkbox" checked> Show configuration overview on property page</label>
+        <label class="span-4">Section heading<input id="propertyFloorOverviewHeading" placeholder="Configuration overview"></label>
+        <label>Card 1 label<input id="propertyPlanALabel" placeholder="PLAN A"></label>
+        <label class="span-2">Card 1 title<input id="propertyPlanATitle" placeholder="2 BHK layout"></label>
+        <label class="span-4">Card 1 description<textarea id="propertyPlanADescription" rows="2" placeholder="1,050 sq.ft. • 2 bathrooms • 1 balcony"></textarea></label>
+        <label>Card 2 label<input id="propertyPlanBLabel" placeholder="PLAN B"></label>
+        <label class="span-2">Card 2 title<input id="propertyPlanBTitle" placeholder="Configuration highlights"></label>
+        <label class="span-4">Card 2 description<textarea id="propertyPlanBDescription" rows="2" placeholder="1 parking • Unfurnished"></textarea></label>
+      </div>
+    </details>
+  </div>
+</section>
+
+<div class="configuration-manager wide">
+  <div class="configuration-manager-head">
+    <div>
+      <small>OPTIONAL ADDITIONAL CONFIGURATIONS</small>
+      <h3>Configuration 2, 3, 4 and more</h3>
+      <p>Sirf extra options add karo—for example 3 BHK, 4 BHK or Penthouse. Configuration 1 upar existing property data se automatically ready rahega.</p>
+    </div>
+    <button id="addPropertyConfiguration" class="secondary" type="button">+ Add configuration</button>
+  </div>
+  <div id="propertyConfigurations" class="configuration-editor-list"></div>
+</div><label>Builder name<input id="propertyBuilder"></label><label>RERA number<input id="propertyRera"></label><label class="wide">Main image URL<input id="propertyImage" type="url"></label><label class="upload-field wide">Upload main image<input id="propertyImageFile" type="file" accept="image/*"><span>Image uploads to Supabase Storage</span></label><label class="wide">Gallery image URLs<textarea id="propertyGallery" rows="3" placeholder="One URL per line"></textarea></label><label class="upload-field wide">Upload multiple gallery images<input id="propertyGalleryFiles" type="file" accept="image/*" multiple><span>Select many images at once — they upload to Supabase Storage</span></label><div id="propertyGalleryPreview" class="gallery-upload-preview wide"></div><label class="wide">Amenities<textarea id="propertyAmenities" rows="3" placeholder="Clubhouse, Gym, Parking"></textarea></label><label class="wide">Location title shown in animation<input id="propertyMapLabel" placeholder="Vesu, Surat"><small class="admin-field-help">This text appears inside the animated Neighbourhood access card.</small></label><label>Latitude<input id="propertyLatitude" type="number" step="any" placeholder="21.1702"></label><label>Longitude<input id="propertyLongitude" type="number" step="any" placeholder="72.8311"></label><div class="wide property-map-link-admin"><label>Google Maps exact location link<input id="propertyMapEmbed" type="url" placeholder="Paste Google Maps Share link here"><small class="admin-field-help">Google Maps → Share → Copy link. The website animation stays visible and opens this exact link.</small></label><button id="propertyMapLinkPreview" class="secondary property-map-preview-btn" type="button">Test location link ↗</button></div><label class="wide">Map description<textarea id="propertyMapDescription" rows="3" placeholder="Nearby landmarks, road access, metro, schools..."></textarea></label><label class="check wide"><input id="propertyShowMap" type="checkbox" checked> Show map section on property page</label><label class="wide">Description<textarea id="propertyDescription" rows="5"></textarea></label><label class="check"><input id="propertyVerified" type="checkbox" checked> Verified</label><label class="check property-hero-check"><input id="propertyFeatured" type="checkbox"> Use as manual homepage hero <small>Only one property can be selected. Uncheck it to return to automatic newest-property mode.</small></label><label class="check"><input id="propertyPublished" type="checkbox" checked> Published</label></div><div class="modal-actions"><button type="button" class="secondary" data-close="propertyModal">Cancel</button><button type="submit" class="primary">Save property</button></div><p id="propertyMessage" class="message"></p></form></div></div>
+
+  <div class="modal hidden lead-detail-overlay" id="leadDetailModal">
+    <div class="modal-card wide-modal lead-detail-modal">
+      <header class="lead-detail-header">
+        <div class="lead-detail-header-copy">
+          <div class="lead-detail-heading-line">
+            <span id="leadDetailType" class="crm-type-badge enquiry">PROPERTY ENQUIRY</span>
+            <span id="leadDetailId" class="lead-detail-id">—</span>
+          </div>
+          <h2 id="leadDetailTitle">Lead details</h2>
+          <small id="leadDetailCreated">—</small>
+        </div>
+        <button class="icon-btn lead-detail-close" data-close="leadDetailModal" type="button" aria-label="Close lead details">×</button>
+      </header>
+
+      <div class="lead-detail-actions">
+        <a id="leadCallAction" class="lead-action-btn" href="#"><span>☎</span> Call</a>
+        <a id="leadWhatsappAction" class="lead-action-btn whatsapp" href="#" target="_blank" rel="noopener"><span>◉</span> WhatsApp</a>
+        <a id="leadEmailAction" class="lead-action-btn" href="#"><span>✉</span> Email</a>
+        <a id="leadPropertyAction" class="lead-action-btn secondary-action hidden" href="#" target="_blank" rel="noopener"><span>↗</span> View property</a>
+      </div>
+
+      <div class="lead-detail-scroll" id="leadDetailScroll">
+        <div class="lead-detail-grid">
+          <section class="lead-detail-section lead-customer-section">
+            <div class="lead-section-title"><span>01</span><div><small>CUSTOMER</small><h3>Contact information</h3></div></div>
+            <dl class="lead-data-grid">
+              <div><dt>Full name</dt><dd id="leadDetailName">—</dd></div>
+              <div><dt>Mobile</dt><dd id="leadDetailMobile">—</dd></div>
+              <div><dt>Email</dt><dd id="leadDetailEmail">—</dd></div>
+              <div><dt>Preferred contact</dt><dd id="leadDetailContactMethod">—</dd></div>
+            </dl>
+          </section>
+
+          <section class="lead-detail-section lead-property-section">
+            <div class="lead-section-title"><span>02</span><div><small>PROPERTY</small><h3>Selected property</h3></div></div>
+            <dl class="lead-data-grid">
+              <div class="wide"><dt>Property name</dt><dd id="leadDetailPropertyName">—</dd></div>
+              <div><dt>Property type</dt><dd id="leadDetailPropertyType">—</dd></div>
+              <div><dt>BHK / Configuration</dt><dd id="leadDetailBhk">—</dd></div>
+              <div><dt>Price / Budget</dt><dd id="leadDetailPrice">—</dd></div>
+              <div><dt>Area</dt><dd id="leadDetailArea">—</dd></div>
+              <div class="wide"><dt>Location</dt><dd id="leadDetailLocation">—</dd></div>
+            </dl>
+          </section>
+
+          <section class="lead-detail-section lead-request-section" id="leadInquirySection">
+            <div class="lead-section-title"><span>03</span><div><small>ENQUIRY</small><h3>Customer requirement</h3></div></div>
+            <dl class="lead-data-grid">
+              <div><dt>Looking for</dt><dd id="leadDetailLookingFor">—</dd></div>
+              <div><dt>Purchase timeline</dt><dd id="leadDetailPurchaseTimeline">—</dd></div>
+              <div><dt>Loan required</dt><dd id="leadDetailLoan">—</dd></div>
+              <div><dt>Preferred contact time</dt><dd id="leadDetailContactTime">—</dd></div>
+            </dl>
+          </section>
+
+          <section class="lead-detail-section lead-request-section visit-section hidden" id="leadVisitSection">
+            <div class="lead-section-title"><span>03</span><div><small>SITE VISIT</small><h3>Visit schedule</h3></div></div>
+            <div class="lead-visit-schedule">
+              <div><small>DATE & TIME</small><strong id="leadDetailVisitSchedule">—</strong></div>
+              <div><small>BOOKING STATUS</small><strong>Visit requested</strong></div>
+            </div>
+          </section>
+
+          <section class="lead-detail-section lead-message-section">
+            <div class="lead-section-title"><span>04</span><div><small>MESSAGE</small><h3>Requirements and notes</h3></div></div>
+            <div class="lead-message-box" id="leadDetailRequirements">No message provided.</div>
+          </section>
+
+          <section class="lead-detail-section lead-control-section">
+            <div class="lead-section-title"><span>05</span><div><small>CRM CONTROL</small><h3>Status, source and internal notes</h3></div></div>
+            <div class="lead-control-grid advanced-lead-control-grid">
+              <label>Status
+                <select id="leadDetailStatus"><option>NEW</option><option>HOT</option><option>WARM</option><option>COLD</option><option>CONTACTED</option><option>VISIT BOOKED</option><option>WON</option><option>LOST</option></select>
+              </label>
+              <div class="lead-score-meter" id="leadScoreMeter"><div><strong id="leadDetailScore">0</strong><small>SCORE</small></div><span id="leadScoreLabel">Standard opportunity</span></div>
+              <div class="lead-meta-card"><small>SOURCE</small><strong id="leadDetailSource">—</strong></div>
+              <div class="lead-next-action"><small>NEXT BEST ACTION</small><strong id="leadNextBestAction">Contact customer</strong></div>
+              <div class="lead-quick-statuses"><small>QUICK STATUS</small><div><button type="button" data-detail-quick-status="HOT">HOT</button><button type="button" data-detail-quick-status="CONTACTED">CONTACTED</button><button type="button" data-detail-quick-status="VISIT BOOKED">VISIT</button><button type="button" data-detail-quick-status="WON">WON</button></div></div>
+              <label class="lead-notes-field">Internal notes<textarea id="leadDetailNotes" rows="4" placeholder="Add follow-up notes visible only to admin…"></textarea></label>
+              <div class="lead-activity-timeline"><small>ACTIVITY SNAPSHOT</small><div id="leadDetailActivityTimeline"></div></div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="lead-detail-footer lead-detail-footer-v157">
+        <div class="lead-detail-danger-actions">
+          <button id="leadDetailTrash" class="danger-soft" type="button">Move to trash</button>
+          <button id="leadDetailRestore" class="secondary hidden" type="button">Restore lead</button>
+          <button id="leadDetailPermanentDelete" class="danger hidden" type="button">Delete forever</button>
+        </div>
+        <p id="leadDetailMessage" class="message"></p>
+        <button id="leadDetailSave" class="primary" type="button">Save CRM changes</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal hidden command-palette-overlay" id="commandPaletteModal">
+    <div class="command-palette-card">
+      <header><div><small>GLOBAL COMMAND</small><h2>Search everything</h2></div><button class="icon-btn" data-close="commandPaletteModal" type="button">×</button></header>
+      <div class="command-search-box"><span>⌕</span><input id="adminCommandInput" type="search" placeholder="Search lead, mobile, property, page or action…" autocomplete="off"><kbd>ESC</kbd></div>
+      <div id="adminCommandResults" class="command-results"></div>
+      <footer><span>↑ ↓ navigate</span><span>Enter open</span><span>Ctrl K search</span></footer>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="testimonialModal">
+    <div class="modal-card wide-modal testimonial-editor-modal">
+      <header>
+        <div><small>CLIENT SUCCESS EDITOR</small><h2 id="testimonialModalTitle">Add testimonial</h2></div>
+        <button class="icon-btn" data-close="testimonialModal" type="button">×</button>
+      </header>
+
+      <form id="testimonialForm">
+        <input id="testimonialId" type="hidden">
+
+        <div class="testimonial-editor-layout">
+          <div class="testimonial-editor-fields">
+            <div class="field-grid">
+              <label>Client name
+                <input id="testimonialName" required maxlength="120" placeholder="Rahul Champalalji Chandak">
+              </label>
+
+              <label>Project / property
+                <input id="testimonialProject" required maxlength="160" placeholder="Shree Shakti Gold">
+              </label>
+
+              <label>Location
+                <input id="testimonialLocation" required maxlength="160" placeholder="Godadara, Surat">
+              </label>
+
+              <label>Display order
+                <input id="testimonialSortOrder" type="number" min="1" max="99" value="1">
+              </label>
+
+              <label class="wide">Short testimonial / caption
+                <textarea id="testimonialQuote" rows="3" maxlength="500" placeholder="Successful property handover with GD Property Consult."></textarea>
+              </label>
+
+              <label>Rating
+                <select id="testimonialRating">
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="2">2 Stars</option>
+                  <option value="1">1 Star</option>
+                </select>
+              </label>
+
+              <label>Client type
+                <input id="testimonialRole" maxlength="120" placeholder="Homebuyer / Investor">
+              </label>
+
+              <label class="wide">Poster image URL
+                <input id="testimonialImageUrl" type="text" placeholder="https://... or assets/...">
+              </label>
+
+              <label class="upload-field wide">Upload testimonial poster
+                <input id="testimonialImageFile" type="file" accept="image/png,image/jpeg,image/webp">
+                <span>Select PNG, JPG or WebP — maximum 8 MB</span>
+              </label>
+            </div>
+
+            <div class="testimonial-editor-switches">
+              <label class="check"><input id="testimonialFeatured" type="checkbox"> Featured testimonial</label>
+              <label class="check"><input id="testimonialPublished" type="checkbox" checked> Published on website</label>
+            </div>
+          </div>
+
+          <aside class="testimonial-admin-preview">
+            <small>LIVE PREVIEW</small>
+            <div class="testimonial-admin-preview-frame">
+              <img id="testimonialImagePreview" alt="Testimonial poster preview">
+              <div id="testimonialPreviewEmpty">Upload or paste a poster image</div>
+            </div>
+            <strong id="testimonialPreviewName">Client name</strong>
+            <span id="testimonialPreviewMeta">Project • Location</span>
+          </aside>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="secondary" data-close="testimonialModal">Cancel</button>
+          <button type="submit" class="primary">Save testimonial</button>
+        </div>
+        <p id="testimonialMessage" class="message"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="postModal"><div class="modal-card wide-modal"><header><div><small>POST EDITOR</small><h2 id="postModalTitle">Add post</h2></div><button class="icon-btn" data-close="postModal">×</button></header><form id="postForm"><input id="postId" type="hidden"><div class="field-grid"><label class="wide">Title<input id="postTitle" required></label><label>Slug<input id="postSlug" required></label><label>Category<input id="postCategory"></label><label>Author<input id="postAuthor"></label><label class="wide">Excerpt<textarea id="postExcerpt" rows="3"></textarea></label><label class="wide">Cover image URL<input id="postImage" type="url"></label><label class="upload-field wide">Upload cover image<input id="postImageFile" type="file" accept="image/*"><span>Select an image</span></label><label class="wide">Content<textarea id="postContent" rows="12"></textarea></label><label class="check"><input id="postFeatured" type="checkbox"> Featured</label><label class="check"><input id="postPublished" type="checkbox"> Published</label></div><div class="modal-actions"><button type="button" class="secondary" data-close="postModal">Cancel</button><button type="submit" class="primary">Save post</button></div><p id="postMessage" class="message"></p></form></div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../backend/supabase-config.js"></script>
+  <script src="admin.js"></script>
+  <script src="../responsive-fix.js"></script>
+</body>
+</html>

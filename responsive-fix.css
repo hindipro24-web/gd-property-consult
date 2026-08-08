@@ -1,0 +1,1294 @@
+/* KeyAssets V14.2 — device-safe responsive layer */
+:root{
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --app-height:100svh;
+}
+html{
+  width:100%;
+  max-width:100%;
+  overflow-x:clip;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  overflow-x:clip;
+}
+*,*::before,*::after{min-width:0}
+main,header,footer,section,article,aside,nav,form{max-width:100%}
+img,video,canvas,iframe{max-width:100%}
+input,select,textarea,button{max-width:100%;min-width:0}
+h1,h2,h3,h4,p,a,span,strong,small,label{overflow-wrap:anywhere}
+.container{
+  width:min(1220px,calc(100% - clamp(24px,4.5vw,64px)));
+  max-width:100%;
+}
+.hero-layout>*,.market-layout>*,.calculator-grid>*,.about-grid>*,.faq-grid>*,.details-layout>*,.footer-grid>*{min-width:0}
+.hero{
+  min-height:max(720px,var(--app-height,100svh));
+  padding-top:clamp(112px,13vh,150px);
+  padding-bottom:clamp(76px,10vh,112px);
+}
+.hero-layout{grid-template-columns:minmax(0,1.18fr) minmax(340px,.82fr);gap:clamp(32px,5vw,70px)}
+.hero-title{font-size:clamp(52px,6.8vw,96px)}
+.hero-console,.market-interface,.calculator-card,.about-visual,.property-card{width:100%;max-width:100%}
+.search-console input,.search-console select{min-height:48px}
+.property-heading{flex-wrap:wrap}
+.property-heading>*{min-width:0}
+.property-price{min-width:0;max-width:100%}
+.property-body h3,.details-title-row h1{overflow-wrap:anywhere;word-break:normal}
+.property-actions>*{min-width:0}
+.interface-header{gap:12px;flex-wrap:wrap}
+.radar-wrap{height:clamp(360px,43vw,520px)}
+.ring-3,.radar-sweep{width:min(480px,88%);height:auto;aspect-ratio:1}
+.ring-2{width:min(330px,61%);height:auto;aspect-ratio:1}
+.ring-1{width:min(180px,34%);height:auto;aspect-ratio:1}
+.map-node,.cms-map-node{max-width:min(145px,34%)}
+.cta-actions{min-width:0;max-width:100%}
+.modal-dialog,.match-panel,.success-card{max-width:calc(100% - max(24px,var(--safe-left)) - max(24px,var(--safe-right)))}
+.modal-dialog,.match-panel{max-height:calc(var(--app-height,100dvh) - 24px - var(--safe-top) - var(--safe-bottom));overscroll-behavior:contain}
+.whatsapp-float{right:max(14px,var(--safe-right));bottom:max(22px,var(--safe-bottom))}
+.mobile-cta{left:max(10px,var(--safe-left));right:max(10px,var(--safe-right));bottom:max(10px,var(--safe-bottom))}
+.details-nav,.details-title-row,.futuristic-gallery,.details-layout{min-width:0}
+.details-nav>.brand,.details-nav>.btn{min-width:0}
+.details-price{min-width:0}
+.gallery-item{min-width:0}
+.map-box{max-width:100%}
+.image-lightbox{padding:max(14px,var(--safe-top)) max(14px,var(--safe-right)) max(14px,var(--safe-bottom)) max(14px,var(--safe-left))}
+.image-lightbox img{max-width:100%;max-height:calc(var(--app-height,100dvh) - 50px)}
+
+/* Laptops and tablets: move wide two-column experiences into a safe single column. */
+@media(max-width:1050px){
+  .hero{min-height:auto}
+  .hero-layout{grid-template-columns:1fr}
+  .hero-console{max-width:760px;margin-inline:auto}
+  .hero-copy{max-width:850px}
+  .hero-title{font-size:clamp(54px,8.5vw,82px)}
+  .hero-proof{max-width:760px}
+  .market-layout,.calculator-grid,.about-grid,.faq-grid{grid-template-columns:1fr;gap:50px}
+  .market-interface,.calculator-card{max-width:760px}
+  .about-copy{max-width:800px}
+  .property-card-featured{grid-template-columns:1fr}
+  .property-card-featured .property-media{min-height:390px}
+  .property-card-featured .property-body{padding:30px}
+  .details-layout{grid-template-columns:1fr}
+  .enquiry-card{position:static}
+}
+
+@media(max-width:820px){
+  .container{width:calc(100% - 30px)}
+  .site-header{padding-top:var(--safe-top)}
+  .nav-wrap{height:76px}
+  .nav{
+    width:min(360px,100vw);
+    max-width:100%;
+    padding:calc(96px + var(--safe-top)) max(22px,var(--safe-right)) calc(30px + var(--safe-bottom)) max(22px,var(--safe-left));
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .hero{padding-top:calc(102px + var(--safe-top));padding-bottom:70px}
+  .hero-title{font-size:clamp(47px,11vw,70px)}
+  .hero-sub{font-size:16px}
+  .hero-proof{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .section{padding:78px 0}
+  .section-head{gap:18px}
+  .section h2,.cta-section h2{font-size:clamp(38px,8vw,56px)}
+  .filter-shell{border-radius:20px;align-items:flex-start;flex-direction:column}
+  .filter-row{width:100%}
+  .filter{flex:1 1 auto;text-align:center}
+  .inventory-status{padding:0 7px 5px}
+  .property-grid{grid-template-columns:1fr}
+  .property-card-featured{grid-column:auto}
+  .process-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .confidence-grid{grid-template-columns:1fr}
+  .about-visual{height:clamp(420px,70vw,560px)}
+  .footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px}
+  .footer-identity,.footer-contact{grid-column:1/-1}
+  .footer-bottom{grid-template-columns:1fr;gap:12px}
+  .footer-bottom>span:nth-child(2){text-align:left}
+  .footer-bottom>div{justify-content:flex-start;flex-wrap:wrap}
+  .details-nav{grid-template-columns:minmax(0,1fr) auto;gap:12px}
+  .details-back{display:none}
+  .details-title-row{grid-template-columns:1fr}
+  .details-price{text-align:left}
+  .futuristic-gallery{grid-template-columns:1fr 1fr;grid-template-rows:330px 180px}
+  .gallery-main{grid-column:1/-1;grid-row:auto}
+  .details-layout{grid-template-columns:1fr}
+  .highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:600px){
+  .container{width:calc(100% - 24px)}
+  .brand-text small{letter-spacing:.25em}
+  .hero{padding-top:calc(94px + var(--safe-top));padding-bottom:58px}
+  .hero-title{font-size:clamp(42px,13.5vw,59px);letter-spacing:-.04em}
+  .hero-kicker{max-width:100%;white-space:normal}
+  .hero-actions{display:grid;grid-template-columns:1fr;width:100%}
+  .hero-actions .btn{width:100%}
+  .hero-proof{grid-template-columns:1fr}
+  .hero-proof>div{max-width:none}
+  .hero-console{border-radius:22px;padding:10px;transform:none!important}
+  .console-visual{height:clamp(220px,68vw,300px)}
+  .visual-badge{left:14px;bottom:14px;max-width:65%}
+  .visual-badge strong{font-size:clamp(19px,6vw,24px)}
+  .visual-price{right:14px;bottom:14px}
+  .search-row{grid-template-columns:1fr}
+  .section{padding:68px 0}
+  .section-head{margin-bottom:32px}
+  .section h2,.cta-section h2{font-size:clamp(35px,11vw,48px)}
+  .filter-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+  .filter{width:100%;padding-inline:10px}
+  .property-media,.property-card-featured .property-media{min-height:clamp(245px,72vw,330px)}
+  .property-body,.property-card-featured .property-body{padding:20px}
+  .property-body h3{font-size:clamp(27px,9vw,36px)}
+  .property-heading{display:block}
+  .property-heading .property-price{text-align:left;margin-top:12px}
+  .property-actions{grid-template-columns:1fr}
+  .market-interface{padding:12px;border-radius:22px;transform:none!important}
+  .radar-wrap{height:clamp(310px,92vw,410px);margin:10px 0}
+  .ring-3,.radar-sweep{width:84%}
+  .ring-2{width:59%}
+  .ring-1{width:33%}
+  .radar-core{width:64px;height:64px;font-size:18px}
+  .map-node,.cms-map-node{max-width:100px;padding:8px 9px}
+  .map-node span,.cms-map-node span{font-size:9px}
+  .map-node small,.cms-map-node small{font-size:7px}
+  .map-node::before{left:-10px}
+  .interface-footer{grid-template-columns:1fr}
+  .process-grid{grid-template-columns:1fr}
+  .process-card{min-height:auto;padding-bottom:48px}
+  .calculator-card{padding:22px;transform:none!important}
+  .calculator-card-head{gap:12px;flex-wrap:wrap}
+  .calc-result>strong{font-size:clamp(38px,12vw,48px)}
+  .about-visual{height:clamp(360px,112vw,470px);transform:none!important}
+  .about-card{left:18px;right:18px;bottom:18px}
+  .about-coordinate{right:15px;top:15px}
+  .about-values{grid-template-columns:1fr}
+  .faq-grid{gap:28px}
+  .accordion summary{padding:20px 0}
+  .accordion p{padding-right:0}
+  .cta-section{padding:68px 0}
+  .cta-box{gap:28px}
+  .cta-actions{width:100%;align-items:stretch}
+  .cta-actions .btn{width:100%}
+  .footer{padding-top:55px}
+  .footer-grid{grid-template-columns:1fr;gap:30px;padding-bottom:42px}
+  .footer-identity,.footer-contact{grid-column:auto}
+  .whatsapp-float{bottom:calc(70px + var(--safe-bottom));right:max(12px,var(--safe-right));min-height:50px;padding:6px 12px 6px 6px}
+  .whatsapp-icon{width:38px;height:38px;flex-basis:38px}
+  .whatsapp-copy small{display:none}
+  .mobile-cta{display:block}
+  .modal,.success-modal,.match-modal{padding:max(10px,var(--safe-top)) max(10px,var(--safe-right)) max(10px,var(--safe-bottom)) max(10px,var(--safe-left))}
+  .modal-dialog,.match-panel{width:100%;max-width:100%;border-radius:20px;padding:22px 16px}
+  .form-head h2{font-size:clamp(30px,10vw,38px)}
+  .field-grid,.choice-grid.four{grid-template-columns:1fr}
+  .form-actions{gap:8px;flex-wrap:wrap}
+  .form-actions .btn{flex:1 1 120px}
+  .match-actions{flex-direction:column}
+  .match-actions>*{width:100%}
+  .details-header .brand-text{display:none}
+  .details-nav{min-height:66px}
+  .details-nav>.btn{padding:10px 12px;font-size:10px}
+  .details-hero{padding-top:32px}
+  .details-breadcrumb{line-height:1.8}
+  .details-title-row h1{font-size:clamp(40px,13vw,54px)}
+  .futuristic-gallery{grid-template-columns:1fr 1fr;grid-template-rows:auto;grid-auto-rows:150px}
+  .futuristic-gallery .gallery-main{grid-column:1/-1;height:clamp(250px,76vw,320px)}
+  .futuristic-gallery .gallery-item:not(.gallery-main){display:block}
+  .gallery-counter{right:10px;bottom:10px}
+  .details-content-section{padding-top:26px}
+  .detail-card{padding:18px;border-radius:18px}
+  .detail-card-head{gap:10px;flex-wrap:wrap}
+  .detail-card h2{font-size:clamp(27px,9vw,34px)}
+  .highlight-grid,.amenities,.floor-plan{grid-template-columns:1fr}
+  .map-box,.map-fallback{grid-template-columns:1fr;padding:20px}
+  .map-radar{width:140px;height:140px}
+  .enquiry-card{padding:20px;border-radius:20px}
+  .details-footer .container{flex-direction:column}
+  .image-lightbox button{right:max(10px,var(--safe-right));top:max(8px,var(--safe-top))}
+}
+
+@media(max-width:400px){
+  .container{width:calc(100% - 20px)}
+  .brand-mark{width:39px;height:39px}
+  .brand-text strong{font-size:16px}
+  .hero-title{font-size:clamp(39px,13vw,50px)}
+  .filter-row{grid-template-columns:1fr}
+  .visual-badge{max-width:60%}
+  .visual-price strong{font-size:15px}
+  .choice-grid.three{grid-template-columns:1fr}
+  .footer-bottom>div{gap:10px}
+  .whatsapp-copy{display:none}
+  .whatsapp-float{width:50px;height:50px;padding:6px;border-radius:50%}
+  .whatsapp-icon{width:38px;height:38px;flex-basis:38px}
+  .map-node,.cms-map-node{max-width:82px;padding:7px}
+  .map-node small,.cms-map-node small{display:none}
+  .details-nav>.btn{max-width:132px;white-space:normal;line-height:1.15}
+}
+
+/* Short laptop screens: keep the first screen useful instead of oversized. */
+@media(min-width:1051px) and (max-height:820px){
+  .hero{min-height:760px;padding-top:108px;padding-bottom:70px}
+  .hero-title{font-size:clamp(54px,5.5vw,76px);margin-block:18px}
+  .hero-sub{font-size:16px;line-height:1.65}
+  .hero-actions{margin-block:24px}
+  .console-visual{height:250px}
+}
+
+@media(hover:none),(pointer:coarse){
+  [data-tilt],.magnetic,.hero-console,.market-interface,.calculator-card,.about-visual{transform:none!important}
+  .property-card:hover,.process-card:hover,.btn:hover,.map-node:hover{transform:none}
+}
+
+
+/* V14.3 — Property Details map/location layout fix */
+.details-page .map-box{
+  display:block;
+  width:100%;
+  min-width:0;
+}
+
+.details-page .map-box > .map-fallback{
+  width:100%;
+  min-width:0;
+  min-height:224px;
+  display:grid!important;
+  grid-template-columns:minmax(150px,170px) minmax(0,1fr);
+  align-items:center;
+  gap:28px;
+}
+
+.details-page .map-fallback > div:last-child{
+  width:100%;
+  min-width:0;
+  max-width:100%;
+}
+
+.details-page #mapLocation{
+  display:block;
+  width:100%;
+  max-width:100%;
+  writing-mode:horizontal-tb!important;
+  text-orientation:mixed!important;
+  white-space:normal;
+  word-break:normal;
+  overflow-wrap:break-word;
+  line-height:1.18;
+}
+
+.details-page #mapDescription{
+  width:100%;
+  max-width:620px;
+  white-space:normal;
+  word-break:normal;
+  overflow-wrap:break-word;
+  line-height:1.7;
+}
+
+@media(max-width:900px){
+  .details-page .map-box > .map-fallback{
+    grid-template-columns:1fr;
+    min-height:auto;
+    gap:22px;
+  }
+
+  .details-page .map-radar{
+    justify-self:center;
+  }
+}
+
+@media(max-width:600px){
+  .details-page .map-box{
+    padding:20px;
+  }
+
+  .details-page .map-box > .map-fallback{
+    padding:0;
+    gap:18px;
+  }
+
+  .details-page #mapLocation{
+    font-size:clamp(23px,8vw,30px);
+  }
+}
+
+
+/* V14.5 — Start Property Match direct-scroll behavior */
+#heroSearchForm{
+  scroll-margin-top:clamp(86px,12vh,132px);
+}
+
+#heroSearchForm.property-match-highlight{
+  animation:property-match-focus 1.45s ease both;
+}
+
+@keyframes property-match-focus{
+  0%{
+    box-shadow:0 20px 60px rgba(0,0,0,.22);
+  }
+  35%{
+    box-shadow:
+      0 24px 70px rgba(0,0,0,.3),
+      0 0 0 3px rgba(85,229,211,.58),
+      0 0 42px rgba(85,229,211,.38);
+  }
+  100%{
+    box-shadow:0 20px 60px rgba(0,0,0,.22);
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  #heroSearchForm.property-match-highlight{
+    animation:none;
+    outline:3px solid rgba(85,229,211,.62);
+    outline-offset:4px;
+  }
+}
+
+
+/* V14.6 — Stable mobile navigation drawer */
+.nav-backdrop{
+  display:none;
+}
+
+@media(max-width:900px){
+  body.nav-open{
+    overflow:hidden!important;
+    overscroll-behavior:none;
+  }
+
+  /* backdrop-filter on a parent can trap position:fixed children inside
+     the header. Disable it only while the drawer is open. */
+  .site-header.menu-open,
+  .site-header.menu-open.scrolled{
+    background:transparent!important;
+    border-bottom-color:transparent!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  .nav-backdrop{
+    display:block;
+    position:fixed;
+    inset:0;
+    z-index:1190;
+    width:100%;
+    height:100%;
+    padding:0;
+    border:0;
+    background:rgba(1,9,13,.62);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    backdrop-filter:blur(5px);
+    -webkit-backdrop-filter:blur(5px);
+    transition:opacity .28s ease,visibility .28s ease;
+  }
+
+  .nav-backdrop.open{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+
+  .nav{
+    position:fixed!important;
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:auto!important;
+    z-index:1201!important;
+    width:min(88vw,370px)!important;
+    height:100dvh!important;
+    min-height:100svh;
+    max-width:100%!important;
+    margin:0!important;
+    padding:calc(104px + var(--safe-top)) max(24px,var(--safe-right)) calc(28px + var(--safe-bottom)) 24px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    gap:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain;
+    background:linear-gradient(180deg,#071820 0%,#061219 100%)!important;
+    border-left:1px solid rgba(246,215,126,.14)!important;
+    box-shadow:-28px 0 80px rgba(0,0,0,.45)!important;
+    transform:translate3d(105%,0,0)!important;
+    transition:transform .32s var(--ease)!important;
+  }
+
+  .nav.open{
+    transform:translate3d(0,0,0)!important;
+  }
+
+  .nav>a:not(.btn){
+    display:flex;
+    align-items:center;
+    width:100%;
+    min-height:58px;
+    padding:15px 4px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    color:rgba(255,255,255,.82);
+    font-size:17px;
+    line-height:1.25;
+    font-weight:750;
+    overflow-wrap:normal;
+    word-break:normal;
+  }
+
+  .nav>a:not(.btn)::after{
+    display:none!important;
+  }
+
+  .nav>a:not(.btn):hover,
+  .nav>a:not(.btn):focus-visible{
+    color:var(--teal-2);
+  }
+
+  .nav>.btn{
+    width:100%!important;
+    min-height:54px;
+    margin-top:22px;
+    padding:15px 18px!important;
+    flex:0 0 auto!important;
+    font-size:13px;
+  }
+
+  .menu-btn{
+    z-index:1203!important;
+  }
+
+  .menu-btn[aria-expanded="true"]{
+    position:fixed;
+    top:calc(18px + var(--safe-top));
+    right:max(18px,var(--safe-right));
+    width:48px;
+    height:48px;
+    padding:9px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:50%;
+    background:rgba(255,255,255,.045);
+  }
+
+  body.nav-open .mobile-cta,
+  body.nav-open .whatsapp-float{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  }
+}
+
+@media(max-width:420px){
+  .nav{
+    width:100vw!important;
+    padding-left:max(22px,var(--safe-left))!important;
+  }
+}
+
+
+@media(max-width:700px){
+  .property-enquiry-context-head{
+    display:block;
+  }
+  .property-enquiry-context-head strong{
+    display:block;
+    margin-top:6px;
+    text-align:left;
+    font-size:18px;
+  }
+  .property-enquiry-context-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:380px){
+  .property-enquiry-context-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){.selected-configuration-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.configuration-tabs button{min-width:135px}}
+@media(max-width:390px){.selected-configuration-stats{grid-template-columns:1fr}}
+
+
+@media(max-width:600px){
+  .property-configuration-picker{
+    padding:10px;
+  }
+  .property-enquiry-lock-note{
+    align-items:flex-start;
+  }
+}
+
+
+/* V15 — Premium property enquiry responsive polish */
+@media(max-width:700px){
+  .property-enquiry-context{
+    margin:12px 0 18px;
+    padding:15px;
+    border-radius:17px;
+  }
+  .property-enquiry-context-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .property-enquiry-title>strong{
+    font-size:21px;
+  }
+}
+
+@media(max-width:380px){
+  .property-enquiry-context-grid{
+    grid-template-columns:1fr;
+  }
+  .property-context-item{
+    padding:11px 12px;
+  }
+}
+
+
+@media(max-width:600px){
+  .details-page .map-directions{
+    width:100%;
+    min-width:0;
+  }
+  .details-page .map-location-kicker{
+    margin-top:2px;
+  }
+}
+
+
+/* V15.2 — Mobile readability */
+@media(max-width:700px){
+  .details-page .map-radar .map-location-pin{
+    width:44px;
+    height:44px;
+  }
+
+  .details-page .map-radar .map-location-pin svg{
+    width:22px;
+    height:22px;
+  }
+
+  .hero-proof small,
+  .property-location,
+  .property-meta span,
+  .property-labels span,
+  .details-breadcrumb,
+  .detail-card-head,
+  .highlight small,
+  .enquiry-card label,
+  .property-context-item small,
+  .property-configuration-picker>small{
+    font-size:11px!important;
+  }
+
+  .field input,
+  .field select,
+  .field textarea,
+  .search-console input,
+  .search-console select,
+  .enquiry-card input,
+  .enquiry-card select,
+  .enquiry-card textarea{
+    font-size:16px!important;
+  }
+}
+
+
+/* V15.4 — Guided visit mobile polish */
+@media(max-width:600px){
+  .visit-property-summary-head strong{
+    font-size:19px;
+  }
+
+  .visit-property-summary-grid{
+    grid-template-columns:1fr;
+  }
+
+  .visit-property-summary-grid .visit-location-row{
+    grid-column:auto;
+  }
+
+  .visit-success-modal{
+    padding:12px;
+  }
+
+  .visit-success-dialog{
+    padding:28px 17px 18px;
+    border-radius:21px;
+  }
+
+  .visit-success-dialog h2{
+    font-size:32px;
+  }
+
+  .visit-success-schedule{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* V15.9 — Validation mobile polish */
+@media(max-width:600px){
+  .form-error:not(:empty),
+  .site-visit-form-error:not(:empty){
+    font-size:11px;
+  }
+
+  .field .error{
+    font-size:10px;
+  }
+}
+
+
+/* V16 — Sale/Rent filters responsive */
+@media(max-width:900px){
+  .detail-highlight-card .highlight-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:600px){
+  .property-filter-stack,
+  .purpose-filter-row{
+    width:100%;
+  }
+
+  .purpose-filter-row{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .purpose-filter{
+    width:100%;
+    padding-inline:7px;
+  }
+
+  .detail-highlight-card .highlight-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:360px){
+  .purpose-filter-row{
+    grid-template-columns:1fr;
+  }
+}
+
+
+/* V16.2 — Dynamic hero property mobile fit */
+@media(max-width:600px){
+  .hero-featured-details{
+    top:10px;
+    right:10px;
+    min-height:32px;
+    padding-inline:10px;
+  }
+
+  #heroFeaturedTag{
+    max-width:190px;
+  }
+}
+
+/* V17.8.1 — official responsive property listing layout */
+#propertyGrid{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:clamp(18px,2vw,28px);
+  align-items:stretch;
+}
+
+#propertyGrid > .property-card{
+  grid-column:span 4;
+  min-width:0;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured){
+  display:flex;
+  flex-direction:column;
+  height:100%;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-media{
+  min-height:0;
+  aspect-ratio: 16 / 10;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-media img{
+  width:100%;
+  height:100%;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-body{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  padding:22px;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-location{
+  display:block;
+  min-height:28px;
+  margin-bottom:4px;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-body h3{
+  font-size:clamp(22px,1.8vw,28px);
+  line-height:1.18;
+  margin:6px 0 12px;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-meta{
+  gap:8px 7px;
+  align-content:flex-start;
+  min-height:44px;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-price.inline-price{
+  margin-top:auto;
+  padding-top:18px;
+}
+
+#propertyGrid > .property-card:not(.property-card-featured) .property-actions{
+  margin-top:18px;
+}
+
+#propertyGrid > .property-card .property-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+}
+
+#propertyGrid > .property-card-featured{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(320px,0.9fr);
+  min-height:0;
+}
+
+#propertyGrid > .property-card-featured .property-media{
+  min-height:420px;
+}
+
+#propertyGrid > .property-card-featured .property-body{
+  padding:clamp(30px,3vw,42px);
+}
+
+#propertyGrid > .property-card-featured .property-body h3{
+  font-size:clamp(30px,2.7vw,40px);
+  line-height:1.08;
+}
+
+@media(max-width:1180px){
+  #propertyGrid > .property-card{
+    grid-column:span 6;
+  }
+}
+
+@media(max-width:980px){
+  #propertyGrid > .property-card-featured{
+    grid-template-columns:1fr;
+  }
+
+  #propertyGrid > .property-card-featured .property-media{
+    min-height:360px;
+  }
+}
+
+@media(max-width:680px){
+  #propertyGrid{
+    gap:18px;
+  }
+
+  #propertyGrid > .property-card{
+    grid-column:1 / -1;
+  }
+
+  #propertyGrid > .property-card:not(.property-card-featured) .property-media,
+  #propertyGrid > .property-card-featured .property-media{
+    aspect-ratio:16 / 10;
+    min-height:0;
+  }
+
+  #propertyGrid > .property-card:not(.property-card-featured) .property-body,
+  #propertyGrid > .property-card-featured .property-body{
+    padding:20px;
+  }
+
+  #propertyGrid > .property-card:not(.property-card-featured) .property-body h3{
+    font-size:clamp(24px,7vw,32px);
+  }
+}
+
+/* =========================================================
+   GD PROPERTY CONSULT — V18 UNIVERSAL RESPONSIVE HARDENING
+   Final layout safety layer for phone / tablet / laptop / PC
+   ========================================================= */
+
+/* Global layout safety */
+html,body{min-height:100%;}
+body{min-width:320px;}
+.container{margin-inline:auto;}
+svg{max-width:100%;}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent;}
+input,select,textarea{width:100%;}
+.property-meta,.property-actions,.hero-actions,.search-row,.field-grid,.choice-grid{min-width:0;}
+.property-meta>*{max-width:100%;}
+.modal-dialog,.match-panel,.success-card,.visit-success-dialog{width:min(100%,720px);}
+
+/* Comfortable desktop/laptop composition */
+@media(min-width:1440px){
+  .container{width:min(1280px,calc(100% - 80px));}
+  #propertyGrid{gap:28px;}
+}
+
+@media(min-width:1051px) and (max-width:1366px){
+  .container{width:min(1180px,calc(100% - 48px));}
+  .hero-layout{grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:38px;}
+  .hero-title{font-size:clamp(52px,5.6vw,76px);}
+  .hero-sub{font-size:16px;}
+  .section{padding-block:88px;}
+}
+
+/* Tablet portrait / small laptop */
+@media(max-width:900px){
+  .nav-wrap{gap:14px;}
+  .brand{min-width:0;}
+  .brand-text{min-width:0;}
+  .brand-text strong,.brand-text small{white-space:nowrap;}
+  .property-meta{align-items:flex-start;}
+  .cta-actions{width:100%;max-width:360px;}
+  .details-page .details-content-section{overflow:hidden;}
+}
+
+/* Phones */
+@media(max-width:600px){
+  body{padding-bottom:calc(72px + var(--safe-bottom));}
+  .site-header{max-width:100vw;}
+  .nav-wrap{height:68px;}
+  .brand{gap:9px;}
+  .brand-mark{flex:0 0 auto;}
+  .brand-text strong{line-height:1.15;}
+  .brand-text small{font-size:7px;letter-spacing:.16em;}
+  .menu-btn{flex:0 0 auto;}
+  .nav{inset:0 0 0 auto;height:100dvh;}
+
+  /* Prevent iOS form zoom and improve touch usability */
+  input,select,textarea{font-size:16px!important;min-height:46px;}
+  textarea{min-height:110px;}
+  button,.btn,.property-btn,.filter,.purpose-filter{min-height:44px;}
+
+  .hero-sub{line-height:1.65;}
+  .hero-proof>div{padding:14px;}
+  .hero-console{overflow:hidden;}
+  .console-visual{border-radius:16px;}
+  .search-console{padding:14px;}
+  .search-row{gap:10px;}
+
+  .property-card{border-radius:20px;overflow:hidden;}
+  .property-location{line-height:1.5;}
+  .property-meta{gap:7px;}
+  .property-meta span{white-space:normal;line-height:1.35;}
+  .property-actions{gap:8px;}
+  .property-actions .property-btn{width:100%;}
+
+  .details-title-row{gap:16px;}
+  .details-price{width:100%;}
+  .details-price strong{font-size:clamp(27px,9vw,34px);}
+  .detail-card,.enquiry-card{overflow:hidden;}
+  .amenities>*,.highlight-grid>*,.floor-plan>*{min-width:0;}
+
+  .modal,.success-modal,.match-modal,.visit-success-modal{align-items:end;}
+  .modal-dialog,.match-panel,.success-card,.visit-success-dialog{
+    max-height:calc(100dvh - max(10px,var(--safe-top)) - max(10px,var(--safe-bottom)));
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .modal-dialog,.match-panel{border-bottom-left-radius:0;border-bottom-right-radius:0;}
+  .form-actions{position:sticky;bottom:0;z-index:3;padding-top:10px;background:inherit;}
+
+  .mobile-cta{min-height:50px;display:grid;place-items:center;}
+}
+
+/* Very small phones */
+@media(max-width:430px){
+  .container{width:calc(100% - 20px);}
+  .hero-title{font-size:clamp(38px,12.5vw,50px);}
+  .section h2,.cta-section h2{font-size:clamp(32px,10.5vw,42px);}
+  .property-body,.property-card-featured .property-body{padding:18px;}
+  .property-body h3{font-size:clamp(24px,8vw,30px);}
+  .details-title-row h1{font-size:clamp(34px,11.5vw,46px);}
+  .futuristic-gallery{grid-auto-rows:128px;gap:8px;}
+  .futuristic-gallery .gallery-main{height:clamp(225px,70vw,285px);}
+  .detail-card,.enquiry-card{padding:16px;}
+  .purpose-filter-row{gap:7px;}
+  .purpose-filter{font-size:10px;}
+}
+
+@media(max-width:360px){
+  .brand-text small{display:none;}
+  .hero-actions,.property-actions,.form-actions{grid-template-columns:1fr;}
+  .hero-proof>div{padding:12px;}
+  .visual-badge{display:none;}
+  .visual-price{left:12px;right:auto;bottom:12px;}
+  .details-nav>.btn{max-width:116px;font-size:9px;padding-inline:9px;}
+}
+
+/* Landscape phones / short screens */
+@media(max-height:520px) and (orientation:landscape){
+  .nav{padding-top:70px;}
+  .hero{padding-top:86px;}
+  .modal-dialog,.match-panel,.success-card,.visit-success-dialog{max-height:94dvh;}
+}
+
+/* Accessibility: preserve layout without expensive hover motion on touch */
+@media(pointer:coarse){
+  .btn,.property-btn,.menu-btn,.filter,.purpose-filter{touch-action:manipulation;}
+}
+
+/* V18.4.1 — Android compact responsive polish */
+@media (max-width:600px){
+  .nav-wrap{height:64px!important;min-height:64px!important;}
+  .brand{gap:8px!important;max-width:calc(100% - 58px);}
+  .brand-mark,.brand-mark.has-logo{width:42px!important;height:42px!important;flex-basis:42px!important;}
+  .brand-text{min-width:0;overflow:hidden;}
+  .brand-text strong{font-size:clamp(15px,4.8vw,19px)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+  .brand-text small{display:none!important;}
+  .menu-btn{width:44px;height:44px;}
+
+  .property-filter-shell{padding:12px!important;border-radius:20px!important;gap:10px!important;margin-bottom:18px!important;}
+  .property-filter-stack{width:100%;gap:9px!important;}
+  .filter-row{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px!important;width:100%;}
+  .filter-row .filter{width:100%;padding:9px 7px!important;min-height:40px!important;font-size:10px!important;border:1px solid rgba(9,31,39,.08);background:rgba(255,255,255,.48);}
+  .filter-row .filter:first-child{grid-column:1/-1;}
+  .filter-row .filter.active{background:var(--ink);color:#fff;}
+  .purpose-filter-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px!important;width:100%;}
+  .purpose-filter{width:100%;padding:8px 5px!important;min-height:39px!important;font-size:9px!important;}
+  .inventory-status{padding:2px 4px!important;font-size:9px!important;}
+
+  .property-card,.property-card-featured{border-radius:20px!important;}
+  .property-media,.property-card-featured .property-media{min-height:0!important;height:clamp(225px,67vw,290px)!important;}
+  .property-card-featured .property-body,.property-body{padding:17px!important;}
+  .property-location{font-size:9px!important;}
+  .property-body h3{font-size:clamp(25px,8vw,31px)!important;margin:7px 0 12px!important;}
+  .property-meta{gap:6px!important;}
+  .property-meta span{font-size:9px!important;padding:6px 8px!important;}
+  .property-price.inline-price{margin-top:14px!important;padding-top:13px!important;}
+  .property-price strong{font-size:clamp(25px,8vw,31px)!important;}
+  .property-actions{margin-top:16px!important;gap:7px!important;}
+  .property-btn{min-height:43px!important;padding:10px 12px!important;}
+  .property-labels{top:12px!important;left:12px!important;right:52px;gap:5px!important;}
+  .property-labels span{font-size:8px!important;padding:6px 8px!important;}
+  .wishlist-btn{top:12px!important;right:12px!important;width:38px!important;height:38px!important;}
+
+  body{padding-bottom:calc(64px + var(--safe-bottom))!important;}
+  .mobile-cta{left:12px!important;right:12px!important;bottom:8px!important;min-height:48px!important;padding:10px 16px!important;font-size:14px!important;box-shadow:0 10px 28px rgba(0,0,0,.22)!important;}
+  .whatsapp-float{bottom:66px!important;right:13px!important;min-height:48px!important;padding:4px!important;border-radius:999px!important;}
+  .whatsapp-icon{width:42px!important;height:42px!important;flex-basis:42px!important;}
+  .whatsapp-copy{display:none!important;}
+}
+
+@media (max-width:380px){
+  .brand-text strong{font-size:15px!important;}
+  .filter-row .filter{font-size:9px!important;}
+  .property-media,.property-card-featured .property-media{height:235px!important;}
+}
+
+/* =========================================================
+   V18.4.2 — Desktop card + enquiry consent alignment fix
+   Keeps mobile V18.4.1 behavior intact while removing desktop
+   whitespace and aligning consent/actions cleanly.
+   ========================================================= */
+
+/* Featured property: keep both columns visually balanced on desktop */
+@media (min-width:981px){
+  #propertyGrid > .property-card-featured{
+    align-items:stretch;
+  }
+
+  #propertyGrid > .property-card-featured .property-media{
+    min-height:0!important;
+    height:clamp(390px,31vw,470px)!important;
+  }
+
+  #propertyGrid > .property-card-featured .property-body{
+    min-height:0;
+    height:clamp(390px,31vw,470px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  #propertyGrid > .property-card-featured .property-heading{
+    flex:0 0 auto;
+  }
+
+  #propertyGrid > .property-card-featured .property-meta{
+    flex:0 0 auto;
+  }
+
+  #propertyGrid > .property-card-featured .property-actions{
+    flex:0 0 auto;
+    margin-top:22px;
+  }
+}
+
+/* Enquiry modal: stable consent row and action alignment */
+#leadForm .consent{
+  display:grid;
+  grid-template-columns:20px minmax(0,1fr);
+  align-items:start;
+  gap:10px;
+  width:min(100%,660px);
+  margin:10px 0 0 auto;
+  line-height:1.55;
+}
+
+#leadForm .consent input[type="checkbox"]{
+  appearance:auto;
+  width:18px!important;
+  min-width:18px;
+  height:18px;
+  min-height:18px;
+  margin:2px 0 0;
+  padding:0;
+  justify-self:start;
+  accent-color:#159e91;
+}
+
+#leadForm .consent span{
+  display:block;
+  min-width:0;
+  text-align:left;
+}
+
+#leadForm .form-error{
+  text-align:right;
+}
+
+#leadForm .form-actions{
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+@media (min-width:681px){
+  #leadForm .form-actions{
+    justify-content:flex-end;
+  }
+
+  #leadForm .form-actions .btn{
+    min-width:124px;
+  }
+
+  #leadForm #submitBtn{
+    min-width:190px;
+  }
+}
+
+@media (max-width:680px){
+  #leadForm .consent{
+    width:100%;
+    margin:8px 0 0;
+    grid-template-columns:20px minmax(0,1fr);
+  }
+
+  #leadForm .form-error{
+    text-align:left;
+  }
+}
+
+/* V18.4.3 — property section reveal safety / blank-gap fix */
+/* Critical discovery controls must never remain visually hidden if the
+   IntersectionObserver is delayed or skipped in an embedded/mobile browser. */
+.properties-section .section-head.reveal,
+.properties-section .filter-shell.reveal{
+  opacity:1 !important;
+  transform:none !important;
+  filter:none !important;
+  visibility:visible !important;
+}
+
+/* Keep the discovery section compact on wide screens without affecting cards. */
+@media (min-width: 901px){
+  .properties-section{
+    padding-top:72px;
+  }
+  .properties-section .section-head{
+    margin-bottom:28px;
+  }
+  .properties-section .property-filter-shell{
+    margin-bottom:28px;
+  }
+}
+
+/* V18.4.4 — compact consent validation message */
+#leadForm .form-error:not(:empty){
+  display:block;
+  margin:6px 0 0 auto;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#c94f49;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.4;
+  text-align:right;
+  width:min(100%,660px);
+}
+
+@media (max-width:680px){
+  #leadForm .form-error:not(:empty){
+    margin:6px 0 0;
+    text-align:left;
+    width:100%;
+  }
+}
+
+/* V18.4.5 — consent validation alignment fix */
+#leadForm .form-error:not(:empty){
+  box-sizing:border-box;
+  width:min(100%,660px);
+  margin:6px 0 0 auto;
+  padding:0 0 0 30px;
+  text-align:left;
+}
+
+@media (max-width:680px){
+  #leadForm .form-error:not(:empty){
+    width:100%;
+    margin:6px 0 0;
+    padding-left:30px;
+    text-align:left;
+  }
+}
+
+/* V18.4.6 — remove oversized blank space before property cards */
+.properties-section{
+  padding-top:36px !important;
+  padding-bottom:72px !important;
+}
+.properties-section .container > .section-head,
+.properties-section .container > .property-filter-shell,
+.properties-section .container > .filter-shell{
+  opacity:1 !important;
+  visibility:visible !important;
+  transform:none !important;
+  filter:none !important;
+}
+.properties-section .container > .section-head{
+  margin-top:0 !important;
+  margin-bottom:20px !important;
+}
+.properties-section .container > .property-filter-shell,
+.properties-section .container > .filter-shell{
+  margin-top:0 !important;
+  margin-bottom:22px !important;
+}
+.properties-section .property-grid{
+  margin-top:0 !important;
+  padding-top:0 !important;
+}
+@media (max-width:680px){
+  .properties-section{
+    padding-top:24px !important;
+    padding-bottom:48px !important;
+  }
+  .properties-section .container > .section-head{
+    margin-bottom:14px !important;
+  }
+  .properties-section .container > .property-filter-shell,
+  .properties-section .container > .filter-shell{
+    margin-bottom:16px !important;
+  }
+}
+
+/* V18.4.7 — Insights section blank-space/reveal fix */
+.insights-section{
+  padding-top:58px !important;
+  padding-bottom:72px !important;
+}
+.insights-section .section-head.reveal{
+  opacity:1 !important;
+  visibility:visible !important;
+  transform:none !important;
+  filter:none !important;
+  margin-top:0 !important;
+  margin-bottom:28px !important;
+}
+.insights-section .insight-grid{
+  margin-top:0 !important;
+  padding-top:0 !important;
+}
+.insights-section .insight-card.reveal{
+  visibility:visible !important;
+}
+@media (max-width:680px){
+  .insights-section{
+    padding-top:36px !important;
+    padding-bottom:52px !important;
+  }
+  .insights-section .section-head.reveal{
+    margin-bottom:20px !important;
+  }
+}
+
+/* =========================================================
+   V18.5.1 — WhatsApp floating position: fixed center-right
+   ========================================================= */
+.whatsapp-float{
+  top:50%!important;
+  right:max(18px,var(--safe-right))!important;
+  bottom:auto!important;
+  transform:translateY(-50%)!important;
+}
+.whatsapp-float:hover{
+  transform:translateY(calc(-50% - 4px)) scale(1.025)!important;
+}
+
+@media(max-width:768px){
+  .whatsapp-float{
+    top:50%!important;
+    right:max(12px,var(--safe-right))!important;
+    bottom:auto!important;
+    transform:translateY(-50%)!important;
+  }
+  .whatsapp-float:hover{
+    transform:translateY(-50%)!important;
+  }
+}
+
+
+/* =========================================================
+   V18.5.2 — Cross-device QA hardening
+   Prevents accidental horizontal overflow and keeps controls
+   inside the viewport without changing the desktop design.
+   ========================================================= */
+html,body{max-width:100%;overflow-x:clip}
+*,*::before,*::after{box-sizing:border-box}
+img,svg,video,canvas{max-width:100%}
+input,select,textarea,button{max-width:100%;font:inherit}
+.container,.section,.site-main,main{min-width:0}
+.property-card,.insight-card,.filter-panel,.lead-modal-card,.visit-modal-card{min-width:0}
+
+@supports not (overflow:clip){html,body{overflow-x:hidden}}
+
+@media(max-width:480px){
+  .whatsapp-float{right:max(10px,var(--safe-right))!important}
+  .whatsapp-float,.whatsapp-icon{touch-action:manipulation}
+}
+
+@media(max-width:359px){
+  .site-header .brand-name{font-size:clamp(17px,6vw,21px)!important}
+  .whatsapp-float{width:46px!important;height:46px!important;padding:4px!important}
+  .whatsapp-icon{width:38px!important;height:38px!important;flex-basis:38px!important}
+}

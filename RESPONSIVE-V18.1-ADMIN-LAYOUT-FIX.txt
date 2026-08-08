@@ -1,0 +1,8 @@
+GD Property Consult V18.1
+
+Admin panel lead detail modal fixed and improved:
+- Fixed duplicate timeline ID issue
+- Purchase timeline field now shows correct value
+- Activity Snapshot now renders in its own card grid
+- Better mobile/tablet layout for lead requirement section
+- Existing backend logic preserved

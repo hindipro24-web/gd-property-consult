@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="description" content="View Surat property details and request a guided site visit with GD Property Consult." />
+  <meta name="theme-color" content="#07131a" />
+  <title>Property Details | GD Property Consult</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="responsive-fix.css" />
+</head>
+<body class="details-page">
+  <div class="site-noise" aria-hidden="true"></div>
+  <header class="details-header">
+    <div class="container details-nav">
+      <a class="brand" href="index.html">
+        <span class="brand-mark has-logo"><img src="assets/gd-property-consult/gd-logo.png" alt="GD Property Consult logo"></span>
+        <span class="brand-text"><strong>GD Property</strong><small>CONSULT</small></span>
+      </a>
+      <a class="details-back" href="index.html#properties">← Back to collection</a>
+      <a class="btn btn-small btn-luminous" href="#enquiry">Book site visit</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="details-hero">
+      <div class="details-grid-lines" aria-hidden="true"></div>
+      <div class="container">
+        <div class="details-breadcrumb">Home <span>/</span> Properties <span>/</span> <strong id="crumbName">Property</strong></div>
+        <div class="details-title-row">
+          <div>
+            <div class="details-property-badges"><span class="verified-pill">✓ Verified property</span><span class="listing-purpose-pill sale" id="propertyPurposePill">For Sale</span></div>
+            <h1 id="propertyName">Skyline Residences</h1>
+            <p class="details-location" id="propertyLocation">Bamroli, Surat</p>
+          </div>
+          <div class="details-price"><small id="propertyPriceCaption">Starting from</small><strong id="propertyPrice">₹1.45 Cr</strong><span id="propertyStatusTop">Ready to Move</span></div>
+        </div>
+
+        <div class="gallery futuristic-gallery" id="propertyGalleryGrid"></div>
+      </div>
+    </section>
+
+    <section class="details-content-section">
+      <div class="container details-layout">
+        <div class="details-main">
+          <article class="detail-card detail-highlight-card">
+            <div class="detail-card-head"><span>PROJECT OVERVIEW</span><small>KEY FACTS</small></div>
+            <div class="highlight-grid">
+              <div class="highlight"><small>Configuration</small><strong id="propertyBhk">3 BHK</strong></div>
+              <div class="highlight"><small>Area</small><strong id="propertyArea">1,540 sq.ft.</strong></div>
+              <div class="highlight"><small>Property type</small><strong id="propertyType">Apartment</strong></div>
+              <div class="highlight"><small>Listing</small><strong id="propertyListingPurpose">For Sale</strong></div>
+              <div class="highlight"><small>Status</small><strong id="propertyStatus">Ready to Move</strong></div>
+            </div>
+          </article>
+
+          <article class="detail-card configuration-selector-card hidden" id="configurationSelectorCard">
+            <div class="detail-card-head"><span>AVAILABLE CONFIGURATIONS</span><small>SELECT</small></div>
+            <h2>Choose your preferred layout</h2>
+            <p class="configuration-intro">Price, area and facilities update according to the selected configuration.</p>
+            <div class="configuration-tabs" id="configurationTabs"></div>
+            <div class="selected-configuration-panel">
+              <div class="selected-configuration-stats">
+                <div><small>PRICE</small><strong id="selectedConfigurationPrice">—</strong></div>
+                <div><small>AREA</small><strong id="selectedConfigurationArea">—</strong></div>
+                <div><small>BATHROOMS</small><strong id="selectedConfigurationBathrooms">—</strong></div>
+                <div><small>BALCONIES</small><strong id="selectedConfigurationBalconies">—</strong></div>
+                <div><small>PARKING</small><strong id="selectedConfigurationParking">—</strong></div>
+                <div><small>FURNISHING</small><strong id="selectedConfigurationFurnishing">—</strong></div>
+              </div>
+              <div class="configuration-facilities-wrap" id="configurationFacilitiesWrap">
+                <small>CONFIGURATION FACILITIES</small>
+                <div class="configuration-facilities" id="configurationFacilities"></div>
+              </div>
+              <a class="configuration-floor-plan hidden" id="configurationFloorPlan" target="_blank" rel="noopener">View selected floor plan ↗</a>
+            </div>
+          </article>
+
+          <article class="detail-card">
+            <div class="detail-card-head"><span>ABOUT THE PROJECT</span><small>01</small></div>
+            <h2>Designed for modern living</h2>
+            <p class="details-about-copy" id="propertyAbout"></p>
+          </article>
+
+          <article class="detail-card">
+            <div class="detail-card-head"><span>LIFESTYLE FEATURES</span><small>02</small></div>
+            <h2>Amenities</h2>
+            <div class="amenities" id="amenities"></div>
+          </article>
+
+          <article class="detail-card" id="floorPlanOverviewCard">
+            <div class="detail-card-head"><span>CONFIGURATION</span><small>03</small></div>
+            <h2 id="floorPlanOverviewHeading">Configuration overview</h2>
+            <div class="floor-plan">
+              <div class="floor-box">
+                <span id="floorLabel1">PLAN A</span>
+                <strong id="floorTitle1">Primary configuration</strong>
+                <p id="floorText1">Configuration details available with the property advisor.</p>
+              </div>
+              <div class="floor-box">
+                <span id="floorLabel2">PLAN B</span>
+                <strong id="floorTitle2">Configuration highlights</strong>
+                <p id="floorText2">Additional layout and facility information available on request.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="detail-card">
+            <div class="detail-card-head"><span>LOCATION</span><small>04</small></div>
+            <h2>Neighbourhood access</h2>
+            <div class="map-box" id="propertyMapBox">
+              <iframe id="propertyMapFrame" class="property-map-frame hidden" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen aria-hidden="true"></iframe>
+              <div id="propertyMapFallback" class="map-fallback">
+                <div class="map-radar" aria-hidden="true">
+                  <i></i><i></i><i></i>
+                  <span class="map-location-pin">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                      <path d="M12 21s6-5.25 6-11a6 6 0 1 0-12 0c0 5.75 6 11 6 11Z"></path>
+                      <circle cx="12" cy="10" r="2.25"></circle>
+                    </svg>
+                  </span>
+                </div>
+                <div class="map-location-content">
+                  <span class="map-location-kicker">EXACT PROJECT LOCATION</span>
+                  <strong id="mapLocation">Bamroli, Surat</strong>
+                  <p id="mapDescription">Location details can be managed from the admin panel.</p>
+                  <a id="mapDirections" class="map-directions hidden" target="_blank" rel="noopener noreferrer">
+                    <span>View exact location</span>
+                    <i aria-hidden="true">↗</i>
+                  </a>
+                  <small id="mapDirectionsHint" class="map-directions-hint hidden">Opens the saved Google Maps location in a new tab.</small>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="detail-card">
+            <div class="detail-card-head"><span>PROJECT INFORMATION</span><small>05</small></div>
+            <h2>Builder and registration</h2>
+            <div class="highlight-grid">
+              <div class="highlight"><small>RERA number</small><strong id="reraNumber">On request</strong></div>
+              <div class="highlight"><small>Developer</small><strong id="builderName">Developer details</strong></div>
+              <div class="highlight"><small>Possession</small><strong id="possession">As scheduled</strong></div>
+              <div class="highlight"><small>Ownership</small><strong>Project dependent</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <aside class="sidebar" id="enquiry">
+          <form class="enquiry-card visit-booking-card" id="propertyEnquiryForm">
+            <div class="enquiry-status"><i></i> SITE VISIT DESK</div>
+            <h3>Book a guided visit</h3>
+            <p>Select your preferred date and time. The property details are already attached to this visit request.</p>
+
+            <section class="visit-property-summary" id="visitPropertySummary" aria-live="polite">
+              <div class="visit-property-summary-head">
+                <span>SELECTED PROPERTY</span>
+                <strong id="visitPropertyName">—</strong>
+              </div>
+              <div class="visit-property-summary-grid">
+                <div><small>CONFIGURATION</small><strong id="visitPropertyBhk">—</strong></div>
+                <div><small>PRICE</small><strong id="visitPropertyPrice">—</strong></div>
+                <div><small>PROPERTY TYPE</small><strong id="visitPropertyType">—</strong></div>
+                <div><small>LISTING</small><strong id="visitPropertyPurpose">—</strong></div>
+                <div><small>AREA</small><strong id="visitPropertyArea">—</strong></div>
+                <div class="visit-location-row"><small>LOCATION</small><strong id="visitPropertyLocation">—</strong></div>
+              </div>
+            </section>
+
+            <input type="hidden" name="property" id="formProperty" />
+            <input type="hidden" name="propertyConfigurationId" id="formPropertyConfigurationId" />
+
+            <label for="detailName">Full name *</label>
+            <input id="detailName" name="fullName" type="text" minlength="2" autocomplete="name" placeholder="Enter your name" required />
+
+            <label for="detailMobile">Mobile number *</label>
+            <div class="detail-phone"><span>+91</span><input id="detailMobile" name="mobile" type="tel" inputmode="numeric" autocomplete="tel" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" placeholder="10-digit mobile number" required /></div>
+
+            <label for="detailEmail">Email address *</label>
+            <input id="detailEmail" name="email" type="email" autocomplete="email" placeholder="Enter your email address" required />
+
+            <div class="visit-date-time-grid">
+              <label class="visit-field" for="detailVisitDate">
+                <span>Visit date *</span>
+                <input id="detailVisitDate" name="visitDate" type="date" required />
+              </label>
+              <label class="visit-field" for="detailTime">
+                <span>Preferred time *</span>
+                <select id="detailTime" name="preferredTime" required>
+                  <option value="">Choose time</option>
+                  <option value="10:00 AM – 12:00 PM">10:00 AM – 12:00 PM</option>
+                  <option value="12:00 PM – 02:00 PM">12:00 PM – 02:00 PM</option>
+                  <option value="02:00 PM – 04:00 PM">02:00 PM – 04:00 PM</option>
+                  <option value="04:00 PM – 06:00 PM">04:00 PM – 06:00 PM</option>
+                </select>
+              </label>
+            </div>
+
+            <label for="detailMessage">Message <small>(optional)</small></label>
+            <textarea id="detailMessage" name="message" placeholder="Any special request for the site visit?"></textarea>
+
+            <p class="site-visit-form-error" id="siteVisitFormError" role="alert" aria-live="polite"></p>
+            <button type="submit">Book site visit <span>↗</span></button>
+            <p class="enquiry-note">Fields marked * are required. Your details are used only for this property visit request.</p>
+          </form>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="details-footer">
+    <div class="container"><span>© <span id="detailsYear"></span> <span data-cms-site-name>GD Property Consult</span></span><a href="index.html">Return to main website ↗</a></div>
+  </footer>
+
+  <div class="image-lightbox" id="imageLightbox" aria-hidden="true"><button type="button" aria-label="Close image">×</button><img src="" alt="Expanded property view" /></div>
+
+  <div class="visit-success-modal" id="visitSuccessModal" aria-hidden="true">
+    <div class="visit-success-dialog" role="dialog" aria-modal="true" aria-labelledby="visitSuccessTitle">
+      <button class="visit-success-close" id="visitSuccessClose" type="button" aria-label="Close success message">×</button>
+      <div class="visit-success-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="m5 12.5 4.2 4.2L19 7"></path></svg>
+      </div>
+      <span class="visit-success-kicker">VISIT CONFIRMED</span>
+      <h2 id="visitSuccessTitle">Site visit booked</h2>
+      <p>Our property advisor will contact you to confirm the final meeting details.</p>
+
+      <div class="visit-success-property">
+        <small>PROPERTY</small>
+        <strong id="visitSuccessProperty">—</strong>
+        <span id="visitSuccessConfiguration">—</span>
+      </div>
+
+      <div class="visit-success-schedule">
+        <div><small>DATE</small><strong id="visitSuccessDate">—</strong></div>
+        <div><small>TIME</small><strong id="visitSuccessTime">—</strong></div>
+      </div>
+
+      <div class="visit-success-id">Visit ID: <strong id="visitSuccessId">—</strong></div>
+      <button class="visit-success-done" id="visitSuccessDone" type="button">Done</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="backend/supabase-config.js"></script>
+  <script src="backend/cms.js"></script>
+  <script src="property-details.js"></script>
+  <script src="responsive-fix.js"></script>
+</body>
+</html>
