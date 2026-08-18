@@ -61,7 +61,7 @@
     const controls = images.length > 1 ? `
       <div class="property-slider-controls" aria-label="Property gallery controls">
         <button class="property-slider-arrow prev" type="button" data-slider-prev aria-label="Previous property image">‹</button>
-        <div class="property-slider-progress" aria-hidden="true"><i></i></div>
+        <div class="property-slider-dots">${images.map((_, slideIndex) => `<button class="property-slider-dot${slideIndex === 0 ? " is-active" : ""}" type="button" data-slider-dot="${slideIndex}" aria-label="Show image ${slideIndex + 1}" aria-current="${slideIndex === 0 ? "true" : "false"}"></button>`).join("")}</div>
         <button class="property-slider-arrow next" type="button" data-slider-next aria-label="Next property image">›</button>
       </div>
       <span class="property-image-count"><b>1</b> / ${images.length}</span>` : "";
@@ -220,11 +220,10 @@
     const display = orderPropertiesForHero(data);
     applyHeroProperty(display.hero, display.mode);
 
-    grid.innerHTML = display.ordered.slice(0, 5).map(card).join("");
+    grid.innerHTML = display.ordered.map(card).join("");
     window.KeyAssetsFrontend?.observeReveals(grid);
     window.KeyAssetsFrontend?.initTilt(grid);
     window.KeyAssetsFrontend?.initPropertySliders?.(grid);
-    window.initFeaturedPropertyRail?.(grid);
   }
 
   loadProperties();
