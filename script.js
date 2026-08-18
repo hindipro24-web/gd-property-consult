@@ -127,6 +127,56 @@ function initTilt(root = document) {
 }
 initTilt();
 
+// Premium property image galleries. Dynamic Supabase cards call this again after rendering.
+function initPropertySliders(root = document) {
+  root.querySelectorAll?.("[data-property-slider]").forEach(slider => {
+    if (slider.dataset.sliderReady === "true") return;
+    slider.dataset.sliderReady = "true";
+    const slides = [...slider.querySelectorAll("[data-property-slide]")];
+    const dots = [...slider.querySelectorAll("[data-slider-dot]")];
+    if (slides.length < 2) return;
+
+    let index = Number(slider.dataset.sliderIndex || 0);
+    let touchStartX = 0;
+    const show = nextIndex => {
+      index = (nextIndex + slides.length) % slides.length;
+      slider.dataset.sliderIndex = String(index);
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === index;
+        slide.classList.toggle("is-active", active);
+        slide.setAttribute("aria-hidden", String(!active));
+      });
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === index;
+        dot.classList.toggle("is-active", active);
+        dot.setAttribute("aria-current", String(active));
+      });
+      const counter = slider.querySelector(".property-image-count b");
+      if (counter) counter.textContent = String(index + 1);
+    };
+
+    slider.addEventListener("click", event => {
+      const previous = event.target.closest("[data-slider-prev]");
+      const next = event.target.closest("[data-slider-next]");
+      const dot = event.target.closest("[data-slider-dot]");
+      if (!previous && !next && !dot) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (previous) show(index - 1);
+      if (next) show(index + 1);
+      if (dot) show(Number(dot.dataset.sliderDot));
+    });
+    slider.addEventListener("touchstart", event => {
+      touchStartX = event.changedTouches[0]?.clientX || 0;
+    }, { passive:true });
+    slider.addEventListener("touchend", event => {
+      const distance = (event.changedTouches[0]?.clientX || 0) - touchStartX;
+      if (Math.abs(distance) > 42) show(index + (distance < 0 ? 1 : -1));
+    }, { passive:true });
+  });
+}
+initPropertySliders();
+
 // Magnetic buttons
 if (!prefersReducedMotion && window.matchMedia("(pointer:fine)").matches) {
   $$(".magnetic").forEach(button => {
@@ -1217,7 +1267,7 @@ $("#successClose")?.addEventListener("click", () => {
 });
 
 // Reinitialize interactions after Supabase replaces the fallback cards.
-window.KeyAssetsFrontend = { observeReveals, initTilt };
+window.KeyAssetsFrontend = { observeReveals, initTilt, initPropertySliders };
 
 
 // Start Property Match button

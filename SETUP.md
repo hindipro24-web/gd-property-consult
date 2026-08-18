@@ -1,5 +1,13 @@
 # GD Property Real-Estate Automation Demo
 
+## V20 premium interface update
+
+- Property listing cards now use `main_image` plus `gallery_images` as an interactive slider.
+- Desktop controls include previous/next arrows, image count and gallery dots.
+- Mobile users can swipe left/right; controls remain touch-friendly.
+- Cards include upgraded glass, depth, image transition and hover-light animation.
+- Existing Supabase, CRM, enquiry, site-visit and n8n payload behavior is unchanged.
+
 ## 1. Supabase setup
 
 1. Open Supabase Dashboard > SQL Editor.

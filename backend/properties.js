@@ -46,8 +46,40 @@
     })[0];
   }
 
+  function propertyImages(property) {
+    const gallery = Array.isArray(property.gallery_images) ? property.gallery_images : [];
+    return [...new Set([property.main_image, ...gallery].filter(Boolean))].slice(0, 8);
+  }
+
+  function propertyMedia(property, title, index) {
+    const images = propertyImages(property);
+    if (!images.length) images.push("assets/gd-property-consult/gd-hero-wide.jpg");
+    const slides = images.map((image, slideIndex) => `
+      <figure class="property-slide${slideIndex === 0 ? " is-active" : ""}" data-property-slide="${slideIndex}" aria-hidden="${slideIndex !== 0}">
+        <img src="${escapeHtml(image)}" alt="${title}${images.length > 1 ? ` — image ${slideIndex + 1}` : ""}" loading="${slideIndex === 0 ? "eager" : "lazy"}">
+      </figure>`).join("");
+    const controls = images.length > 1 ? `
+      <div class="property-slider-controls" aria-label="Property gallery controls">
+        <button class="property-slider-arrow prev" type="button" data-slider-prev aria-label="Previous property image">‹</button>
+        <div class="property-slider-dots">${images.map((_, slideIndex) => `<button class="property-slider-dot${slideIndex === 0 ? " is-active" : ""}" type="button" data-slider-dot="${slideIndex}" aria-label="Show image ${slideIndex + 1}" aria-current="${slideIndex === 0 ? "true" : "false"}"></button>`).join("")}</div>
+        <button class="property-slider-arrow next" type="button" data-slider-next aria-label="Next property image">›</button>
+      </div>
+      <span class="property-image-count"><b>1</b> / ${images.length}</span>` : "";
+    return `<div class="property-media property-slider" data-property-slider data-slider-index="0" data-slider-total="${images.length}">
+      <div class="property-slider-track">${slides}</div>
+      <div class="property-shade"></div>
+      ${controls}
+      <div class="property-labels">
+        ${property.verified ? '<span class="verified-badge">✓ Verified</span>' : ""}
+        <span class="listing-purpose-badge ${listingPurpose(property).toLowerCase()}">For ${listingPurpose(property)}</span>
+        <span>${escapeHtml(property.status_label || "Available")}</span>
+      </div>
+      <button class="wishlist-btn" type="button" aria-label="Save ${title}">♡</button>
+      <div class="property-index">${String(index + 1).padStart(2, "0")}</div>
+    </div>`;
+  }
+
   function card(property, index) {
-    const image = property.main_image || "assets/gd-property-consult/gd-hero-wide.jpg";
     const category = normalizeCategory(property.property_type);
     const featuredClass = index === 0 ? " property-card-featured" : "";
     const title = escapeHtml(property.title || "Property");
@@ -64,17 +96,7 @@
     if (index === 0) {
       return `
         <article class="property-card${featuredClass} reveal visible" data-category="${category}" data-location="${escapeHtml(location)}" data-price="${displayPriceAmount}" data-title="${title}" data-property-id="${escapeHtml(property.id || "")}" data-property-configuration-id="${escapeHtml(starting?.id || "")}" data-property-name="${title}" data-property-price="${escapeHtml(displayPrice)}" data-property-price-amount="${displayPriceAmount}" data-property-bhk="${escapeHtml(starting?.name || property.bhk || "Not Applicable")}" data-property-configuration-count="${configurations.length}" data-property-configurations="${escapeHtml(JSON.stringify(configurations))}" data-listing-purpose="${listingPurpose(property)}" data-property-type="${escapeHtml(property.property_type || "Property")}" data-property-location="${escapeHtml(location)}" data-property-area="${escapeHtml(starting?.area || property.area || "Area on request")}" data-tilt>
-          <div class="property-media">
-            <img src="${escapeHtml(image)}" alt="${title}" loading="lazy">
-            <div class="property-shade"></div>
-            <div class="property-labels">
-              ${property.verified ? '<span class="verified-badge">✓ Verified</span>' : ""}
-              <span class="listing-purpose-badge ${listingPurpose(property).toLowerCase()}">For ${listingPurpose(property)}</span>
-              <span>${escapeHtml(property.status_label || "Available")}</span>
-            </div>
-            <button class="wishlist-btn" type="button" aria-label="Save ${title}">♡</button>
-            <div class="property-index">01</div>
-          </div>
+          ${propertyMedia(property, title, index)}
           <div class="property-body">
             <div class="property-heading">
               <div><small class="property-location">${escapeHtml(location)}</small><h3>${title}</h3></div>
@@ -95,17 +117,7 @@
 
     return `
       <article class="property-card reveal visible" data-category="${category}" data-location="${escapeHtml(location)}" data-price="${displayPriceAmount}" data-title="${title}" data-property-id="${escapeHtml(property.id || "")}" data-property-configuration-id="${escapeHtml(starting?.id || "")}" data-property-name="${title}" data-property-price="${escapeHtml(displayPrice)}" data-property-price-amount="${displayPriceAmount}" data-property-bhk="${escapeHtml(starting?.name || property.bhk || "Not Applicable")}" data-property-configuration-count="${configurations.length}" data-property-configurations="${escapeHtml(JSON.stringify(configurations))}" data-listing-purpose="${listingPurpose(property)}" data-property-type="${escapeHtml(property.property_type || "Property")}" data-property-location="${escapeHtml(location)}" data-property-area="${escapeHtml(starting?.area || property.area || "Area on request")}" data-tilt>
-        <div class="property-media">
-          <img src="${escapeHtml(image)}" alt="${title}" loading="lazy">
-          <div class="property-shade"></div>
-          <div class="property-labels">
-            ${property.verified ? '<span class="verified-badge">✓ Verified</span>' : ""}
-            <span class="listing-purpose-badge ${listingPurpose(property).toLowerCase()}">For ${listingPurpose(property)}</span>
-            <span>${escapeHtml(property.status_label || "Available")}</span>
-          </div>
-          <button class="wishlist-btn" type="button" aria-label="Save ${title}">♡</button>
-          <div class="property-index">${String(index + 1).padStart(2, "0")}</div>
-        </div>
+        ${propertyMedia(property, title, index)}
         <div class="property-body">
           <small class="property-location">${escapeHtml(location)}</small>
           <h3>${title}</h3>
@@ -211,6 +223,7 @@
     grid.innerHTML = display.ordered.map(card).join("");
     window.KeyAssetsFrontend?.observeReveals(grid);
     window.KeyAssetsFrontend?.initTilt(grid);
+    window.KeyAssetsFrontend?.initPropertySliders?.(grid);
   }
 
   loadProperties();
