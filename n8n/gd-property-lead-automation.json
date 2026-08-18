@@ -1,0 +1,45 @@
+{
+  "name": "GD Property - Lead to Sheets and Email",
+  "nodes": [
+    {
+      "parameters": {"httpMethod":"POST","path":"property-enquiry","responseMode":"responseNode","options":{}},
+      "id":"1","name":"Property Enquiry Webhook","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[0,0],
+      "webhookId":"gd-property-enquiry"
+    },
+    {
+      "parameters": {"assignments":{"assignments":[
+        {"id":"a1","name":"Lead ID","value":"={{ $json.body.leadId || $json.leadId }}","type":"string"},
+        {"id":"a2","name":"Name","value":"={{ $json.body.fullName || $json.fullName }}","type":"string"},
+        {"id":"a3","name":"Mobile","value":"={{ $json.body.phoneWithCountryCode || $json.phoneWithCountryCode }}","type":"string"},
+        {"id":"a4","name":"Email","value":"={{ $json.body.email || $json.email || '' }}","type":"string"},
+        {"id":"a5","name":"Lead Type","value":"={{ $json.body.leadType || $json.leadType }}","type":"string"},
+        {"id":"a6","name":"Property","value":"={{ $json.body.propertyName || $json.propertyName || '' }}","type":"string"},
+        {"id":"a7","name":"Location","value":"={{ $json.body.location || $json.location || '' }}","type":"string"},
+        {"id":"a8","name":"Budget","value":"={{ $json.body.budget || $json.budget || '' }}","type":"string"},
+        {"id":"a9","name":"Visit Schedule","value":"={{ $json.body.visitSchedule || $json.visitSchedule || $json.body.contactTime || '' }}","type":"string"},
+        {"id":"a10","name":"Source","value":"={{ $json.body.source || $json.source || '' }}","type":"string"},
+        {"id":"a11","name":"Submitted At","value":"={{ $json.body.submittedAt || $json.submittedAt || $now }}","type":"string"}
+      ]},"options":{}},
+      "id":"2","name":"Normalize Lead","type":"n8n-nodes-base.set","typeVersion":3.4,"position":[240,0]
+    },
+    {
+      "parameters":{"operation":"append","documentId":{"__rl":true,"value":"SELECT_SPREADSHEET","mode":"list"},"sheetName":{"__rl":true,"value":"Leads","mode":"name"},"columns":{"mappingMode":"autoMapInputData","value":{},"matchingColumns":[],"schema":[]},"options":{}},
+      "id":"3","name":"Save to Google Sheets","type":"n8n-nodes-base.googleSheets","typeVersion":4.6,"position":[480,-80],"credentials":{"googleSheetsOAuth2Api":{"id":"CONNECT_GOOGLE_SHEETS","name":"Google Sheets account"}}
+    },
+    {
+      "parameters":{"sendTo":"CHANGE_TO_AGENT_EMAIL@example.com","subject":"=New {{ $('Normalize Lead').item.json['Lead Type'] }} — {{ $('Normalize Lead').item.json['Name'] }}","emailType":"html","message":"=<h2>New GD Property Lead</h2><p><b>Lead ID:</b> {{ $('Normalize Lead').item.json['Lead ID'] }}</p><p><b>Name:</b> {{ $('Normalize Lead').item.json.Name }}</p><p><b>Mobile:</b> {{ $('Normalize Lead').item.json.Mobile }}</p><p><b>Property:</b> {{ $('Normalize Lead').item.json.Property }}</p><p><b>Location:</b> {{ $('Normalize Lead').item.json.Location }}</p><p><b>Budget:</b> {{ $('Normalize Lead').item.json.Budget }}</p><p><b>Visit:</b> {{ $('Normalize Lead').item.json['Visit Schedule'] }}</p>","options":{}},
+      "id":"4","name":"Email Agent","type":"n8n-nodes-base.gmail","typeVersion":2.1,"position":[720,-80],"credentials":{"gmailOAuth2":{"id":"CONNECT_GMAIL","name":"Gmail account"}}
+    },
+    {
+      "parameters":{"respondWith":"json","responseBody":"={\"success\":true,\"leadId\":\"{{ $('Normalize Lead').item.json['Lead ID'] }}\"}","options":{}},
+      "id":"5","name":"Success Response","type":"n8n-nodes-base.respondToWebhook","typeVersion":1.4,"position":[960,-80]
+    }
+  ],
+  "connections":{
+    "Property Enquiry Webhook":{"main":[[{"node":"Normalize Lead","type":"main","index":0}]]},
+    "Normalize Lead":{"main":[[{"node":"Save to Google Sheets","type":"main","index":0}]]},
+    "Save to Google Sheets":{"main":[[{"node":"Email Agent","type":"main","index":0}]]},
+    "Email Agent":{"main":[[{"node":"Success Response","type":"main","index":0}]]}
+  },
+  "pinData":{},"settings":{"executionOrder":"v1"},"active":false,"versionId":"b1c7ef85-c8f5-4bc0-9da2-6431042e9f01","meta":{"templateCredsSetupCompleted":false},"tags":[]
+}

@@ -2,6 +2,10 @@
 window.KEYASSETS_SUPABASE_URL = "https://dfegilgonjmzxywesvzj.supabase.co";
 window.KEYASSETS_SUPABASE_ANON_KEY = "sb_publishable_7mdXlv8T-y1XM7IAPl8SNQ_pqfw1ard";
 
+// Paste the n8n Production Webhook URL here after activating the workflow.
+// Example: https://your-n8n-domain.com/webhook/property-enquiry
+window.GD_WEBHOOK_URL = "";
+
 window.isSupabaseConfigured = function () {
   return Boolean(
     window.KEYASSETS_SUPABASE_URL &&

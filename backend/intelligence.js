@@ -27,7 +27,7 @@
 
   async function loadIntelligence() {
     const [settingsResult, propertiesResult] = await Promise.all([
-      client.from("site_settings").select("*").eq("id", 1).maybeSingle(),
+      client.from(window.GD_SITE_SETTINGS_TABLE || "gd_site_settings").select("*").eq("id", 1).maybeSingle(),
       client
         .from("properties")
         .select("price_amount,location,city,property_type,listing_purpose")
