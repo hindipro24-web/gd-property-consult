@@ -153,6 +153,8 @@ function initPropertySliders(root = document) {
       });
       const counter = slider.querySelector(".property-image-count b");
       if (counter) counter.textContent = String(index + 1);
+      const progress = slider.querySelector(".property-slider-progress i");
+      if (progress) progress.style.width = `${((index + 1) / slides.length) * 100}%`;
     };
 
     slider.addEventListener("click", event => {
@@ -176,6 +178,47 @@ function initPropertySliders(root = document) {
   });
 }
 initPropertySliders();
+
+function initFeaturedPropertyRail(grid = document.getElementById("propertyGrid")) {
+  if (!grid) return;
+  let controls = grid.nextElementSibling;
+  if (!controls?.classList.contains("featured-rail-controls")) {
+    controls = document.createElement("div");
+    controls.className = "featured-rail-controls";
+    controls.innerHTML = `<div class="featured-rail-status"><strong>01</strong><span>/ 05</span><i><b></b></i></div><div class="featured-rail-actions"><button type="button" data-rail-prev aria-label="Previous property">←</button><button type="button" data-rail-next aria-label="Next property">→</button></div>`;
+    grid.insertAdjacentElement("afterend", controls);
+  }
+  if (grid.dataset.railReady === "true") return;
+  grid.dataset.railReady = "true";
+  const current = controls.querySelector("strong");
+  const total = controls.querySelector(".featured-rail-status span");
+  const bar = controls.querySelector(".featured-rail-status b");
+  const cards = () => [...grid.querySelectorAll(".property-card")].filter(card => getComputedStyle(card).display !== "none").slice(0, 5);
+  const nearest = visible => visible.reduce((best, card, index) => Math.abs(card.offsetLeft - grid.scrollLeft) < Math.abs(visible[best].offsetLeft - grid.scrollLeft) ? index : best, 0);
+  const update = () => {
+    const visible = cards();
+    if (!visible.length) return;
+    const index = nearest(visible);
+    current.textContent = String(index + 1).padStart(2, "0");
+    total.textContent = `/ ${String(visible.length).padStart(2, "0")}`;
+    bar.style.width = `${((index + 1) / visible.length) * 100}%`;
+  };
+  const move = direction => {
+    const visible = cards();
+    if (!visible.length) return;
+    const target = visible[(nearest(visible) + direction + visible.length) % visible.length];
+    grid.scrollTo({ left: target.offsetLeft, behavior: "smooth" });
+  };
+  controls.addEventListener("click", event => {
+    if (event.target.closest("[data-rail-prev]")) move(-1);
+    if (event.target.closest("[data-rail-next]")) move(1);
+  });
+  grid.addEventListener("scroll", () => requestAnimationFrame(update), { passive:true });
+  new MutationObserver(update).observe(grid, { childList:true });
+  update();
+}
+window.initFeaturedPropertyRail = initFeaturedPropertyRail;
+initFeaturedPropertyRail();
 
 // Magnetic buttons
 if (!prefersReducedMotion && window.matchMedia("(pointer:fine)").matches) {

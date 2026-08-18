@@ -1,5 +1,12 @@
 # GD Property Real-Estate Automation Demo
 
+## V22 editorial redesign
+
+- Homepage inventory shows only the five latest published properties.
+- Property cards use a swipe rail with arrows and a numbered progress bar.
+- Property image and testimonial dots were replaced with cleaner controls.
+- Existing Supabase, CRM, enquiry, visit booking and automation integrations are unchanged.
+
 ## V20 premium interface update
 
 - Property listing cards now use `main_image` plus `gallery_images` as an interactive slider.
