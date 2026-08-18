@@ -8,6 +8,14 @@
 - Cards include upgraded glass, depth, image transition and hover-light animation.
 - Existing Supabase, CRM, enquiry, site-visit and n8n payload behavior is unchanged.
 
+## V21 client-closing redesign
+
+- Full Luxury Navy + Gold + Modern White visual system.
+- Redesigned navigation, cinematic hero, match console and CTA hierarchy.
+- Added four-part service assurance strip for immediate trust.
+- Unified premium styling across property, market, process, EMI, about, testimonials, insights, FAQ and footer sections.
+- Responsive mobile design and reduced-motion behavior are included.
+
 ## 1. Supabase setup
 
 1. Open Supabase Dashboard > SQL Editor.
