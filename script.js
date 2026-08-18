@@ -153,6 +153,8 @@ function initPropertySliders(root = document) {
       });
       const counter = slider.querySelector(".property-image-count b");
       if (counter) counter.textContent = String(index + 1);
+      const progress = slider.querySelector(".property-gallery-progress i");
+      if (progress) progress.style.width = `${((index + 1) / slides.length) * 100}%`;
     };
 
     slider.addEventListener("click", event => {
@@ -176,6 +178,42 @@ function initPropertySliders(root = document) {
   });
 }
 initPropertySliders();
+
+// Featured inventory rail: five properties, numbered progress and large arrows.
+(function initV23PropertyRail() {
+  const grid = document.getElementById("propertyGrid");
+  const previous = document.getElementById("v23PropertyPrevious");
+  const next = document.getElementById("v23PropertyNext");
+  const current = document.getElementById("v23PropertyCurrent");
+  const total = document.getElementById("v23PropertyTotal");
+  const progress = document.getElementById("v23PropertyProgress");
+  if (!grid || !previous || !next) return;
+
+  const cards = () => [...grid.querySelectorAll(".property-card")]
+    .filter(card => getComputedStyle(card).display !== "none")
+    .slice(0, 5);
+  const nearestIndex = items => items.reduce((best, card, index) =>
+    Math.abs(card.offsetLeft - grid.scrollLeft) < Math.abs(items[best].offsetLeft - grid.scrollLeft) ? index : best, 0);
+  const update = () => {
+    const items = cards();
+    if (!items.length) return;
+    const index = nearestIndex(items);
+    current.textContent = String(index + 1).padStart(2, "0");
+    total.textContent = `/ ${String(items.length).padStart(2, "0")}`;
+    progress.style.width = `${((index + 1) / items.length) * 100}%`;
+  };
+  const move = direction => {
+    const items = cards();
+    if (!items.length) return;
+    const target = items[(nearestIndex(items) + direction + items.length) % items.length];
+    grid.scrollTo({ left: target.offsetLeft, behavior: "smooth" });
+  };
+  previous.addEventListener("click", () => move(-1));
+  next.addEventListener("click", () => move(1));
+  grid.addEventListener("scroll", () => requestAnimationFrame(update), { passive:true });
+  new MutationObserver(update).observe(grid, { childList:true, attributes:true, subtree:true });
+  update();
+})();
 
 // Magnetic buttons
 if (!prefersReducedMotion && window.matchMedia("(pointer:fine)").matches) {

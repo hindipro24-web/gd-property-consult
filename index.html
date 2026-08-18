@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="responsive-fix.css" />
   <link rel="stylesheet" href="v21-premium.css" />
+  <link rel="stylesheet" href="v23-signature.css" />
   <link rel="preload" as="image" href="assets/gd-property-consult/gd-hero-wide.jpg">
   <link rel="preload" as="image" href="assets/gd-property-consult/gd-about-dhoot-brothers.jpg">
   <script>
@@ -23,7 +24,7 @@
     window.setTimeout(window.__revealGDWebsite, 2300);
   </script>
 </head>
-<body class="cms-pending v21-luxury">
+<body class="cms-pending v21-luxury v23-signature">
   <div class="gd-site-loader" id="gdSiteLoader" role="status" aria-live="polite">
     <div class="gd-site-loader-card">
       <img src="assets/gd-property-consult/gd-logo.png" alt="GD Property Consult">
@@ -76,16 +77,16 @@
             Surat property experts • 15 years of experience
           </div>
           <h1 id="heroTitle" class="hero-title reveal" style="--delay:.12s">
-            <span id="heroTitleMain">Your trusted partner for</span><br>
-            <span class="gradient-text" id="heroTitleHighlight">buy, sell & rent in Surat.</span>
+            <span id="heroTitleMain">Find a place worthy of</span><br>
+            <span class="gradient-text" id="heroTitleHighlight">your next chapter.</span>
           </h1>
           <p class="hero-sub reveal" id="cmsHeroSubtitle" style="--delay:.2s">
             Explore residential, commercial and rental opportunities with experienced property consultants across Vesu, Parvat Patiya, Godadara and key Surat locations.
           </p>
 
           <div class="hero-actions reveal" style="--delay:.28s">
-            <a class="btn btn-luminous btn-large magnetic" id="cmsHeroPrimaryLink" href="#heroSearchForm" data-scroll-to-property-match><span id="cmsHeroPrimary">Start property match</span> <span>↗</span></a>
-            <a class="btn btn-glass btn-large magnetic" id="cmsHeroSecondaryLink" href="#properties"><span id="cmsHeroSecondary">Explore collection</span></a>
+            <a class="btn btn-luminous btn-large magnetic" id="cmsHeroPrimaryLink" href="#properties"><span id="cmsHeroPrimary">Explore Properties</span> <span>↗</span></a>
+            <button class="btn btn-glass btn-large magnetic open-lead-form" type="button"><span id="cmsHeroSecondary">Book Private Consultation</span></button>
           </div>
 
           <div class="hero-assurance reveal" style="--delay:.32s" aria-label="GD Property service assurance">
@@ -288,6 +289,10 @@
             <div class="property-body"><small class="property-location">Althan, Surat</small><h3>Althan Urban Homes</h3><div class="property-meta"><span>2 BHK</span><span>1,300 sq.ft.</span><span>Apartment</span></div><div class="property-price inline-price"><span>Monthly rent</span><strong>₹28,000/month</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Althan Urban Homes">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
           </article>
         </div>
+        <div class="v23-property-nav" id="v23PropertyNav" aria-label="Featured property navigation">
+          <div class="v23-property-count"><strong id="v23PropertyCurrent">01</strong><span id="v23PropertyTotal">/ 05</span><i><b id="v23PropertyProgress"></b></i></div>
+          <div class="v23-property-arrows"><button type="button" id="v23PropertyPrevious" aria-label="Previous property">←</button><button type="button" id="v23PropertyNext" aria-label="Next property">→</button></div>
+        </div>
         </div>
       </div>
     </section>
@@ -463,7 +468,7 @@
           <span>Click any image to view full size</span>
         </div>
 
-        <div class="testimonial-gallery-dots" id="testimonialGalleryDots" aria-label="Testimonial slider pages"></div>
+        <div class="testimonial-gallery-dots" id="testimonialGalleryDots" aria-label="Testimonial slider pages" hidden></div>
 
         <div class="testimonial-swipe-hint" aria-hidden="true">
           <span>Swipe to explore</span><i>→</i>

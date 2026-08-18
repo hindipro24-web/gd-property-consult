@@ -1,5 +1,14 @@
 # GD Property Real-Estate Automation Demo
 
+## V23 Signature Experience
+
+- Approved cinematic charcoal, ivory and restrained gold visual direction.
+- Homepage inventory is limited to the five latest published properties.
+- Featured properties use a full-width showcase rail with `01 / 05`, progress line and arrows.
+- Property galleries use arrows, image count and a progress line instead of dots.
+- Testimonial dot navigation is removed; arrows, swipe and status remain.
+- Supabase, admin, CRM, enquiry, site-visit and n8n automation behavior is unchanged.
+
 ## V20 premium interface update
 
 - Property listing cards now use `main_image` plus `gallery_images` as an interactive slider.
