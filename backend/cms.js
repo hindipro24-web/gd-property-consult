@@ -11,6 +11,34 @@
   const SETTINGS_CACHE_KEY = window.GD_SITE_SETTINGS_CACHE_KEY || 'gd-property-consult-settings-v177';
   const safeText = (value, fallback = '') => value == null ? fallback : String(value);
 
+  function presentationHeroCopy(settings) {
+    const title = safeText(settings.hero_title).trim();
+    const highlight = safeText(settings.hero_highlight).trim();
+    const subtitle = safeText(settings.hero_subtitle).trim();
+    const legacyCopy = /trusted partner/i.test(title) || /buy\s*,?\s*sell\s*&\s*rent in surat/i.test(`${title} ${highlight}`);
+
+    if (!legacyCopy) return { title, highlight, subtitle };
+    return {
+      title: 'Exceptional Surat properties.',
+      highlight: 'Personally shortlisted.',
+      subtitle: 'Residential, commercial and investment opportunities selected around your location, budget and next move.'
+    };
+  }
+
+  function verifiedSocialUrl(value, allowedHosts, fallback = '') {
+    const candidates = [value, fallback].map(item => safeText(item).trim()).filter(Boolean);
+    for (const candidate of candidates) {
+      try {
+        const parsed = new URL(candidate, window.location.href);
+        const hostname = parsed.hostname.toLowerCase().replace(/^www\./, '');
+        if (parsed.protocol === 'https:' && allowedHosts.some(host => hostname === host || hostname.endsWith(`.${host}`))) {
+          return parsed.href;
+        }
+      } catch {}
+    }
+    return '';
+  }
+
   function readCachedSettings() {
     try {
       const cached = JSON.parse(localStorage.getItem(SETTINGS_CACHE_KEY) || 'null');
@@ -57,16 +85,17 @@
 
     applyBrand(settings);
 
+    const heroCopy = presentationHeroCopy(settings);
     setText('#cmsHeroKicker', settings.hero_kicker);
-    setText('#heroTitleMain', settings.hero_title);
-    setText('#heroTitleHighlight', settings.hero_highlight);
-    setText('#cmsHeroSubtitle', settings.hero_subtitle);
+    setText('#heroTitleMain', heroCopy.title);
+    setText('#heroTitleHighlight', heroCopy.highlight);
+    setText('#cmsHeroSubtitle', heroCopy.subtitle);
     const heroImage = document.getElementById('cmsHeroImage');
     if (heroImage && settings.hero_image_url) heroImage.src = settings.hero_image_url;
     setText('#cmsHeroPrimary', settings.hero_primary_label);
     setHref('#cmsHeroPrimaryLink', settings.hero_primary_url);
-    setText('#cmsHeroSecondary', settings.hero_secondary_label);
-    setHref('#cmsHeroSecondaryLink', settings.hero_secondary_url);
+    setText('#cmsHeroSecondary', settings.hero_secondary_label || 'View properties');
+    setHref('#cmsHeroSecondaryLink', settings.hero_secondary_url || '#properties');
 
     setText('#cmsPropertiesEyebrow', settings.properties_eyebrow);
     setText('#cmsPropertiesHeading', settings.properties_heading);
@@ -126,14 +155,14 @@
     setHref('#cmsFooterPhone', phoneDigits ? `tel:${phoneDigits}` : '');
     setHref('#cmsFooterEmail', settings.email ? `mailto:${settings.email}` : '');
     const socialLinks = [
-      ['#cmsInstagram', settings.instagram_url],
-      ['#cmsFacebook', settings.facebook_url],
-      ['#cmsX', settings.x_url],
-      ['#cmsLinkedin', settings.linkedin_url]
+      ['#cmsInstagram', verifiedSocialUrl(settings.instagram_url, ['instagram.com'], 'https://www.instagram.com/gd_property_consult/')],
+      ['#cmsFacebook', verifiedSocialUrl(settings.facebook_url, ['facebook.com', 'fb.com'])],
+      ['#cmsX', verifiedSocialUrl(settings.x_url, ['x.com', 'twitter.com'])],
+      ['#cmsLinkedin', verifiedSocialUrl(settings.linkedin_url, ['linkedin.com'])]
     ];
     socialLinks.forEach(([selector, value]) => {
       const element = document.querySelector(selector);
-      const usable = value && value !== '#';
+      const usable = Boolean(value);
       if (element) element.hidden = !usable;
       setHref(selector, usable ? value : '');
     });

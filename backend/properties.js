@@ -27,13 +27,39 @@
     return property?.listing_purpose === "Rent" ? "Rent" : "Sale";
   }
 
+  function professionalStatus(value = "") {
+    const status = String(value || "").trim();
+    if (/^move\s*to\s*go$/i.test(status)) return "Ready to move";
+    return status || "Available";
+  }
+
+  function displayPrice(property, configuration = null) {
+    const label = String(configuration?.price_label || property?.price_label || "").trim();
+    const amount = Number(configuration?.price_amount || property?.price_amount || 0);
+    const invalidRentalPrice = listingPurpose(property) === "Rent" && (amount >= 1000000 || /\b(?:cr|crore|lakh|lac)\b/i.test(label));
+    return {
+      label: invalidRentalPrice ? "Rent on request" : (label || "On request"),
+      amount: invalidRentalPrice ? 0 : amount
+    };
+  }
+
   function priceCaption(property) {
     return listingPurpose(property) === "Rent" ? "Monthly rent" : "Starting from";
   }
 
   function publishedConfigurations(property) {
     const list = Array.isArray(property.configurations) ? property.configurations : [];
-    return list.filter(item => item && item.published !== false && item.name);
+    return list
+      .filter(item => item && item.published !== false && item.name)
+      .map(item => {
+        const price = displayPrice(property, item);
+        return {
+          ...item,
+          price_label: price.label,
+          price_amount: price.amount,
+          status_label: professionalStatus(item.status_label || property.status_label)
+        };
+      });
   }
 
   function startingConfiguration(property) {
@@ -72,7 +98,7 @@
       <div class="property-labels">
         ${property.verified ? '<span class="verified-badge">✓ Verified</span>' : ""}
         <span class="listing-purpose-badge ${listingPurpose(property).toLowerCase()}">For ${listingPurpose(property)}</span>
-        <span>${escapeHtml(property.status_label || "Available")}</span>
+        <span>${escapeHtml(professionalStatus(property.status_label))}</span>
       </div>
       <button class="wishlist-btn" type="button" aria-label="Save ${title}">♡</button>
       <div class="property-index">${String(index + 1).padStart(2, "0")}</div>
@@ -87,20 +113,21 @@
     const detailHref = `property-details.html?id=${encodeURIComponent(property.id)}`;
     const configurations = publishedConfigurations(property);
     const starting = startingConfiguration(property);
-    const displayPrice = starting?.price_label || property.price_label || "On request";
-    const displayPriceAmount = Number(starting?.price_amount || property.price_amount || 0);
+    const price = displayPrice(property, starting);
+    const displayPriceLabel = price.label;
+    const displayPriceAmount = price.amount;
     const configurationNames = configurations.map(item => item.name).join(" / ");
     const displayBhk = configurationNames || property.bhk || property.property_type || "Property";
     const displayArea = configurations.length > 1 ? `${configurations.length} options` : (starting?.area || property.area || "Area on request");
 
     if (index === 0) {
       return `
-        <article class="property-card${featuredClass} reveal visible" data-category="${category}" data-location="${escapeHtml(location)}" data-price="${displayPriceAmount}" data-title="${title}" data-property-id="${escapeHtml(property.id || "")}" data-property-configuration-id="${escapeHtml(starting?.id || "")}" data-property-name="${title}" data-property-price="${escapeHtml(displayPrice)}" data-property-price-amount="${displayPriceAmount}" data-property-bhk="${escapeHtml(starting?.name || property.bhk || "Not Applicable")}" data-property-configuration-count="${configurations.length}" data-property-configurations="${escapeHtml(JSON.stringify(configurations))}" data-listing-purpose="${listingPurpose(property)}" data-property-type="${escapeHtml(property.property_type || "Property")}" data-property-location="${escapeHtml(location)}" data-property-area="${escapeHtml(starting?.area || property.area || "Area on request")}" data-tilt>
+        <article class="property-card${featuredClass} reveal visible" data-category="${category}" data-location="${escapeHtml(location)}" data-price="${displayPriceAmount}" data-title="${title}" data-property-id="${escapeHtml(property.id || "")}" data-property-configuration-id="${escapeHtml(starting?.id || "")}" data-property-name="${title}" data-property-price="${escapeHtml(displayPriceLabel)}" data-property-price-amount="${displayPriceAmount}" data-property-bhk="${escapeHtml(starting?.name || property.bhk || "Not Applicable")}" data-property-configuration-count="${configurations.length}" data-property-configurations="${escapeHtml(JSON.stringify(configurations))}" data-listing-purpose="${listingPurpose(property)}" data-property-type="${escapeHtml(property.property_type || "Property")}" data-property-location="${escapeHtml(location)}" data-property-area="${escapeHtml(starting?.area || property.area || "Area on request")}" data-tilt>
           ${propertyMedia(property, title, index)}
           <div class="property-body">
             <div class="property-heading">
               <div><small class="property-location">${escapeHtml(location)}</small><h3>${title}</h3></div>
-              <div class="property-price"><span>${priceCaption(property)}</span><strong>${escapeHtml(displayPrice)}</strong></div>
+              <div class="property-price"><span>${priceCaption(property)}</span><strong>${escapeHtml(displayPriceLabel)}</strong></div>
             </div>
             <div class="property-meta">
               <span>${escapeHtml(displayBhk)}</span>
@@ -116,7 +143,7 @@
     }
 
     return `
-      <article class="property-card reveal visible" data-category="${category}" data-location="${escapeHtml(location)}" data-price="${displayPriceAmount}" data-title="${title}" data-property-id="${escapeHtml(property.id || "")}" data-property-configuration-id="${escapeHtml(starting?.id || "")}" data-property-name="${title}" data-property-price="${escapeHtml(displayPrice)}" data-property-price-amount="${displayPriceAmount}" data-property-bhk="${escapeHtml(starting?.name || property.bhk || "Not Applicable")}" data-property-configuration-count="${configurations.length}" data-property-configurations="${escapeHtml(JSON.stringify(configurations))}" data-listing-purpose="${listingPurpose(property)}" data-property-type="${escapeHtml(property.property_type || "Property")}" data-property-location="${escapeHtml(location)}" data-property-area="${escapeHtml(starting?.area || property.area || "Area on request")}" data-tilt>
+      <article class="property-card reveal visible" data-category="${category}" data-location="${escapeHtml(location)}" data-price="${displayPriceAmount}" data-title="${title}" data-property-id="${escapeHtml(property.id || "")}" data-property-configuration-id="${escapeHtml(starting?.id || "")}" data-property-name="${title}" data-property-price="${escapeHtml(displayPriceLabel)}" data-property-price-amount="${displayPriceAmount}" data-property-bhk="${escapeHtml(starting?.name || property.bhk || "Not Applicable")}" data-property-configuration-count="${configurations.length}" data-property-configurations="${escapeHtml(JSON.stringify(configurations))}" data-listing-purpose="${listingPurpose(property)}" data-property-type="${escapeHtml(property.property_type || "Property")}" data-property-location="${escapeHtml(location)}" data-property-area="${escapeHtml(starting?.area || property.area || "Area on request")}" data-tilt>
         ${propertyMedia(property, title, index)}
         <div class="property-body">
           <small class="property-location">${escapeHtml(location)}</small>
@@ -126,7 +153,7 @@
             <span>${escapeHtml(displayArea)}</span>
             <span>${escapeHtml(property.property_type || "Property")}</span>
           </div>
-          <div class="property-price inline-price"><span>${priceCaption(property)}</span><strong>${escapeHtml(displayPrice)}</strong></div>
+          <div class="property-price inline-price"><span>${priceCaption(property)}</span><strong>${escapeHtml(displayPriceLabel)}</strong></div>
           <div class="property-actions">
             <a class="property-btn property-btn-outline" href="${detailHref}">View details</a>
             <button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button>
@@ -174,7 +201,7 @@
     const purpose = listingPurpose(property);
     const image = property.main_image || document.getElementById("cmsHeroImage")?.src || "";
     const location = [property.location, property.city].filter(Boolean).join(", ");
-    const price = starting?.price_label || property.price_label || "On request";
+    const price = displayPrice(property, starting).label;
     const detailHref = `property-details.html?id=${encodeURIComponent(property.id)}`;
 
     const imageElement = document.getElementById("cmsHeroImage");

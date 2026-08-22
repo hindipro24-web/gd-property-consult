@@ -545,6 +545,20 @@ function openPropertyMapLocation() {
   if (opened) opened.opener = null;
 }
 
+function professionalStatus(value = "") {
+  const status = String(value || "").trim();
+  if (/^move\s*to\s*go$/i.test(status)) return "Ready to move";
+  return status || "Available";
+}
+
+function professionalPrice(property, configuration = null) {
+  const purpose = property?.listing_purpose === "Rent" ? "Rent" : "Sale";
+  const label = String(configuration?.price_label || property?.price_label || "").trim();
+  const amount = Number(configuration?.price_amount || property?.price_amount || 0);
+  const invalidRentalPrice = purpose === "Rent" && (amount >= 1000000 || /\b(?:cr|crore|lakh|lac)\b/i.test(label));
+  return invalidRentalPrice ? "Rent on request" : (label || "On request");
+}
+
 function normalizeSupabaseProperty(property) {
   const location = [property.location, property.city].filter(Boolean).join(", ");
   const gallery = Array.isArray(property.gallery_images) ? property.gallery_images.filter(Boolean) : [];
@@ -554,12 +568,12 @@ function normalizeSupabaseProperty(property) {
   return {
     name: property.title || "Property",
     location: location || "Surat",
-    price: property.price_label || "On request",
+    price: professionalPrice(property),
     bhk: property.bhk || property.property_type || "On request",
     area: property.area || "On request",
     type: property.property_type || "Property",
     listingPurpose: property.listing_purpose === "Rent" ? "Rent" : "Sale",
-    status: property.status_label || "Available",
+    status: professionalStatus(property.status_label),
     about: property.description || "Contact GD Property Consult for complete property information and a guided discussion.",
     amenities: Array.isArray(property.amenities) && property.amenities.length ? property.amenities : ["Project information on request", "Guided site visit", "Advisor support"],
     images,
@@ -571,14 +585,14 @@ function normalizeSupabaseProperty(property) {
     showMap: property.show_map !== false,
     rera: property.rera_number || "On request",
     builder: property.builder_name || "On request",
-    possession: property.status_label || "On request",
+    possession: professionalStatus(property.status_label),
     id: property.id || "",
     configurations: (Array.isArray(property.configurations) ? property.configurations : [])
       .filter(item => item && item.published !== false && item.name)
       .map(item => ({
         id: item.id || "",
         name: item.name,
-        price_label: item.price_label || property.price_label || "On request",
+        price_label: professionalPrice(property, item),
         price_amount: Number(item.price_amount || 0),
         area: item.area || property.area || "On request",
         bedrooms: item.bedrooms ?? null,
@@ -586,7 +600,7 @@ function normalizeSupabaseProperty(property) {
         balconies: item.balconies ?? null,
         parking: item.parking ?? null,
         furnishing: item.furnishing || "On request",
-        status_label: item.status_label || property.status_label || "Available",
+        status_label: professionalStatus(item.status_label || property.status_label),
         floor_plan_url: item.floor_plan_url || "",
         show_floor_plan_overview: item.show_floor_plan_overview !== false,
         floor_overview_heading: item.floor_overview_heading || "Configuration overview",
