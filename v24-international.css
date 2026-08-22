@@ -1,0 +1,280 @@
+/*
+   V24 — International luxury header + hero
+   A clean, editorial real-estate direction built to feel credible in premium
+   markets while preserving GD Property's actual Surat positioning and flows.
+*/
+
+.v24-international{
+  --v24-obsidian:#0c0d0b;
+  --v24-ink:#141512;
+  --v24-champagne:#c6a66b;
+  --v24-champagne-light:#f1dfb7;
+  --v24-ivory:#f7f3eb;
+}
+
+.v24-international .site-header{
+  background:linear-gradient(180deg,rgba(8,9,8,.94),rgba(8,9,8,.72));
+  border-bottom:1px solid rgba(255,255,255,.11);
+  backdrop-filter:blur(22px) saturate(120%);
+  -webkit-backdrop-filter:blur(22px) saturate(120%);
+}
+
+.v24-international .v24-header-rail{
+  height:31px;
+  border-bottom:1px solid rgba(255,255,255,.09);
+  color:rgba(255,255,255,.52);
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.2em;
+}
+
+.v24-international .v24-header-rail .container{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:24px;
+}
+
+.v24-international .v24-header-rail .v24-rail-center{color:rgba(241,223,183,.82)}
+.v24-international .v24-header-rail a{justify-self:end;color:rgba(255,255,255,.74);transition:color .25s ease}
+.v24-international .v24-header-rail a:hover{color:var(--v24-champagne-light)}
+.v24-international .v24-header-rail b{color:var(--v24-champagne);font-size:10px}
+
+.v24-international .nav-wrap{height:79px}
+.v24-international .site-header.scrolled .nav-wrap{height:68px}
+.v24-international .site-header.scrolled .v24-header-rail{height:0;overflow:hidden;border:0;opacity:0}
+
+.v24-international .brand-mark.has-logo{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  box-shadow:0 0 0 1px rgba(198,166,107,.45),0 12px 32px rgba(0,0,0,.35);
+}
+.v24-international .brand-text strong{font-size:20px;color:#fff;letter-spacing:-.025em}
+.v24-international .brand-text small{font-size:8px;letter-spacing:.48em;color:var(--v24-champagne-light)}
+
+.v24-international .nav{gap:clamp(18px,2vw,30px);font-size:11px;letter-spacing:.035em}
+.v24-international .nav a{color:rgba(255,255,255,.68)}
+.v24-international .nav a:hover{color:#fff}
+.v24-international .nav a::after{bottom:-10px;background:var(--v24-champagne)}
+.v24-international .nav .btn{
+  min-height:44px;
+  padding:11px 18px;
+  border:1px solid rgba(198,166,107,.75)!important;
+  border-radius:0;
+  background:transparent!important;
+  color:var(--v24-champagne-light)!important;
+  box-shadow:none!important;
+  letter-spacing:.06em;
+}
+.v24-international .nav .btn b{font-size:13px;color:var(--v24-champagne)}
+.v24-international .nav .btn:hover{background:var(--v24-champagne)!important;color:var(--v24-ink)!important}
+.v24-international .nav .btn:hover b{color:var(--v24-ink)}
+
+.v24-international .hero{
+  min-height:100svh;
+  padding:176px 0 80px;
+  background:var(--v24-obsidian);
+  isolation:isolate;
+}
+
+.v24-international .hero::after{
+  content:"GD  /  PRIVATE COLLECTION";
+  position:absolute;
+  left:28px;
+  bottom:42px;
+  z-index:3;
+  color:rgba(255,255,255,.33);
+  font-size:8px;
+  font-weight:700;
+  letter-spacing:.24em;
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+}
+
+.v24-international .hero-bg{z-index:0}
+.v24-international .hero-image{
+  inset:0 0 0 47%;
+  background:
+    linear-gradient(90deg,var(--v24-obsidian) 0%,rgba(12,13,11,.76) 13%,rgba(12,13,11,.08) 48%,rgba(12,13,11,.35) 100%),
+    linear-gradient(180deg,rgba(12,13,11,.26),rgba(12,13,11,.62)),
+    url("assets/gd-property-consult/gd-hero-wide.jpg") center/cover no-repeat;
+  transform:scale(1.02);
+  filter:saturate(.78) contrast(1.05);
+  animation:v24HeroDrift 18s ease-in-out infinite alternate;
+}
+
+.v24-international .hero-grid-lines{
+  opacity:.15;
+  background-size:88px 88px;
+  mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.7),transparent 76%);
+}
+.v24-international .hero-orb{display:none}
+.v24-international .hero-layout{
+  grid-template-columns:minmax(0,1.05fr) minmax(380px,.72fr);
+  gap:clamp(54px,7vw,112px);
+  align-items:end;
+}
+.v24-international .hero-copy{padding-top:18px;max-width:800px}
+
+.v24-international .hero-kicker{
+  color:var(--v24-champagne-light);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.25em;
+}
+.v24-international .hero-kicker::after{content:"";width:76px;height:1px;background:linear-gradient(90deg,var(--v24-champagne),transparent);margin-left:8px}
+.v24-international .hero-kicker .live-dot{background:var(--v24-champagne);box-shadow:0 0 0 5px rgba(198,166,107,.11),0 0 18px rgba(198,166,107,.5)}
+
+.v24-international .hero-title{
+  max-width:850px;
+  margin:27px 0 26px;
+  font-size:clamp(60px,6.4vw,104px);
+  line-height:.91;
+  letter-spacing:-.058em;
+  text-wrap:balance;
+  text-shadow:0 14px 48px rgba(0,0,0,.36);
+}
+.v24-international .hero-title .gradient-text{color:var(--v24-champagne-light);-webkit-text-fill-color:var(--v24-champagne-light);font-weight:600}
+.v24-international .hero-sub{max-width:610px;font-size:16px;line-height:1.85;color:rgba(255,255,255,.66);text-wrap:pretty}
+
+.v24-international .hero-actions{margin:34px 0 30px;gap:10px}
+.v24-international .hero-actions .btn{
+  min-height:60px;
+  padding:17px 25px;
+  border-radius:0;
+  font-size:11px;
+  letter-spacing:.075em;
+  text-transform:uppercase;
+}
+.v24-international .hero-actions .btn-luminous{background:var(--v24-champagne)!important}
+.v24-international .hero-actions .btn-glass{background:rgba(8,9,8,.38)!important;border-color:rgba(255,255,255,.32)!important}
+
+.v24-international .hero-assurance{
+  max-width:710px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  padding:17px 0;
+  border-color:rgba(255,255,255,.16);
+}
+.v24-international .hero-assurance span{padding:0 18px;border-right:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.62);font-size:9px;letter-spacing:.05em;text-transform:uppercase}
+.v24-international .hero-assurance span:first-child{padding-left:0}
+.v24-international .hero-assurance span:last-child{border-right:0}
+.v24-international .hero-assurance b{display:block;margin-bottom:6px;color:var(--v24-champagne);font-family:"Playfair Display",serif;font-size:17px;font-weight:600}
+
+.v24-international .hero-console{
+  position:relative;
+  padding:10px;
+  border-color:rgba(255,255,255,.23);
+  background:rgba(10,11,9,.76);
+  box-shadow:0 46px 120px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.09);
+  backdrop-filter:blur(24px) saturate(115%);
+  -webkit-backdrop-filter:blur(24px) saturate(115%);
+}
+.v24-international .hero-console::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  z-index:-1;
+  border:1px solid transparent;
+  background:linear-gradient(145deg,rgba(241,223,183,.5),transparent 22%,transparent 76%,rgba(198,166,107,.3)) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.v24-international .console-topbar{padding:5px 7px 13px;font-size:8px;letter-spacing:.19em}
+.v24-international .console-status span{background:var(--v24-champagne);box-shadow:0 0 14px rgba(198,166,107,.75)}
+.v24-international .console-code{color:var(--v24-champagne-light)}
+.v24-international .console-visual{height:clamp(260px,30vw,350px);min-height:0}
+.v24-international .console-visual img{filter:saturate(.82) contrast(1.04)}
+.v24-international .visual-overlay{background:linear-gradient(180deg,transparent 24%,rgba(7,8,7,.82) 100%)}
+.v24-international .visual-badge span,.v24-international .visual-price small{color:var(--v24-champagne-light);letter-spacing:.16em;text-transform:uppercase}
+.v24-international .visual-badge strong{font-family:"Playfair Display",serif;font-size:26px;font-weight:600}
+.v24-international .visual-price strong{font-family:"Playfair Display",serif;color:#fff;font-size:21px}
+.v24-international .hero-featured-details{border-radius:0;background:rgba(8,9,8,.68);border-color:rgba(255,255,255,.3);color:#fff;text-transform:uppercase;letter-spacing:.1em}
+.v24-international .hero-featured-details span{color:var(--v24-champagne-light)}
+
+.v24-international .search-console{padding:19px 6px 4px;gap:11px;background:transparent}
+.v24-international .v24-search-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:0 2px 4px;color:#fff}
+.v24-international .v24-search-intro div{display:grid;gap:4px}
+.v24-international .v24-search-intro small{font-size:7px;font-weight:800;letter-spacing:.19em;color:var(--v24-champagne)}
+.v24-international .v24-search-intro strong{font-family:"Playfair Display",serif;font-size:19px;font-weight:600}
+.v24-international .v24-search-intro>span{color:rgba(255,255,255,.36);font-size:9px;letter-spacing:.16em}
+.v24-international .search-console label>span{font-size:8px;letter-spacing:.16em;color:rgba(255,255,255,.48)}
+.v24-international .search-console input,.v24-international .search-console select{min-height:46px;border-radius:0;border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.045);font-size:12px}
+.v24-international .search-console input:focus,.v24-international .search-console select:focus{border-color:var(--v24-champagne);box-shadow:0 0 0 2px rgba(198,166,107,.09)}
+.v24-international .search-console button{min-height:50px;border-radius:0;text-transform:uppercase;font-size:10px;letter-spacing:.1em}
+
+.v24-international .hero-scroll{bottom:23px;color:rgba(255,255,255,.34)}
+.v24-international .hero-scroll span::after{background:var(--v24-champagne)}
+
+@keyframes v24HeroDrift{
+  from{transform:scale(1.02) translate3d(0,0,0)}
+  to{transform:scale(1.075) translate3d(-.8%,.6%,0)}
+}
+
+@media(max-width:1180px){
+  .v24-international .nav{gap:16px}
+  .v24-international .nav a{font-size:10px}
+  .v24-international .hero-layout{grid-template-columns:minmax(0,1fr) minmax(350px,.78fr);gap:42px}
+  .v24-international .hero-title{font-size:clamp(58px,6.4vw,82px)}
+}
+
+@media(max-width:900px){
+  .v24-international .v24-header-rail .container{grid-template-columns:1fr 1fr}
+  .v24-international .v24-rail-center{display:none}
+  .v24-international .hero{padding-top:154px}
+  .v24-international .hero-image{inset:0;background:linear-gradient(90deg,rgba(12,13,11,.97),rgba(12,13,11,.76) 55%,rgba(12,13,11,.45)),url("assets/gd-property-consult/gd-hero-wide.jpg") center/cover no-repeat;opacity:.8}
+  .v24-international .hero-layout{grid-template-columns:1fr;gap:44px}
+  .v24-international .hero-copy{max-width:760px}
+  .v24-international .hero-console{width:min(100%,700px)}
+  .v24-international .hero::after{display:none}
+}
+
+@media(max-width:640px){
+  .v24-international .v24-header-rail{display:none}
+  .v24-international .nav-wrap{height:72px!important;min-height:72px!important}
+  .v24-international .brand-mark.has-logo{width:44px!important;height:44px!important}
+  .v24-international .brand-text strong{font-size:17px!important}
+  .v24-international .hero{padding:112px 0 46px;min-height:auto}
+  .v24-international .hero-image{opacity:.62;background-position:60% center;filter:saturate(.65) contrast(1.08)}
+  .v24-international .hero-grid-lines{opacity:.11}
+  .v24-international .hero-layout{gap:32px}
+  .v24-international .hero-kicker{font-size:8px;letter-spacing:.2em}
+  .v24-international .hero-kicker::after{width:40px}
+  .v24-international .hero-title{font-size:clamp(47px,13.5vw,64px);line-height:.92;margin:22px 0 19px}
+  .v24-international .hero-sub{font-size:14px;line-height:1.72}
+  .v24-international .hero-actions{grid-template-columns:1fr;margin:27px 0 25px}
+  .v24-international .hero-actions .btn{min-height:55px;width:100%;font-size:10px;padding-inline:16px}
+  .v24-international .hero-assurance{grid-template-columns:repeat(3,1fr);gap:0;padding:14px 0}
+  .v24-international .hero-assurance span{padding:0 8px;font-size:7px;line-height:1.45}
+  .v24-international .hero-assurance span:first-child{padding-left:0}
+  .v24-international .hero-assurance b{font-size:14px;margin-bottom:4px}
+  .v24-international .hero-console{padding:8px}
+  .v24-international .console-topbar{padding-bottom:11px}
+  .v24-international .console-visual{height:64vw;min-height:225px;max-height:300px;border-radius:0}
+  .v24-international .visual-badge{left:16px;bottom:16px}
+  .v24-international .visual-badge strong{font-size:21px}
+  .v24-international .visual-price{right:14px;top:14px}
+  .v24-international .hero-featured-details{right:14px;bottom:14px}
+  .v24-international .search-console{padding:16px 4px 2px}
+  .v24-international .v24-search-intro strong{font-size:17px}
+  .v24-international .search-row{grid-template-columns:1fr 1fr}
+  .v24-international .hero-scroll{display:none}
+}
+
+@media(max-width:400px){
+  .v24-international .hero{padding-top:101px}
+  .v24-international .hero-title{font-size:clamp(43px,13.3vw,54px)}
+  .v24-international .hero-assurance span{font-size:6.5px;padding-inline:6px}
+  .v24-international .search-row{grid-template-columns:1fr}
+  .v24-international .visual-price{display:none}
+  .v24-international .hero-featured-details{font-size:8px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v24-international .hero-image{animation:none}
+}
