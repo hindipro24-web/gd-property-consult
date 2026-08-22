@@ -233,20 +233,62 @@ let activePropertyCategory = "all";
 let activeListingPurpose = "all";
 
 function filterProperties() {
-  $$(".property-card").forEach(card => {
+  const grid = document.getElementById("propertyGrid");
+  const cards = $$("#propertyGrid .property-card");
+  const matchingCards = cards.filter(card => {
+    const category = String(card.dataset.category || "apartment").trim().toLowerCase();
     const categoryMatches =
       activePropertyCategory === "all" ||
-      card.dataset.category === activePropertyCategory;
+      category === activePropertyCategory;
 
-    const purpose = String(card.dataset.listingPurpose || "Sale").toLowerCase();
+    const purpose = String(card.dataset.listingPurpose || "Sale").trim().toLowerCase();
     const purposeMatches =
       activeListingPurpose === "all" ||
       purpose === activeListingPurpose;
 
-    const show = categoryMatches && purposeMatches;
+    return categoryMatches && purposeMatches;
+  });
+
+  const visibleCards = matchingCards.slice(0, 5);
+  const visibleSet = new Set(visibleCards);
+  cards.forEach(card => {
+    const show = visibleSet.has(card);
     card.hidden = !show;
+    card.setAttribute("aria-hidden", String(!show));
     if (show) requestAnimationFrame(() => card.classList.add("visible"));
   });
+
+  const emptyState = document.getElementById("propertyFilterEmpty");
+  if (emptyState) emptyState.hidden = matchingCards.length > 0;
+
+  const rail = document.getElementById("v23PropertyNav");
+  if (rail) rail.hidden = visibleCards.length === 0;
+
+  const inventoryText = document.getElementById("propertyInventoryText");
+  if (inventoryText) {
+    inventoryText.textContent = matchingCards.length > 5
+      ? `Showing 5 of ${matchingCards.length} matching properties`
+      : matchingCards.length
+        ? `${matchingCards.length} matching ${matchingCards.length === 1 ? "property" : "properties"}`
+        : "No exact match — try another filter";
+  }
+
+  if (grid && visibleCards.length) grid.scrollTo({ left: 0, behavior: "auto" });
+
+  $$(".filter").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.filter === activePropertyCategory));
+  });
+  $$(".purpose-filter").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.purposeFilter === activeListingPurpose));
+  });
+}
+
+function resetPropertyFilters() {
+  activePropertyCategory = "all";
+  activeListingPurpose = "all";
+  $$(".filter").forEach(button => button.classList.toggle("active", button.dataset.filter === "all"));
+  $$(".purpose-filter").forEach(button => button.classList.toggle("active", button.dataset.purposeFilter === "all"));
+  filterProperties();
 }
 
 document.addEventListener("click", event => {
@@ -256,6 +298,11 @@ document.addEventListener("click", event => {
     purposeFilterButton.classList.add("active");
     activeListingPurpose = purposeFilterButton.dataset.purposeFilter || "all";
     filterProperties();
+    return;
+  }
+
+  if (event.target.closest("#resetPropertyFilters")) {
+    resetPropertyFilters();
     return;
   }
 
@@ -281,6 +328,8 @@ document.addEventListener("click", event => {
     window.location.href = `property-details.html?property=${encodeURIComponent(propertyName)}`;
   }
 });
+
+filterProperties();
 
 // EMI calculator
 const loanAmount = $("#loanAmount");
@@ -1305,7 +1354,12 @@ $("#successClose")?.addEventListener("click", () => {
 });
 
 // Reinitialize interactions after Supabase replaces the fallback cards.
-window.KeyAssetsFrontend = { observeReveals, initTilt, initPropertySliders };
+window.KeyAssetsFrontend = {
+  observeReveals,
+  initTilt,
+  initPropertySliders,
+  applyPropertyFilters: filterProperties
+};
 
 
 // Start Property Match button
@@ -1338,6 +1392,25 @@ startPropertyMatchButton?.addEventListener("click", event => {
     });
   }, 550);
 });
+
+// The page-level mobile CTA is useful elsewhere, but property cards already have
+// their own actions. Hide it while the property rail is in view so it cannot cover a card.
+(() => {
+  const mobileCta = document.querySelector(".mobile-cta");
+  const propertiesSection = document.getElementById("properties");
+  if (!mobileCta || !propertiesSection || !("IntersectionObserver" in window)) return;
+
+  const update = isVisible => {
+    mobileCta.classList.toggle(
+      "is-context-hidden",
+      isVisible && window.matchMedia("(max-width: 640px)").matches
+    );
+  };
+  const observer = new IntersectionObserver(entries => update(entries[0]?.isIntersecting), {
+    threshold: 0.08
+  });
+  observer.observe(propertiesSection);
+})();
 
 
 // GD V17.1 — Testimonial poster lightbox

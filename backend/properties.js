@@ -247,10 +247,13 @@
     const display = orderPropertiesForHero(data);
     applyHeroProperty(display.hero, display.mode);
 
-    grid.innerHTML = display.ordered.slice(0, 5).map(card).join("");
+    // Keep the full published inventory available to the filters. The frontend
+    // displays a maximum of five cards from the currently selected combination.
+    grid.innerHTML = display.ordered.map(card).join("");
     window.KeyAssetsFrontend?.observeReveals(grid);
     window.KeyAssetsFrontend?.initTilt(grid);
     window.KeyAssetsFrontend?.initPropertySliders?.(grid);
+    window.KeyAssetsFrontend?.applyPropertyFilters?.();
   }
 
   loadProperties();

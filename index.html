@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="v21-premium.css" />
   <link rel="stylesheet" href="v23-signature.css" />
   <link rel="stylesheet" href="v24-international.css" />
-  <link rel="stylesheet" href="v25-polish.css" />
+  <link rel="stylesheet" href="v25-polish.css?v=25.2" />
   <link rel="preload" as="image" href="assets/gd-property-consult/gd-hero-wide.jpg">
   <link rel="preload" as="image" href="assets/gd-property-consult/gd-about-dhoot-brothers.jpg">
   <script>
@@ -94,7 +94,7 @@
           </p>
 
           <div class="hero-actions reveal" style="--delay:.28s">
-            <a class="btn btn-luminous btn-large magnetic" id="cmsHeroPrimaryLink" href="#properties"><span id="cmsHeroPrimary">Explore the collection</span> <span>↗</span></a>
+            <a class="btn btn-luminous btn-large magnetic" id="cmsHeroPrimaryLink" href="#heroSearchForm" data-scroll-to-property-match><span id="cmsHeroPrimary">Explore the collection</span> <span>↗</span></a>
             <a class="btn btn-glass btn-large magnetic" id="cmsHeroSecondaryLink" href="#properties"><span id="cmsHeroSecondary">View properties</span></a>
           </div>
 
@@ -219,7 +219,7 @@
               <button class="purpose-filter" data-purpose-filter="rent">For Rent</button>
             </div>
           </div>
-          <span class="inventory-status"><i></i> Live inventory enabled</span>
+          <span class="inventory-status"><i></i><span id="propertyInventoryText">Live inventory enabled</span></span>
         </div>
 
         <div class="property-grid" id="propertyGrid">
@@ -301,6 +301,10 @@
             </div>
             <div class="property-body"><small class="property-location">Althan, Surat</small><h3>Althan Urban Homes</h3><div class="property-meta"><span>2 BHK</span><span>1,300 sq.ft.</span><span>Apartment</span></div><div class="property-price inline-price"><span>Monthly rent</span><strong>₹28,000/month</strong></div><div class="property-actions"><button class="property-btn property-btn-outline property-details-btn" type="button" data-property="Althan Urban Homes">View details</button><button class="property-btn property-btn-primary open-lead-form" type="button">Enquire ↗</button></div></div>
           </article>
+        </div>
+        <div class="property-filter-empty" id="propertyFilterEmpty" role="status" aria-live="polite" hidden>
+          <span>No exact property is available in this combination right now.</span>
+          <button type="button" id="resetPropertyFilters">Show all properties</button>
         </div>
         <div class="v23-property-nav" id="v23PropertyNav" aria-label="Featured property navigation">
           <div class="v23-property-count"><strong id="v23PropertyCurrent">01</strong><span id="v23PropertyTotal">/ 05</span><i><b id="v23PropertyProgress"></b></i></div>
@@ -700,9 +704,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="backend/supabase-config.js"></script>
-  <script src="backend/cms.js"></script>
-  <script src="script.js"></script>
-  <script src="backend/properties.js"></script>
+  <script src="backend/cms.js?v=25.2"></script>
+  <script src="script.js?v=25.2"></script>
+  <script src="backend/properties.js?v=25.2"></script>
   <script src="backend/intelligence.js"></script>
   <script src="responsive-fix.js"></script>
 </body>

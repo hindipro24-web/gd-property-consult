@@ -93,7 +93,11 @@
     const heroImage = document.getElementById('cmsHeroImage');
     if (heroImage && settings.hero_image_url) heroImage.src = settings.hero_image_url;
     setText('#cmsHeroPrimary', settings.hero_primary_label);
-    setHref('#cmsHeroPrimaryLink', settings.hero_primary_url);
+    const heroPrimaryLink = document.querySelector('#cmsHeroPrimaryLink');
+    if (heroPrimaryLink) {
+      heroPrimaryLink.href = '#heroSearchForm';
+      heroPrimaryLink.setAttribute('data-scroll-to-property-match', '');
+    }
     setText('#cmsHeroSecondary', settings.hero_secondary_label || 'View properties');
     setHref('#cmsHeroSecondaryLink', settings.hero_secondary_url || '#properties');
 
