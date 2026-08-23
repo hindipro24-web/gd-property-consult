@@ -562,8 +562,7 @@ function professionalPrice(property, configuration = null) {
 function normalizeSupabaseProperty(property) {
   const location = [property.location, property.city].filter(Boolean).join(", ");
   const gallery = Array.isArray(property.gallery_images) ? property.gallery_images.filter(Boolean) : [];
-  const images = [property.main_image, ...gallery].filter(Boolean);
-  while (images.length < 5) images.push(images[images.length - 1] || FALLBACK_PROPERTIES[defaultName].images[images.length]);
+  const images = [...new Set([property.main_image, ...gallery].filter(Boolean))];
 
   return {
     name: property.title || "Property",
@@ -829,6 +828,170 @@ byId("configurationTabs")?.addEventListener("click", event => {
   if (selected) applyConfiguration(selected);
 });
 
+function renderPropertyGallery(name, imageSources) {
+  const gallery = byId("propertyGalleryGrid");
+  const images = Array.isArray(imageSources) ? [...new Set(imageSources.filter(Boolean))] : [];
+
+  gallery.className = "gallery detail-gallery-slider";
+  gallery.replaceChildren();
+
+  if (!images.length) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "detail-gallery-empty";
+    emptyState.textContent = "Property images will be available soon.";
+    gallery.append(emptyState);
+    return;
+  }
+
+  const viewport = document.createElement("div");
+  viewport.className = "detail-gallery-viewport";
+  viewport.tabIndex = 0;
+  viewport.setAttribute("role", "region");
+  viewport.setAttribute("aria-roledescription", "carousel");
+  viewport.setAttribute("aria-label", `${name} property images`);
+
+  const track = document.createElement("div");
+  track.className = "detail-gallery-track";
+
+  const slides = images.map((src, index) => {
+    const slide = document.createElement("button");
+    slide.className = "detail-gallery-slide";
+    slide.type = "button";
+    slide.dataset.galleryIndex = String(index);
+    slide.setAttribute("aria-label", `Open ${name} image ${index + 1} of ${images.length}`);
+
+    const image = document.createElement("img");
+    image.src = src;
+    image.alt = `${name} image ${index + 1}`;
+    image.decoding = "async";
+    image.loading = index === 0 ? "eager" : "lazy";
+    image.draggable = false;
+    slide.append(image);
+    track.append(slide);
+    return slide;
+  });
+
+  const arrowIcon = direction => {
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("viewBox", "0 0 24 24");
+    icon.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", direction === "previous" ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6");
+    icon.append(path);
+    return icon;
+  };
+
+  const previous = document.createElement("button");
+  previous.className = "detail-gallery-arrow detail-gallery-prev";
+  previous.type = "button";
+  previous.setAttribute("aria-label", "Previous property image");
+  previous.append(arrowIcon("previous"));
+
+  const next = document.createElement("button");
+  next.className = "detail-gallery-arrow detail-gallery-next";
+  next.type = "button";
+  next.setAttribute("aria-label", "Next property image");
+  next.append(arrowIcon("next"));
+
+  const counter = document.createElement("div");
+  counter.className = "gallery-counter detail-gallery-counter";
+  counter.setAttribute("aria-live", "polite");
+  const currentCount = document.createElement("span");
+  counter.append(currentCount, ` / ${String(images.length).padStart(2, "0")}`);
+
+  viewport.append(track, previous, next, counter);
+
+  const thumbnailRail = document.createElement("div");
+  thumbnailRail.className = "detail-gallery-thumbs";
+  thumbnailRail.setAttribute("role", "tablist");
+  thumbnailRail.setAttribute("aria-label", "Choose a property image");
+
+  const thumbnails = images.map((src, index) => {
+    const thumbnail = document.createElement("button");
+    thumbnail.className = "detail-gallery-thumb";
+    thumbnail.type = "button";
+    thumbnail.dataset.galleryThumb = String(index);
+    thumbnail.setAttribute("role", "tab");
+    thumbnail.setAttribute("aria-label", `Show image ${index + 1} of ${images.length}`);
+
+    const image = document.createElement("img");
+    image.src = src;
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.draggable = false;
+    thumbnail.append(image);
+    thumbnailRail.append(thumbnail);
+    return thumbnail;
+  });
+
+  gallery.append(viewport, thumbnailRail);
+  gallery.classList.toggle("detail-gallery-single", images.length === 1);
+
+  let activeIndex = 0;
+  const showSlide = requestedIndex => {
+    activeIndex = (requestedIndex + images.length) % images.length;
+    slides.forEach((slide, index) => {
+      const isActive = index === activeIndex;
+      slide.classList.toggle("is-active", isActive);
+      slide.setAttribute("aria-hidden", String(!isActive));
+      slide.tabIndex = isActive ? 0 : -1;
+    });
+    thumbnails.forEach((thumbnail, index) => {
+      const isActive = index === activeIndex;
+      thumbnail.classList.toggle("is-active", isActive);
+      thumbnail.setAttribute("aria-selected", String(isActive));
+      thumbnail.tabIndex = isActive ? 0 : -1;
+    });
+    currentCount.textContent = String(activeIndex + 1).padStart(2, "0");
+
+    const activeThumbnail = thumbnails[activeIndex];
+    if (activeThumbnail && thumbnailRail.scrollWidth > thumbnailRail.clientWidth) {
+      thumbnailRail.scrollTo({
+        left: activeThumbnail.offsetLeft - (thumbnailRail.clientWidth - activeThumbnail.offsetWidth) / 2,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  previous.addEventListener("click", () => showSlide(activeIndex - 1));
+  next.addEventListener("click", () => showSlide(activeIndex + 1));
+  thumbnails.forEach((thumbnail, index) => {
+    thumbnail.addEventListener("click", () => showSlide(index));
+  });
+
+  viewport.addEventListener("keydown", event => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    showSlide(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
+  });
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let suppressSlideClick = false;
+  viewport.addEventListener("touchstart", event => {
+    const touch = event.changedTouches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+  }, { passive: true });
+  viewport.addEventListener("touchend", event => {
+    const touch = event.changedTouches[0];
+    const horizontalDistance = touch.clientX - touchStartX;
+    const verticalDistance = touch.clientY - touchStartY;
+    if (Math.abs(horizontalDistance) < 44 || Math.abs(horizontalDistance) <= Math.abs(verticalDistance)) return;
+    suppressSlideClick = true;
+    showSlide(activeIndex + (horizontalDistance < 0 ? 1 : -1));
+    window.setTimeout(() => { suppressSlideClick = false; }, 350);
+  }, { passive: true });
+  gallery.addEventListener("click", event => {
+    if (!suppressSlideClick || !event.target.closest(".detail-gallery-slide")) return;
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
+
+  showSlide(0);
+}
+
 function renderProperty(name, property) {
   activePropertyName = name;
   activeProperty = property;
@@ -869,8 +1032,7 @@ function renderProperty(name, property) {
   document.title = `${name} | GD Property Consult`;
   updateVisitPropertySummary(null);
 
-  const galleryGrid = byId("propertyGalleryGrid");
-  galleryGrid.innerHTML = property.images.map((src,index)=>`<button class="gallery-item ${index===0?'gallery-main':''}" type="button" aria-label="View property image ${index+1}"><img src="${src}" alt="${name} image ${index+1}"></button>`).join('') + `<div class="gallery-counter"><span>01</span> / ${String(property.images.length).padStart(2,'0')}</div>`;
+  renderPropertyGallery(name, property.images);
 
   const mapBox = byId("propertyMapBox");
   const mapCard = mapBox?.closest("article");
@@ -949,7 +1111,7 @@ async function loadProperty() {
 // Gallery lightbox
 const lightbox = byId("imageLightbox");
 byId("propertyGalleryGrid").addEventListener("click", event => {
-  const button = event.target.closest(".gallery-item");
+  const button = event.target.closest(".detail-gallery-slide");
   const image = button?.querySelector("img");
   if (!image?.src) return;
   lightbox.querySelector("img").src = image.src;
