@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="responsive-fix.css?v=25.6" />
+  <link rel="stylesheet" href="responsive-fix.css?v=25.7" />
   <link rel="stylesheet" href="v21-premium.css" />
   <link rel="stylesheet" href="v23-signature.css" />
   <link rel="stylesheet" href="v24-international.css" />
@@ -329,11 +329,13 @@
         </div>
 
         <div class="market-interface reveal" data-tilt>
-          <div class="interface-header"><span><i></i> <b id="cmsIntelligenceTitle">GD Intelligence</b></span><small class="live-status"><i></i><b id="cmsIntelligenceStatus">LIVE INVENTORY SYNCED</b></small></div>
+          <div class="interface-header"><span><i></i> <b id="cmsIntelligenceTitle">GD PROPERTY INTELLIGENCE</b></span><small class="live-status"><i></i><b id="cmsIntelligenceStatus">LIVE INVENTORY SYNCED</b></small></div>
           <div class="radar-wrap">
-            <div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-ring ring-3"></div><div class="radar-sweep"></div>
-            <div class="radar-core">GD</div>
-            <div id="cmsIntelligenceNodes" class="intelligence-nodes"></div>
+            <div class="radar-stage">
+              <div class="radar-ring ring-1"></div><div class="radar-ring ring-2"></div><div class="radar-ring ring-3"></div><div class="radar-sweep"></div>
+              <div class="radar-core">GD</div>
+              <div id="cmsIntelligenceNodes" class="intelligence-nodes"></div>
+            </div>
           </div>
           <div class="interface-footer">
             <div><small id="cmsListingsLabel">Active listings</small><strong id="marketActiveListings">Loading…</strong></div>
@@ -704,7 +706,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="backend/supabase-config.js"></script>
-  <script src="backend/cms.js?v=25.2"></script>
+  <script src="backend/cms.js?v=25.7"></script>
   <script src="script.js?v=25.4"></script>
   <script src="backend/properties.js?v=25.4"></script>
   <script src="backend/intelligence.js"></script>

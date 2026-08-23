@@ -107,7 +107,9 @@
     setText('#cmsMarketHeading', settings.market_heading);
     setText('#cmsMarketEyebrow', settings.market_eyebrow);
     setText('#cmsMarketDescription', settings.market_description);
-    setText('#cmsIntelligenceTitle', settings.intelligence_title);
+    const intelligenceTitle = safeText(settings.intelligence_title, 'GD PROPERTY INTELLIGENCE')
+      .replace(/keyassets/gi, 'GD PROPERTY');
+    setText('#cmsIntelligenceTitle', intelligenceTitle);
     setText('#cmsIntelligenceStatus', settings.intelligence_status);
     setText('#cmsListingsLabel', settings.market_listings_label);
     setText('#cmsAverageLabel', settings.market_average_label);
@@ -123,12 +125,17 @@
         const parts = line.split('|');
         return { name: (parts[0] || '').trim(), type: (parts[1] || 'Property').trim() };
       }).filter(item => item.name);
-      const positions = [[17,25],[72,18],[77,67],[14,72],[44,10],[88,43],[46,82],[5,47]];
+      const nodeCount = nodes.length;
+      const orbitRadius = nodeCount <= 4 ? 30 : nodeCount <= 6 ? 29 : 32;
+      const startAngle = nodeCount === 4 ? -135 : -90;
+      nodeHost.dataset.nodeCount = String(nodeCount);
       nodeHost.innerHTML = nodes.map((item,index) => {
-        const [left,top] = positions[index] || [50,50];
+        const angle = (startAngle + (360 / Math.max(nodeCount, 1)) * index) * (Math.PI / 180);
+        const left = 50 + Math.cos(angle) * orbitRadius;
+        const top = 50 + Math.sin(angle) * orbitRadius;
         const name = item.name.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         const type = item.type.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-        return `<button class="map-node cms-map-node" style="left:${left}%;top:${top}%" type="button"><span>${name}</span><small>${type}</small></button>`;
+        return `<button class="map-node cms-map-node" style="left:${left.toFixed(2)}%;top:${top.toFixed(2)}%" type="button" aria-label="${name}, ${type}"><span>${name}</span><small>${type}</small></button>`;
       }).join('');
     }
     setText('#cmsServicesHeading', settings.services_heading);
