@@ -945,6 +945,38 @@ input,select,textarea{width:100%;}
   .purpose-filter{font-size:10px;}
 }
 
+/* V25.5 — compact property gallery counter on every mobile detail page.
+   An older sticky rule made the counter occupy a full grid row, creating a
+   tall empty oval and a large blank area below the gallery images. */
+@media(max-width:600px){
+  .details-page .futuristic-gallery{
+    position:relative;
+  }
+
+  .details-page .futuristic-gallery .gallery-counter{
+    position:absolute!important;
+    top:12px!important;
+    right:12px!important;
+    bottom:auto!important;
+    left:auto!important;
+    grid-column:auto!important;
+    align-self:auto!important;
+    justify-self:auto!important;
+    display:inline-flex!important;
+    align-items:center;
+    justify-content:center;
+    width:auto!important;
+    height:auto!important;
+    min-width:68px;
+    min-height:34px;
+    margin:0!important;
+    padding:7px 11px!important;
+    border-radius:999px!important;
+    line-height:1!important;
+    z-index:8;
+  }
+}
+
 @media(max-width:360px){
   .brand-text small{display:none;}
   .hero-actions,.property-actions,.form-actions{grid-template-columns:1fr;}
