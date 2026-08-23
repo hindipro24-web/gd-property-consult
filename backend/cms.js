@@ -135,7 +135,7 @@
         const top = 50 + Math.sin(angle) * orbitRadius;
         const name = item.name.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         const type = item.type.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-        return `<button class="map-node cms-map-node" style="left:${left.toFixed(2)}%;top:${top.toFixed(2)}%" type="button" aria-label="${name}, ${type}"><span>${name}</span><small>${type}</small></button>`;
+        return `<button class="map-node cms-map-node" style="left:${left.toFixed(2)}%;top:${top.toFixed(2)}%" type="button" data-intelligence-location="${name}" aria-label="View ${name} property intelligence" aria-controls="intelligenceInsightPanel" aria-expanded="false"><span>${name}</span><small>${type}</small></button>`;
       }).join('');
     }
     setText('#cmsServicesHeading', settings.services_heading);

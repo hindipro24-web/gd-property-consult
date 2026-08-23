@@ -230,6 +230,29 @@ if (!prefersReducedMotion && window.matchMedia("(pointer:fine)").matches) {
 // Property filters
 let activePropertyCategory = "all";
 let activeListingPurpose = "all";
+let activePropertyLocation = "";
+
+function normalizeFilterLocation(value = "") {
+  return normalizeText(value).replace(/\bsurat\b/g, "").trim();
+}
+
+function cardMatchesActiveLocation(card) {
+  if (!activePropertyLocation) return true;
+  const wanted = normalizeFilterLocation(activePropertyLocation);
+  const location = normalizeFilterLocation(
+    card.dataset.propertyLocation ||
+    card.dataset.location ||
+    $(".property-location", card)?.textContent ||
+    ""
+  );
+  if (!wanted || !location) return false;
+  if (location.includes(wanted) || wanted.includes(location)) return true;
+  const tokens = wanted.split(" ").filter(token => token.length >= 3);
+  const combinedArea = /[-–—/]/.test(activePropertyLocation);
+  return tokens.length > 0 && (combinedArea
+    ? tokens.some(token => location.includes(token))
+    : tokens.every(token => location.includes(token)));
+}
 
 function filterProperties() {
   const grid = document.getElementById("propertyGrid");
@@ -245,7 +268,7 @@ function filterProperties() {
       activeListingPurpose === "all" ||
       purpose === activeListingPurpose;
 
-    return categoryMatches && purposeMatches;
+    return categoryMatches && purposeMatches && cardMatchesActiveLocation(card);
   });
 
   const visibleCards = matchingCards;
@@ -266,9 +289,14 @@ function filterProperties() {
   const inventoryText = document.getElementById("propertyInventoryText");
   if (inventoryText) {
     inventoryText.textContent = matchingCards.length
-      ? `${matchingCards.length} matching ${matchingCards.length === 1 ? "property" : "properties"} • Newest first`
-      : "No exact match — try another filter";
+      ? `${matchingCards.length} ${matchingCards.length === 1 ? "property" : "properties"}${activePropertyLocation ? ` in ${activePropertyLocation}` : " matching"} • Newest first`
+      : `${activePropertyLocation ? `No property available in ${activePropertyLocation}` : "No exact match"} — try another filter`;
   }
+
+  const locationFilter = document.getElementById("propertyLocationFilter");
+  const locationFilterName = document.getElementById("propertyLocationFilterName");
+  if (locationFilter) locationFilter.hidden = !activePropertyLocation;
+  if (locationFilterName) locationFilterName.textContent = activePropertyLocation || "—";
 
   if (grid && visibleCards.length) grid.scrollTo({ left: 0, behavior: "auto" });
 
@@ -281,6 +309,16 @@ function filterProperties() {
 }
 
 function resetPropertyFilters() {
+  activePropertyCategory = "all";
+  activeListingPurpose = "all";
+  activePropertyLocation = "";
+  $$(".filter").forEach(button => button.classList.toggle("active", button.dataset.filter === "all"));
+  $$(".purpose-filter").forEach(button => button.classList.toggle("active", button.dataset.purposeFilter === "all"));
+  filterProperties();
+}
+
+function showLocationProperties(location = "") {
+  activePropertyLocation = String(location || "").split(",")[0].trim();
   activePropertyCategory = "all";
   activeListingPurpose = "all";
   $$(".filter").forEach(button => button.classList.toggle("active", button.dataset.filter === "all"));
@@ -300,6 +338,12 @@ document.addEventListener("click", event => {
 
   if (event.target.closest("#resetPropertyFilters")) {
     resetPropertyFilters();
+    return;
+  }
+
+  if (event.target.closest("#clearPropertyLocationFilter")) {
+    activePropertyLocation = "";
+    filterProperties();
     return;
   }
 
@@ -1355,7 +1399,8 @@ window.KeyAssetsFrontend = {
   observeReveals,
   initTilt,
   initPropertySliders,
-  applyPropertyFilters: filterProperties
+  applyPropertyFilters: filterProperties,
+  showLocationProperties
 };
 
 

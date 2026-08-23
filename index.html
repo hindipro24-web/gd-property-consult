@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="responsive-fix.css?v=25.7" />
+  <link rel="stylesheet" href="responsive-fix.css?v=25.8" />
   <link rel="stylesheet" href="v21-premium.css" />
   <link rel="stylesheet" href="v23-signature.css" />
   <link rel="stylesheet" href="v24-international.css" />
@@ -220,6 +220,10 @@
             </div>
           </div>
           <span class="inventory-status"><i></i><span id="propertyInventoryText">Live inventory enabled</span></span>
+          <div class="property-location-filter" id="propertyLocationFilter" hidden>
+            <span>Location: <strong id="propertyLocationFilterName">—</strong></span>
+            <button id="clearPropertyLocationFilter" type="button" aria-label="Clear location filter">×</button>
+          </div>
         </div>
 
         <div class="property-grid" id="propertyGrid">
@@ -337,6 +341,29 @@
               <div id="cmsIntelligenceNodes" class="intelligence-nodes"></div>
             </div>
           </div>
+          <div class="intelligence-panel-backdrop" id="intelligencePanelBackdrop" hidden></div>
+          <section class="intelligence-insight-panel" id="intelligenceInsightPanel" role="dialog" aria-hidden="true" aria-labelledby="intelligencePanelTitle" inert>
+            <button class="intelligence-panel-close" id="intelligencePanelClose" type="button" aria-label="Close location intelligence">×</button>
+            <div class="intelligence-panel-head">
+              <span><i></i> LIVE LOCATION SIGNAL</span>
+              <h3 id="intelligencePanelTitle">Location intelligence</h3>
+              <p id="intelligencePanelSummary">Select a radar location to see matching inventory.</p>
+            </div>
+            <div class="intelligence-metrics">
+              <div><small>Available</small><strong id="intelligenceAvailable">0</strong></div>
+              <div><small>Starting from</small><strong id="intelligenceStartingPrice">On request</strong></div>
+              <div><small>Sale / Rent</small><strong id="intelligencePurposeSplit">0 / 0</strong></div>
+            </div>
+            <div class="intelligence-property-types" id="intelligencePropertyTypes" aria-label="Available property types"></div>
+            <a class="intelligence-latest-property" id="intelligenceLatestProperty" href="#properties" hidden>
+              <img id="intelligenceLatestImage" src="" alt="">
+              <span><small>LATEST IN THIS LOCATION</small><strong id="intelligenceLatestTitle">—</strong><b id="intelligenceLatestMeta">—</b></span>
+            </a>
+            <div class="intelligence-panel-actions">
+              <button id="intelligenceViewProperties" type="button">View properties</button>
+              <button id="intelligenceGetOptions" type="button">Get options ↗</button>
+            </div>
+          </section>
           <div class="interface-footer">
             <div><small id="cmsListingsLabel">Active listings</small><strong id="marketActiveListings">Loading…</strong></div>
             <div><small id="cmsAverageLabel">Average price</small><strong id="marketAveragePrice">Loading…</strong></div>
@@ -706,10 +733,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="backend/supabase-config.js"></script>
-  <script src="backend/cms.js?v=25.7"></script>
-  <script src="script.js?v=25.4"></script>
+  <script src="backend/cms.js?v=25.8"></script>
+  <script src="script.js?v=25.8"></script>
   <script src="backend/properties.js?v=25.4"></script>
-  <script src="backend/intelligence.js"></script>
+  <script src="backend/intelligence.js?v=25.8"></script>
   <script src="responsive-fix.js"></script>
 </body>
 </html>
