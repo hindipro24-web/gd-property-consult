@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
   <meta name="theme-color" content="#050d13">
-  <title>GD Property | Admin Command Center</title>
+  <title>GD Property | Intelligence CRM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="responsive-admin.css">
   <link rel="stylesheet" href="admin-v26-command-center.css?v=26.1">
   <link rel="stylesheet" href="admin-v26-dual-mode.css?v=26.2">
+  <link rel="stylesheet" href="admin-v27-intelligence-crm.css?v=27.0">
   <style>
     body.auth-pending #authView,
     body.auth-pending #dashboardView,
@@ -20,7 +21,7 @@
     }
   </style>
 </head>
-<body class="auth-pending admin-v26">
+<body class="auth-pending admin-v26 admin-v27">
   <div id="setupNotice" class="setup-notice hidden">Run <code>backend/super-admin-schema.sql</code> in Supabase SQL Editor, then refresh this page.</div>
 
   <div id="adminAuthLoader" class="admin-auth-loader" role="status" aria-live="polite">
@@ -62,7 +63,7 @@
       <nav id="adminNav">
         <span class="admin-nav-label">OPERATIONS</span>
         <button class="nav-active" data-panel="overview"><span>◈</span> Overview</button>
-        <button class="command-mode-only" data-panel="leads"><span>◎</span> Leads CRM</button>
+        <button class="command-mode-only" data-panel="leads"><span>◎</span> Intelligence CRM</button>
         <button data-panel="properties"><span>▦</span> Properties</button>
         <span class="admin-nav-label">WEBSITE</span>
         <button data-panel="homepage"><span>⌂</span> Homepage</button>
@@ -257,13 +258,17 @@ Ravet | Value"></textarea></label>
       <section class="admin-panel command-mode-only" data-admin-panel="leads">
         <section class="crm-control-deck">
           <div>
-            <span class="crm-control-eyebrow"><i></i> ADVANCED LEAD OPERATIONS</span>
-            <h2>CRM Intelligence Center</h2>
-            <p>Track, prioritize and convert property enquiries and site visits from one workspace.</p>
+            <span class="crm-control-eyebrow"><i></i> GD INTELLIGENCE / LIVE OPERATIONS</span>
+            <h2>Real Estate Command CRM</h2>
+            <p>Every enquiry, visit and next action—prioritized in one conversion workspace.</p>
           </div>
-          <div class="crm-view-switch" aria-label="CRM view">
-            <button class="active" type="button" data-crm-view="table">▤ Table</button>
-            <button type="button" data-crm-view="kanban">▦ Pipeline</button>
+          <div class="crm-control-actions">
+            <button id="addLeadBtn" class="crm-add-lead" type="button"><span>＋</span> New lead</button>
+            <div class="crm-view-switch" aria-label="CRM view">
+              <button class="active" type="button" data-crm-view="workspace">◈ Action Center</button>
+              <button type="button" data-crm-view="kanban">▦ Pipeline</button>
+              <button type="button" data-crm-view="table">▤ Records</button>
+            </div>
           </div>
         </section>
 
@@ -275,25 +280,60 @@ Ravet | Value"></textarea></label>
           <article><small>CONVERSION RATE</small><strong id="crmConversionRate">0%</strong><span>CRM performance</span></article>
         </div>
 
-        <div class="crm-smart-filter-bar">
-          <span>SMART FILTERS</span>
-          <button class="active" type="button" data-crm-smart-filter="all">All records</button>
-          <button type="button" data-crm-smart-filter="today">Today</button>
-          <button type="button" data-crm-smart-filter="priority">High priority</button>
-          <button type="button" data-crm-smart-filter="visits">Site visits</button>
-          <button type="button" data-crm-smart-filter="won">Won deals</button>
-          <button type="button" data-crm-smart-filter="uncontacted">Needs contact</button>
-        </div>
+        <section class="crm-v27-workspace" id="crmWorkspaceView">
+          <div class="crm-v27-workspace-head">
+            <div><span><i></i> TODAY'S OPERATING PICTURE</span><h3>What needs attention now.</h3><p>Priority is calculated from lead stage, score and latest activity.</p></div>
+            <div class="crm-v27-sync"><small>LIVE DATA</small><strong><i></i> Synchronized</strong><span id="crmWorkspaceSyncTime">Updated now</span></div>
+          </div>
 
-        <section class="crm-summary-grid crm-summary-grid-five">
-          <button class="crm-summary-card active" type="button" data-lead-type-filter="all"><span>ALL LEADS</span><strong id="crmAllCount">0</strong><small>Active enquiries and visits</small></button>
-          <button class="crm-summary-card" type="button" data-lead-type-filter="inquiry"><span>PROPERTY ENQUIRIES</span><strong id="crmInquiryCount">0</strong><small>Customer interest requests</small></button>
-          <button class="crm-summary-card visit" type="button" data-lead-type-filter="visit"><span>SITE VISITS</span><strong id="crmVisitCount">0</strong><small>Scheduled visit requests</small></button>
-          <button class="crm-summary-card trash" type="button" data-lead-type-filter="trash"><span>TRASH</span><strong id="crmTrashCount">0</strong><small>Restore or permanently delete</small></button>
-          <article class="crm-summary-card static"><span>HOT / ACTIVE</span><strong id="crmActiveCount">0</strong><small>Needs quick follow-up</small></article>
+          <div class="crm-v27-command-grid">
+            <section class="crm-v27-action-center">
+              <header><div><small>IMMEDIATE ACTION</small><h3>Conversion queue</h3></div><span id="crmAttentionCount">0 actionable</span></header>
+              <div id="crmActionQueue" class="crm-v27-action-list"></div>
+            </section>
+
+            <aside class="crm-v27-operations-rail">
+              <section class="crm-v27-health-card">
+                <div><small>PIPELINE HEALTH</small><strong id="crmHealthScore">0</strong><span>/ 100</span></div>
+                <div class="crm-v27-health-ring" id="crmHealthRing"><i></i></div>
+                <p id="crmHealthMessage">Waiting for CRM records.</p>
+              </section>
+              <section class="crm-v27-visits-card">
+                <header><div><small>VISIT DESK</small><h3>Site-visit queue</h3></div><button type="button" data-crm-quick-view="visits">View all</button></header>
+                <div id="crmUpcomingVisits"></div>
+              </section>
+            </aside>
+          </div>
+
+          <div class="crm-v27-quick-actions">
+            <button type="button" data-crm-quick-view="uncontacted"><span>01</span><strong>New enquiries</strong><small>Open leads requiring first contact</small><b>→</b></button>
+            <button type="button" data-crm-quick-view="priority"><span>02</span><strong>High priority</strong><small>Focus on strongest opportunities</small><b>→</b></button>
+            <button type="button" data-crm-quick-view="visits"><span>03</span><strong>Visit pipeline</strong><small>Prepare and confirm site visits</small><b>→</b></button>
+            <button type="button" data-crm-quick-view="won"><span>04</span><strong>Won business</strong><small>Review converted opportunities</small><b>→</b></button>
+          </div>
         </section>
 
-        <section class="card crm-command-card" id="crmTableView">
+        <div id="crmBrowseControls" class="crm-v27-browse-controls hidden">
+          <div class="crm-smart-filter-bar">
+            <span>SMART FILTERS</span>
+            <button class="active" type="button" data-crm-smart-filter="all">All records</button>
+            <button type="button" data-crm-smart-filter="today">Today</button>
+            <button type="button" data-crm-smart-filter="priority">High priority</button>
+            <button type="button" data-crm-smart-filter="visits">Site visits</button>
+            <button type="button" data-crm-smart-filter="won">Won deals</button>
+            <button type="button" data-crm-smart-filter="uncontacted">Needs contact</button>
+          </div>
+
+          <section class="crm-summary-grid crm-summary-grid-five">
+            <button class="crm-summary-card active" type="button" data-lead-type-filter="all"><span>ALL LEADS</span><strong id="crmAllCount">0</strong><small>Active enquiries and visits</small></button>
+            <button class="crm-summary-card" type="button" data-lead-type-filter="inquiry"><span>PROPERTY ENQUIRIES</span><strong id="crmInquiryCount">0</strong><small>Customer interest requests</small></button>
+            <button class="crm-summary-card visit" type="button" data-lead-type-filter="visit"><span>SITE VISITS</span><strong id="crmVisitCount">0</strong><small>Scheduled visit requests</small></button>
+            <button class="crm-summary-card trash" type="button" data-lead-type-filter="trash"><span>TRASH</span><strong id="crmTrashCount">0</strong><small>Restore or permanently delete</small></button>
+            <article class="crm-summary-card static"><span>HOT / ACTIVE</span><strong id="crmActiveCount">0</strong><small>Needs quick follow-up</small></article>
+          </section>
+        </div>
+
+        <section class="card crm-command-card hidden" id="crmTableView">
           <div class="card-head crm-command-head">
             <div><small>LEAD COMMAND</small><h2>Enquiries & Site Visits</h2><p>Select records for bulk status changes, export, trash, restore or permanent deletion.</p></div>
             <button id="exportLeads" class="secondary" type="button">Export current view</button>
@@ -554,8 +594,14 @@ Ravet | Value"></textarea></label>
             <div class="lead-message-box" id="leadDetailRequirements">No message provided.</div>
           </section>
 
+          <section class="lead-detail-section lead-match-section">
+            <div class="lead-section-title"><span>05</span><div><small>PROPERTY INTELLIGENCE</small><h3>Recommended matches</h3></div></div>
+            <p class="lead-match-intro">Live inventory ranked by property type, configuration, location and listing purpose.</p>
+            <div id="leadPropertyMatches" class="lead-property-matches"></div>
+          </section>
+
           <section class="lead-detail-section lead-control-section">
-            <div class="lead-section-title"><span>05</span><div><small>CRM CONTROL</small><h3>Status, source and internal notes</h3></div></div>
+            <div class="lead-section-title"><span>06</span><div><small>CRM CONTROL</small><h3>Status, source and internal notes</h3></div></div>
             <div class="lead-control-grid advanced-lead-control-grid">
               <label>Status
                 <select id="leadDetailStatus"><option>NEW</option><option>HOT</option><option>WARM</option><option>COLD</option><option>CONTACTED</option><option>VISIT BOOKED</option><option>WON</option><option>LOST</option></select>
@@ -580,6 +626,33 @@ Ravet | Value"></textarea></label>
         <p id="leadDetailMessage" class="message"></p>
         <button id="leadDetailSave" class="primary" type="button">Save CRM changes</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="leadCreateModal">
+    <div class="modal-card crm-create-lead-modal">
+      <header>
+        <div><small>CRM / MANUAL CAPTURE</small><h2>Create a new lead</h2><p>Add a phone, walk-in or referral enquiry directly to the live pipeline.</p></div>
+        <button class="icon-btn" data-close="leadCreateModal" type="button" aria-label="Close new lead form">×</button>
+      </header>
+      <form id="leadCreateForm">
+        <div class="crm-create-lead-grid">
+          <label>Customer name<input id="newLeadName" required maxlength="120" placeholder="Full name"></label>
+          <label>Mobile number<input id="newLeadMobile" required inputmode="numeric" maxlength="15" placeholder="10-digit mobile"></label>
+          <label>Email address<input id="newLeadEmail" type="email" placeholder="Optional email"></label>
+          <label>Looking for<select id="newLeadLookingFor"><option value="Buy">Buy</option><option value="Rent">Rent</option><option value="Sell">Sell</option></select></label>
+          <label>Property type<select id="newLeadPropertyType"><option>Apartment</option><option>Villa</option><option>Plot</option><option>Commercial</option><option>Office</option></select></label>
+          <label>Configuration<input id="newLeadBhk" placeholder="2 BHK, 3 BHK, NA Plot"></label>
+          <label>Preferred location<input id="newLeadLocation" placeholder="Vesu, Dindoli, Godadara"></label>
+          <label>Budget<input id="newLeadBudget" placeholder="₹75 Lakh – ₹1 Crore"></label>
+          <label class="wide">Interested property<select id="newLeadProperty"><option value="">General enquiry / not selected</option></select></label>
+          <label>Status<select id="newLeadStatus"><option>NEW</option><option>HOT</option><option>WARM</option><option>CONTACTED</option><option>VISIT BOOKED</option></select></label>
+          <label>Source<select id="newLeadSource"><option>Phone Call</option><option>WhatsApp</option><option>Walk-in</option><option>Referral</option><option>Instagram</option><option>Manual CRM Entry</option></select></label>
+          <label class="wide">Requirement / internal note<textarea id="newLeadRequirements" rows="4" placeholder="Customer requirement, preferred time or context…"></textarea></label>
+        </div>
+        <div class="modal-actions"><button class="secondary" type="button" data-close="leadCreateModal">Cancel</button><button id="createLeadSubmit" class="primary" type="submit">Create lead & open profile</button></div>
+        <p id="leadCreateMessage" class="message"></p>
+      </form>
     </div>
   </div>
 
@@ -680,7 +753,7 @@ Ravet | Value"></textarea></label>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../backend/supabase-config.js"></script>
-  <script src="admin.js?v=26.2.1"></script>
+  <script src="admin.js?v=27.0"></script>
   <script src="../responsive-fix.js"></script>
 </body>
 </html>

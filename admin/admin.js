@@ -93,7 +93,7 @@ function setAdminCommandMode(enabled,{animate=true,navigate=true}={}){
   window.clearTimeout(commandModeNavigationTimer);
   if (navigate){
     commandModeNavigationTimer = window.setTimeout(()=>{
-      if (active){openPanel('leads');setCrmView('kanban')}
+      if (active){openPanel('leads');setCrmView('workspace')}
       else openPanel('overview');
     },animate?620:0);
   }
@@ -754,7 +754,7 @@ let leadPage = 1;
 let leadPageSize = 10;
 let leadSort = "newest";
 let leadSmartFilter = "all";
-let crmView = "table";
+let crmView = "workspace";
 
 function isDeletedLead(lead = {}) {
   return Boolean(lead.deleted_at);
@@ -1071,6 +1071,7 @@ function renderLeads() {
   updateLeadPageCheckbox();
   updateLeadBulkBar();
   renderKanbanBoard();
+  renderCrmWorkspace();
   renderExecutiveDashboard();
 }
 
@@ -1144,6 +1145,96 @@ function renderExecutiveDashboard() {
     </button>`).join('') || '<div class="empty">No active priority leads.</div>';
 }
 
+function crmStatusClass(value='') {
+  return String(value || 'NEW').toLowerCase().replace(/[^a-z0-9]+/g,'-');
+}
+
+function renderCrmWorkspace() {
+  const active = leads.filter(lead => !isDeletedLead(lead));
+  const actionable = active
+    .filter(lead => !['WON','LOST'].includes(lead.status))
+    .sort((a,b) => leadPriorityWeight(b) - leadPriorityWeight(a));
+  const won = active.filter(lead => lead.status === 'WON');
+  const visits = active.filter(lead => isVisitLead(lead) && !['WON','LOST'].includes(lead.status)).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  const averageScore = active.length
+    ? active.reduce((total,lead) => total + Number(lead.lead_score || 0),0) / active.length
+    : 0;
+  const conversion = active.length ? (won.length / active.length) * 100 : 0;
+  const visitMomentum = active.length ? Math.min(20,(visits.length / active.length) * 50) : 0;
+  const health = active.length ? Math.min(99,Math.round(38 + averageScore * .34 + conversion * .25 + visitMomentum)) : 0;
+
+  if (byId('crmAttentionCount')) byId('crmAttentionCount').textContent = `${actionable.length} actionable`;
+  if (byId('crmHealthScore')) byId('crmHealthScore').textContent = health;
+  if (byId('crmHealthRing')) byId('crmHealthRing').style.setProperty('--crm-health',`${health * 3.6}deg`);
+  if (byId('crmHealthMessage')) byId('crmHealthMessage').textContent = !active.length
+    ? 'New enquiries will appear here automatically.'
+    : health >= 78 ? 'Healthy pipeline. Focus on priority follow-ups and visits.'
+    : health >= 55 ? 'Stable pipeline. Move new leads into qualified conversations.'
+    : 'Pipeline needs attention. Start with uncontacted enquiries.';
+  if (byId('crmWorkspaceSyncTime')) byId('crmWorkspaceSyncTime').textContent = `Updated ${new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`;
+
+  const queue = byId('crmActionQueue');
+  if (queue) queue.innerHTML = actionable.slice(0,6).map((lead,index) => {
+    const phone = safePhone(lead.mobile);
+    return `<article class="crm-v27-action-item" data-workspace-lead="${lead.id}">
+      <span class="crm-v27-action-rank">${String(index + 1).padStart(2,'0')}</span>
+      <span class="crm-v27-avatar">${escapeHtml(String(lead.full_name || 'L').charAt(0).toUpperCase())}</span>
+      <div class="crm-v27-action-copy"><div><strong>${escapeHtml(lead.full_name || 'Unnamed lead')}</strong><span class="crm-v27-stage ${crmStatusClass(lead.status)}">${escapeHtml(lead.status || 'NEW')}</span></div><small>${escapeHtml(lead.property_name || lead.location || 'General property enquiry')}</small><p>${escapeHtml(leadNextActionText(lead))}</p></div>
+      <div class="crm-v27-action-meta"><strong>${Number(lead.lead_score || 0)}</strong><small>score</small></div>
+      <div class="crm-v27-action-buttons"><button type="button" data-workspace-lead="${lead.id}">Open</button>${phone ? `<a href="tel:+91${phone}" aria-label="Call ${escapeHtml(lead.full_name || 'lead')}">☎</a><a href="https://wa.me/91${phone}" target="_blank" rel="noopener" aria-label="WhatsApp ${escapeHtml(lead.full_name || 'lead')}">◉</a>` : ''}</div>
+    </article>`;
+  }).join('') || '<div class="crm-v27-empty"><span>✓</span><strong>Action queue is clear</strong><small>New enquiries and follow-ups will appear here.</small></div>';
+
+  const visitHost = byId('crmUpcomingVisits');
+  if (visitHost) visitHost.innerHTML = visits.slice(0,4).map(lead => `
+    <button type="button" data-workspace-lead="${lead.id}">
+      <span>${escapeHtml(String(lead.full_name || 'V').charAt(0).toUpperCase())}</span>
+      <div><strong>${escapeHtml(lead.full_name || 'Site visit')}</strong><small>${escapeHtml(lead.property_name || lead.location || 'Property not selected')}</small></div>
+      <time>${escapeHtml(lead.contact_time || 'Schedule pending')}</time>
+    </button>`).join('') || '<div class="crm-v27-mini-empty">No site visits in the current queue.</div>';
+}
+
+function propertyMatchScore(lead={},property={}) {
+  let score = 18;
+  const leadType = String(lead.property_type || '').toLowerCase();
+  const propertyType = String(property.property_type || '').toLowerCase();
+  const leadLocation = String(lead.location || '').toLowerCase();
+  const propertyLocation = `${property.location || ''} ${property.city || ''}`.toLowerCase();
+  const leadBhk = String(lead.bhk || '').toLowerCase();
+  const propertyBhk = String(property.bhk || '').toLowerCase();
+  const lookingFor = String(lead.looking_for || '').toLowerCase();
+  const listingPurpose = String(property.listing_purpose || '').toLowerCase();
+  if (lead.property_id && lead.property_id === property.id) score += 65;
+  if (leadType && propertyType && (leadType === propertyType || propertyType.includes(leadType) || leadType.includes(propertyType))) score += 26;
+  if (leadBhk && propertyBhk && (leadBhk.includes(propertyBhk) || propertyBhk.includes(leadBhk))) score += 20;
+  if (leadLocation && propertyLocation && leadLocation.split(/[\s,/-]+/).filter(word => word.length > 2).some(word => propertyLocation.includes(word))) score += 24;
+  if ((lookingFor.includes('rent') && listingPurpose.includes('rent')) || (lookingFor.includes('buy') && listingPurpose.includes('sale'))) score += 12;
+  if (property.featured) score += 3;
+  if (property.verified) score += 3;
+  return Math.min(99,score);
+}
+
+function matchingPropertiesForLead(lead) {
+  return properties
+    .filter(property => property.published !== false)
+    .map(property => ({property,score:propertyMatchScore(lead,property)}))
+    .sort((a,b) => b.score - a.score)
+    .slice(0,3);
+}
+
+function renderLeadPropertyMatches(lead) {
+  const host = byId('leadPropertyMatches');
+  if (!host) return;
+  const matches = matchingPropertiesForLead(lead);
+  host.innerHTML = matches.map(({property,score},index) => `
+    <a href="../property-details.html?id=${encodeURIComponent(property.id)}" target="_blank" rel="noopener" class="lead-property-match">
+      <span class="lead-match-rank">${String(index + 1).padStart(2,'0')}</span>
+      <div><strong>${escapeHtml(property.title || 'Property')}</strong><small>${escapeHtml([property.bhk,property.property_type,property.location].filter(Boolean).join(' • ') || 'Inventory match')}</small></div>
+      <span class="lead-match-score"><b>${score}%</b><small>MATCH</small></span>
+      <i>↗</i>
+    </a>`).join('') || '<div class="crm-v27-mini-empty">Publish properties to activate inventory matching.</div>';
+}
+
 function kanbanBucket(lead) {
   if (lead.status === 'NEW') return 'new';
   if (['HOT','WARM'].includes(lead.status)) return 'priority';
@@ -1189,11 +1280,97 @@ function renderKanbanBoard() {
 }
 
 function setCrmView(view) {
-  crmView = view === 'kanban' ? 'kanban' : 'table';
+  crmView = ['workspace','kanban','table'].includes(view) ? view : 'workspace';
+  byId('crmWorkspaceView')?.classList.toggle('hidden', crmView !== 'workspace');
   byId('crmTableView')?.classList.toggle('hidden', crmView !== 'table');
   byId('crmKanbanView')?.classList.toggle('hidden', crmView !== 'kanban');
+  byId('crmBrowseControls')?.classList.toggle('hidden', crmView === 'workspace');
   $$('[data-crm-view]').forEach(button => button.classList.toggle('active', button.dataset.crmView === crmView));
   if (crmView === 'kanban') renderKanbanBoard();
+  if (crmView === 'workspace') renderCrmWorkspace();
+}
+
+function populateNewLeadProperties() {
+  const select = byId('newLeadProperty');
+  if (!select) return;
+  select.innerHTML = '<option value="">General enquiry / not selected</option>' + properties
+    .filter(property => property.published !== false)
+    .map(property => `<option value="${property.id}">${escapeHtml(property.title || 'Property')} — ${escapeHtml(property.location || property.price_label || 'Available')}</option>`)
+    .join('');
+}
+
+function openLeadCreateModal() {
+  byId('leadCreateForm')?.reset();
+  if (byId('leadCreateMessage')) byId('leadCreateMessage').textContent = '';
+  populateNewLeadProperties();
+  openModal('leadCreateModal');
+  requestAnimationFrame(() => byId('newLeadName')?.focus());
+}
+
+function manualLeadScore(status,values={}) {
+  const base = {HOT:78,WARM:60,CONTACTED:55,'VISIT BOOKED':82,NEW:38}[status] || 38;
+  const completion = [values.email,values.location,values.budget,values.propertyId,values.requirements].filter(Boolean).length * 3;
+  return Math.min(96,base + completion);
+}
+
+async function createManualLead(event) {
+  event.preventDefault();
+  const submit = byId('createLeadSubmit');
+  const message = byId('leadCreateMessage');
+  const phone = safePhone(byId('newLeadMobile').value);
+  if (phone.length !== 10) {
+    message.textContent = 'Enter a valid 10-digit mobile number.';
+    byId('newLeadMobile').focus();
+    return;
+  }
+  const property = properties.find(item => item.id === byId('newLeadProperty').value);
+  const status = byId('newLeadStatus').value;
+  const values = {
+    email:byId('newLeadEmail').value.trim(),
+    location:byId('newLeadLocation').value.trim(),
+    budget:byId('newLeadBudget').value.trim(),
+    propertyId:property?.id || null,
+    requirements:byId('newLeadRequirements').value.trim()
+  };
+  const payload = {
+    lead_id:`GD${Date.now().toString().slice(-10)}`,
+    full_name:byId('newLeadName').value.trim(),
+    mobile:`+91 ${phone}`,
+    email:values.email || null,
+    contact_method:byId('newLeadSource').value === 'WhatsApp' ? 'WhatsApp' : 'Mobile',
+    looking_for:byId('newLeadLookingFor').value,
+    property_type:byId('newLeadPropertyType').value,
+    location:values.location || null,
+    bhk:byId('newLeadBhk').value.trim() || null,
+    budget:values.budget || null,
+    property_id:property?.id || null,
+    property_name:property?.title || null,
+    property_price:property?.price_label || null,
+    property_area:property?.area || null,
+    requirements:values.requirements || null,
+    source:byId('newLeadSource').value,
+    page_url:'Admin CRM / Manual Entry',
+    lead_score:manualLeadScore(status,values),
+    status,
+    notes:values.requirements || null
+  };
+  submit.disabled = true;
+  submit.textContent = 'Creating lead…';
+  message.textContent = '';
+  try {
+    const {data,error} = await client.from('leads').insert(payload).select('*').single();
+    if (error) throw error;
+    closeModal('leadCreateModal');
+    await loadLeads();
+    setCrmView('workspace');
+    openLeadDetail(leads.find(lead => lead.id === data.id) || data);
+    setStatus('New lead created','success');
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    submit.disabled = false;
+    submit.textContent = 'Create lead & open profile';
+  }
 }
 
 function setLeadDetailText(id, value) {
@@ -1262,6 +1439,7 @@ function openLeadDetail(lead) {
   setLeadDetailText("leadDetailRequirements", lead.requirements || "No message or additional requirement provided.");
   setLeadDetailText("leadDetailScore", Number(lead.lead_score || 0));
   setLeadDetailText("leadDetailSource", lead.source);
+  renderLeadPropertyMatches(lead);
 
   byId("leadInquirySection").classList.toggle("hidden", visit);
   byId("leadVisitSection").classList.toggle("hidden", !visit);
@@ -2029,6 +2207,19 @@ updateAdminClock();
 setInterval(updateAdminClock, 30000);
 
 $$('[data-crm-view]').forEach(button => button.addEventListener('click',()=>setCrmView(button.dataset.crmView)));
+byId('addLeadBtn')?.addEventListener('click',openLeadCreateModal);
+byId('leadCreateForm')?.addEventListener('submit',createManualLead);
+$$('[data-crm-quick-view]').forEach(button => button.addEventListener('click',()=>{
+  leadSmartFilter = button.dataset.crmQuickView || 'all';
+  leadTypeFilter = 'all';
+  leadPage = 1;
+  selectedLeadIds.clear();
+  byId('leadFilter').value = 'all';
+  updateLeadFilterUI();
+  $$('[data-crm-smart-filter]').forEach(item => item.classList.toggle('active',item.dataset.crmSmartFilter === leadSmartFilter));
+  setCrmView('table');
+  renderLeads();
+}));
 $$('[data-crm-smart-filter]').forEach(button => button.addEventListener('click',()=>{
   leadSmartFilter = button.dataset.crmSmartFilter || 'all';
   leadPage = 1;
@@ -2072,6 +2263,8 @@ byId('crmKanbanBoard')?.addEventListener('click',event=>{
 });
 
 document.addEventListener('click',event=>{
+  const workspaceLead=event.target.closest('[data-workspace-lead]');
+  if(workspaceLead && !event.target.closest('a')){openLeadDetail(leads.find(lead=>lead.id===workspaceLead.dataset.workspaceLead));return}
   const overviewLead=event.target.closest('[data-overview-lead]');
   if(overviewLead){openPanel('leads');openLeadDetail(leads.find(lead=>lead.id===overviewLead.dataset.overviewLead));return}
   const pipeline=event.target.closest('[data-pipeline-stage]');
@@ -2120,7 +2313,7 @@ byId('adminCommandResults')?.addEventListener('click',event=>{
 
 byId('overviewAddProperty')?.addEventListener('click',()=>{openPanel('properties');openProperty()});
 
-async function loadAll(){setStatus('Loading…','saving');await Promise.all([loadSettings(),loadProperties(),loadLeads(),loadTestimonials(),loadPosts()]);renderExecutiveDashboard();renderKanbanBoard();setStatus('Ready')}
+async function loadAll(){setStatus('Loading…','saving');await Promise.all([loadSettings(),loadProperties(),loadLeads(),loadTestimonials(),loadPosts()]);renderExecutiveDashboard();renderKanbanBoard();renderCrmWorkspace();setCrmView('workspace');setStatus('Ready')}
 
 (async()=>{
   showAuthLoading('Checking secure admin session…');
