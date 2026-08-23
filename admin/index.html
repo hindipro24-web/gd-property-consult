@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="admin.css">
   <link rel="stylesheet" href="responsive-admin.css">
   <link rel="stylesheet" href="admin-v26-command-center.css?v=26.1">
+  <link rel="stylesheet" href="admin-v26-dual-mode.css?v=26.2">
   <style>
     body.auth-pending #authView,
     body.auth-pending #dashboardView,
@@ -61,13 +62,13 @@
       <nav id="adminNav">
         <span class="admin-nav-label">OPERATIONS</span>
         <button class="nav-active" data-panel="overview"><span>◈</span> Overview</button>
-        <button data-panel="leads"><span>◎</span> Leads CRM</button>
+        <button class="command-mode-only" data-panel="leads"><span>◎</span> Leads CRM</button>
         <button data-panel="properties"><span>▦</span> Properties</button>
         <span class="admin-nav-label">WEBSITE</span>
         <button data-panel="homepage"><span>⌂</span> Homepage</button>
         <button data-panel="branding"><span>◉</span> Branding & Theme</button>
         <button data-panel="footer"><span>⌁</span> Footer & Contact</button>
-        <button data-panel="seo"><span>⚙</span> SEO & Custom CSS</button>
+        <button class="command-mode-only" data-panel="seo"><span>⚙</span> SEO & Custom CSS</button>
         <span class="admin-nav-label">CONTENT &amp; ASSETS</span>
         <button data-panel="testimonials"><span>✦</span> Testimonials</button>
         <button data-panel="blog"><span>▤</span> Blog / Insights</button>
@@ -82,10 +83,14 @@
     <main class="content">
       <header class="topbar advanced-topbar">
         <div class="topbar-title-block"><small id="panelKicker">COMMAND CENTER</small><h1 id="panelTitle">Overview</h1></div>
-        <button id="adminCommandButton" class="admin-command-trigger" type="button" aria-label="Open global search">
+        <button id="adminCommandButton" class="admin-command-trigger command-mode-only" type="button" aria-label="Open global search">
           <span>⌕</span><b>Search leads, properties, pages…</b><kbd>Ctrl K</kbd>
         </button>
         <div class="topbar-actions advanced-topbar-actions">
+          <button id="adminModeToggle" class="admin-mode-toggle" type="button" aria-pressed="false" aria-label="Activate GD Intelligence command mode" hidden>
+            <span class="admin-mode-toggle-copy"><small>SECURE LAYER</small><strong id="adminModeToggleLabel">Admin mode</strong></span>
+            <span class="admin-mode-toggle-track" aria-hidden="true"><i></i></span>
+          </button>
           <div class="admin-live-time"><strong id="adminClock">--:--</strong><small id="adminDate">Loading date</small></div>
           <span id="saveStatus" class="save-status">Ready</span>
           <a href="../index.html" target="_blank" class="preview-btn">Live website ↗</a>
@@ -93,7 +98,29 @@
       </header>
 
       <section class="admin-panel active" data-admin-panel="overview">
-        <section class="executive-command-hero">
+        <section class="standard-admin-workspace standard-mode-only">
+          <div class="standard-admin-heading">
+            <span><i></i> WEBSITE MANAGEMENT WORKSPACE</span>
+            <h2>Everything needed to keep the website current.</h2>
+            <p>Manage inventory, homepage content, client stories and media from one focused workspace.</p>
+            <button id="standardCommandLaunch" class="standard-command-launch" type="button" hidden><span>⌁</span><strong>Activate GD Intelligence</strong><small>Open secure CRM command layer</small><b>→</b></button>
+          </div>
+          <div class="standard-workspace-grid">
+            <button type="button" data-go-panel="properties"><span>01</span><strong>Property inventory</strong><small>Add, edit, publish and arrange listings</small><b>▦</b></button>
+            <button type="button" data-go-panel="homepage"><span>02</span><strong>Homepage control</strong><small>Manage hero and website sections</small><b>⌂</b></button>
+            <button type="button" data-go-panel="testimonials"><span>03</span><strong>Client success</strong><small>Publish verified testimonial stories</small><b>✦</b></button>
+            <button type="button" data-go-panel="blog"><span>04</span><strong>Insights studio</strong><small>Create guides and market updates</small><b>▤</b></button>
+            <button type="button" data-go-panel="media"><span>05</span><strong>Media library</strong><small>Organize property images and documents</small><b>▣</b></button>
+            <button type="button" data-go-panel="branding"><span>06</span><strong>Brand system</strong><small>Logo, colors and visual identity</small><b>◉</b></button>
+          </div>
+          <div class="standard-workspace-status">
+            <span><i></i> Website controls available</span>
+            <span>Public frontend preserved</span>
+            <span>Secure Supabase session</span>
+          </div>
+        </section>
+
+        <section class="executive-command-hero command-mode-only">
           <div class="executive-command-copy">
             <span class="executive-eyebrow"><i></i> GD OPERATIONS CENTER</span>
             <h2 id="adminGreeting">Good evening, Super Admin.</h2>
@@ -110,7 +137,7 @@
           </div>
         </section>
 
-        <div class="executive-kpi-grid">
+        <div class="executive-kpi-grid command-mode-only">
           <article class="executive-kpi-card inventory"><span>LIVE INVENTORY</span><strong id="statProperties">0</strong><small>Published and draft properties</small><i>▦</i></article>
           <article class="executive-kpi-card leads"><span>ACTIVE LEADS</span><strong id="statLeads">0</strong><small>Needs follow-up or action</small><i>◎</i></article>
           <article class="executive-kpi-card today"><span>NEW TODAY</span><strong id="statNewToday">0</strong><small>Fresh enquiries received</small><i>↗</i></article>
@@ -119,7 +146,7 @@
           <article class="executive-kpi-card conversion"><span>CONVERSION</span><strong id="statConversion">0%</strong><small>Won from active CRM records</small><i>◔</i></article>
         </div>
 
-        <div class="executive-intelligence-grid">
+        <div class="executive-intelligence-grid command-mode-only">
           <section class="card executive-pipeline-card">
             <div class="card-head"><div><small>LIVE SALES FUNNEL</small><h2>CRM pipeline health</h2></div><button type="button" data-go-panel="leads">View pipeline ↗</button></div>
             <div id="overviewPipeline" class="overview-pipeline"></div>
@@ -130,7 +157,7 @@
           </section>
         </div>
 
-        <div class="overview-grid advanced-overview-grid">
+        <div class="overview-grid advanced-overview-grid command-mode-only">
           <section class="card"><div class="card-head"><div><small>RECENT ACTIVITY</small><h2>Latest CRM records</h2></div><button data-go-panel="leads">Open CRM</button></div><div id="recentLeads" class="activity-list advanced-activity-list"></div></section>
           <section class="card quick-card"><div class="card-head"><div><small>QUICK CONTROL</small><h2>Website actions</h2></div></div><div class="quick-actions advanced-quick-actions"><button data-go-panel="branding"><span>◉</span>Brand system</button><button data-go-panel="homepage"><span>⌂</span>Homepage CMS</button><button data-go-panel="properties" id="quickAddProperty"><span>＋</span>Add property</button><button data-go-panel="footer"><span>◉</span>WhatsApp & contact</button><button data-go-panel="seo"><span>⚙</span>SEO controls</button><button data-go-panel="media"><span>▣</span>Media library</button></div></section>
         </div>
@@ -227,7 +254,7 @@ Ravet | Value"></textarea></label>
         <section class="card"><div class="card-head toolbar"><div><small>LIVE INVENTORY</small><h2>Properties</h2></div><div><input id="propertySearch" placeholder="Search property"><button id="addPropertyBtn" class="primary" type="button">+ Add property</button></div></div><div class="table-wrap"><table><thead><tr><th>Property</th><th>Listing</th><th>Type</th><th>Price</th><th>Status</th><th>Visibility</th><th>Actions</th></tr></thead><tbody id="propertyRows"></tbody></table></div><div id="propertyEmpty" class="empty hidden">No properties found.</div></section>
       </section>
 
-      <section class="admin-panel" data-admin-panel="leads">
+      <section class="admin-panel command-mode-only" data-admin-panel="leads">
         <section class="crm-control-deck">
           <div>
             <span class="crm-control-eyebrow"><i></i> ADVANCED LEAD OPERATIONS</span>
@@ -341,7 +368,7 @@ Ravet | Value"></textarea></label>
         </form>
       </section>
 
-      <section class="admin-panel" data-admin-panel="seo">
+      <section class="admin-panel command-mode-only" data-admin-panel="seo">
         <form id="seoForm" class="settings-grid single">
           <section class="card form-card"><div class="card-head"><div><small>SEARCH VISIBILITY</small><h2>SEO settings</h2></div></div><div class="field-grid"><label class="wide">Page title<input id="seoTitle"></label><label class="wide">Meta description<textarea id="seoDescription" rows="3"></textarea></label><label class="wide">Keywords<input id="seoKeywords"></label><label class="switch wide"><input id="maintenanceMode" type="checkbox"><span></span><div><strong>Maintenance mode</strong><small>Replace the public website with a temporary update screen.</small></div></label></div></section>
           <section class="card form-card"><div class="card-head"><div><small>ADVANCED CONTROL</small><h2>Custom CSS</h2></div></div><p class="help">Use only CSS here. This gives you advanced visual control without exposing secret keys or unsafe admin JavaScript.</p><textarea id="customCss" class="code-editor" rows="16" placeholder="/* Example */\n.hero-title { letter-spacing: -0.05em; }"></textarea></section>
@@ -388,6 +415,16 @@ Ravet | Value"></textarea></label>
         </section>
       </section>
     </main>
+  </div>
+
+  <div class="command-mode-transition hidden" id="commandModeTransition" role="status" aria-live="polite" aria-atomic="true">
+    <div class="command-transition-grid" aria-hidden="true"></div>
+    <div class="command-transition-core" aria-hidden="true"><span></span><span></span><img src="../assets/gd-property-consult/gd-logo.png" alt=""></div>
+    <small>GD / SECURE OPERATIONS LAYER</small>
+    <strong id="commandTransitionTitle">GD Intelligence Online</strong>
+    <p id="commandTransitionText">Synchronizing live CRM command systems…</p>
+    <div class="command-transition-progress" aria-hidden="true"><i></i></div>
+    <div class="command-transition-signals" aria-hidden="true"><span>CRM</span><span>PIPELINE</span><span>VISITS</span><span>INSIGHTS</span></div>
   </div>
 
   <div class="modal hidden" id="propertyModal"><div class="modal-card wide-modal"><header><div><small>PROPERTY EDITOR</small><h2 id="propertyModalTitle">Add property</h2></div><button class="icon-btn" data-close="propertyModal">×</button></header><form id="propertyForm"><input id="propertyId" type="hidden"><div class="field-grid"><label class="wide">Project title<input id="propertyTitle" required></label><label>Slug<input id="propertySlug" required></label><label>Property type<select id="propertyType" required><option>Apartment</option><option>Villa</option><option>Plot</option><option>Commercial</option><option>Office</option></select></label><label>Listing purpose<select id="propertyListingPurpose" required><option value="Sale">For Sale</option><option value="Rent">For Rent</option></select><small class="admin-field-help">Choose whether this property is available for sale or monthly rent.</small></label><label>Location<input id="propertyLocation" required></label><label>City<input id="propertyCity" value="Surat"></label><section class="default-configuration-manager wide">

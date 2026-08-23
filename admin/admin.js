@@ -13,6 +13,9 @@ let testimonials = [];
 let posts = [];
 let currentProfile = null;
 let pendingGalleryUrls = [];
+let commandModeTransitionTimer = null;
+let commandModeHideTimer = null;
+let commandModeNavigationTimer = null;
 
 const panelMeta = {
   overview:['COMMAND CENTER','Overview'], branding:['IDENTITY SYSTEM','Branding & Theme'], homepage:['PAGE BUILDER','Homepage'], properties:['INVENTORY CONTROL','Properties'], leads:['CRM PIPELINE','Leads CRM'], testimonials:['SOCIAL PROOF','Testimonials'], blog:['CONTENT ENGINE','Blog / Insights'], footer:['CONTACT SYSTEM','Footer & Contact'], seo:['ADVANCED CONTROL','SEO & Custom CSS'], media:['ASSET STORAGE','Media Library']
@@ -41,6 +44,10 @@ function finishAuthLoading(){
 }
 
 function showAuth(){
+  currentProfile = null;
+  document.body.classList.remove('super-admin-capable','super-command-mode');
+  if (byId('adminModeToggle')) byId('adminModeToggle').hidden = true;
+  if (byId('standardCommandLaunch')) byId('standardCommandLaunch').hidden = true;
   byId('authView').classList.remove('hidden');
   byId('dashboardView').classList.add('hidden');
   finishAuthLoading();
@@ -50,6 +57,46 @@ function showDashboard(){
   byId('authView').classList.add('hidden');
   byId('dashboardView').classList.remove('hidden');
   finishAuthLoading();
+}
+
+function isSuperAdminProfile(){
+  return currentProfile?.role === 'super_admin';
+}
+
+function runCommandModeTransition(active){
+  const overlay = byId('commandModeTransition');
+  if (!overlay) return;
+  window.clearTimeout(commandModeTransitionTimer);
+  window.clearTimeout(commandModeHideTimer);
+  byId('commandTransitionTitle').textContent = active ? 'GD Intelligence Online' : 'Admin Workspace Restored';
+  byId('commandTransitionText').textContent = active
+    ? 'Synchronizing live CRM command systems…'
+    : 'Returning to focused website management…';
+  overlay.classList.remove('hidden');
+  requestAnimationFrame(()=>overlay.classList.add('active'));
+  commandModeTransitionTimer = window.setTimeout(()=>{
+    overlay.classList.remove('active');
+    commandModeHideTimer = window.setTimeout(()=>overlay.classList.add('hidden'),240);
+  },1050);
+}
+
+function setAdminCommandMode(enabled,{animate=true,navigate=true}={}){
+  const active = Boolean(enabled && isSuperAdminProfile());
+  document.body.classList.toggle('super-command-mode',active);
+  const toggle = byId('adminModeToggle');
+  if (toggle){
+    toggle.setAttribute('aria-pressed',String(active));
+    toggle.setAttribute('aria-label',active ? 'Return to standard admin mode' : 'Activate GD Intelligence command mode');
+  }
+  if (byId('adminModeToggleLabel')) byId('adminModeToggleLabel').textContent = active ? 'Command mode' : 'Admin mode';
+  if (animate) runCommandModeTransition(active);
+  window.clearTimeout(commandModeNavigationTimer);
+  if (navigate){
+    commandModeNavigationTimer = window.setTimeout(()=>{
+      if (active){openPanel('leads');setCrmView('kanban')}
+      else openPanel('overview');
+    },animate?620:0);
+  }
 }
 function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function slugify(value=''){return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
@@ -80,6 +127,12 @@ async function ensureAdmin() {
   if (!profile?.active) throw new Error('This admin account is disabled.');
   currentProfile = profile;
   byId('roleText').textContent = profile.role === 'super_admin' ? 'Super Admin' : profile.role;
+  const superAdmin = profile.role === 'super_admin';
+  document.body.classList.toggle('super-admin-capable',superAdmin);
+  if (byId('adminModeToggle')) byId('adminModeToggle').hidden = !superAdmin;
+  if (byId('standardCommandLaunch')) byId('standardCommandLaunch').hidden = !superAdmin;
+  setAdminCommandMode(false,{animate:false,navigate:false});
+  openPanel('overview');
   return true;
 }
 
@@ -115,15 +168,27 @@ byId('loginForm').addEventListener('submit', async event => {
   await enterDashboard();
 });
 byId('logoutBtn').addEventListener('click',async()=>{
+  setAdminCommandMode(false,{animate:false,navigate:false});
   showAuthLoading('Signing out securely…');
   await client.auth.signOut();
   showAuth();
 });
 
+byId('adminModeToggle')?.addEventListener('click',()=>{
+  if (!isSuperAdminProfile()) return;
+  setAdminCommandMode(!document.body.classList.contains('super-command-mode'));
+});
+
+byId('standardCommandLaunch')?.addEventListener('click',()=>{
+  if (isSuperAdminProfile()) setAdminCommandMode(true);
+});
+
 function openPanel(name){
+  if (['leads','seo'].includes(name) && (!isSuperAdminProfile() || !document.body.classList.contains('super-command-mode'))) return;
   $$('[data-admin-panel]').forEach(panel=>panel.classList.toggle('active',panel.dataset.adminPanel===name));
   $$('#adminNav button').forEach(button=>button.classList.toggle('nav-active',button.dataset.panel===name));
-  const [kicker,title]=panelMeta[name]||['CONTROL','Admin'];
+  const standardOverview = name === 'overview' && !document.body.classList.contains('super-command-mode');
+  const [kicker,title]=standardOverview ? ['ADMIN WORKSPACE','Overview'] : (panelMeta[name]||['CONTROL','Admin']);
   byId('panelKicker').textContent=kicker;byId('panelTitle').textContent=title;
   if (name==='media') loadMedia();
 }
@@ -2038,7 +2103,10 @@ function openCommandPalette(){openModal('commandPaletteModal');byId('adminComman
 byId('adminCommandButton')?.addEventListener('click',openCommandPalette);
 byId('adminCommandInput')?.addEventListener('input',event=>renderCommandResults(event.target.value));
 document.addEventListener('keydown',event=>{
-  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();openCommandPalette();return}
+  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){
+    if(!document.body.classList.contains('super-command-mode'))return;
+    event.preventDefault();openCommandPalette();return
+  }
   if(event.key==='Escape'&&!byId('commandPaletteModal')?.classList.contains('hidden'))closeModal('commandPaletteModal');
 });
 byId('adminCommandResults')?.addEventListener('click',event=>{
