@@ -167,11 +167,25 @@
     return Number.isFinite(timestamp) ? timestamp : 0;
   }
 
+  function comparePropertiesNewest(a, b) {
+    const timestampDifference = propertyTimestamp(b) - propertyTimestamp(a);
+    if (timestampDifference) return timestampDifference;
+
+    const aId = String(a?.id || "");
+    const bId = String(b?.id || "");
+    if (aId !== bId) return aId < bId ? 1 : -1;
+
+    const aTitle = String(a?.title || "");
+    const bTitle = String(b?.title || "");
+    if (aTitle === bTitle) return 0;
+    return aTitle > bTitle ? 1 : -1;
+  }
+
   function orderPropertiesForHero(items) {
-    const newest = [...items].sort((a, b) => propertyTimestamp(b) - propertyTimestamp(a));
+    const newest = [...items].sort(comparePropertiesNewest);
     const manualHero = newest
       .filter(property => property.featured)
-      .sort((a, b) => propertyTimestamp(b) - propertyTimestamp(a))[0] || null;
+      .sort(comparePropertiesNewest)[0] || null;
 
     if (!manualHero) {
       return {
@@ -236,7 +250,9 @@
     const { data, error } = await client
       .from("properties")
       .select("*")
-      .eq("published", true);
+      .eq("published", true)
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false });
 
     if (error) {
       console.warn("Supabase property load failed; fallback cards retained.", error.message);

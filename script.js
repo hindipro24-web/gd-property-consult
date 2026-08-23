@@ -1390,23 +1390,34 @@ startPropertyMatchButton?.addEventListener("click", event => {
   }, 550);
 });
 
-// The page-level mobile CTA is useful elsewhere, but property cards already have
-// their own actions. Hide it while the property rail is in view so it cannot cover a card.
+// Hide fixed mobile actions while the hero/search console or property rail is in
+// view. Both areas already contain their own actions, so nothing covers inputs or cards.
 (() => {
   const mobileCta = document.querySelector(".mobile-cta");
+  const whatsappFloat = document.querySelector(".whatsapp-float");
+  const heroSection = document.querySelector(".hero");
   const propertiesSection = document.getElementById("properties");
-  if (!mobileCta || !propertiesSection || !("IntersectionObserver" in window)) return;
+  const protectedSections = [heroSection, propertiesSection].filter(Boolean);
+  if (!mobileCta || !protectedSections.length || !("IntersectionObserver" in window)) return;
 
-  const update = isVisible => {
-    mobileCta.classList.toggle(
-      "is-context-hidden",
-      isVisible && window.matchMedia("(max-width: 640px)").matches
-    );
+  const mobileViewport = window.matchMedia("(max-width: 640px)");
+  const visibleSections = new Set();
+  const update = () => {
+    const shouldHide = visibleSections.size > 0 && mobileViewport.matches;
+    mobileCta.classList.toggle("is-context-hidden", shouldHide);
+    whatsappFloat?.classList.toggle("is-context-hidden", shouldHide);
   };
-  const observer = new IntersectionObserver(entries => update(entries[0]?.isIntersecting), {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) visibleSections.add(entry.target);
+      else visibleSections.delete(entry.target);
+    });
+    update();
+  }, {
     threshold: 0.08
   });
-  observer.observe(propertiesSection);
+  protectedSections.forEach(section => observer.observe(section));
+  mobileViewport.addEventListener?.("change", update);
 })();
 
 
