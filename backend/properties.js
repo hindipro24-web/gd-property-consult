@@ -184,7 +184,7 @@
     return {
       mode: "manual",
       hero: manualHero,
-      ordered: [manualHero, ...newest.filter(property => property.id !== manualHero.id)]
+      ordered: newest
     };
   }
 
@@ -247,8 +247,8 @@
     const display = orderPropertiesForHero(data);
     applyHeroProperty(display.hero, display.mode);
 
-    // Keep the full published inventory available to the filters. The frontend
-    // displays a maximum of five cards from the currently selected combination.
+    // Keep the full published inventory available to the filters. Cards stay
+    // ordered by creation date so every newly added property appears first.
     grid.innerHTML = display.ordered.map(card).join("");
     window.KeyAssetsFrontend?.observeReveals(grid);
     window.KeyAssetsFrontend?.initTilt(grid);

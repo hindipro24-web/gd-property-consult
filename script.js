@@ -179,7 +179,7 @@ function initPropertySliders(root = document) {
 }
 initPropertySliders();
 
-// Featured inventory rail: five properties, numbered progress and large arrows.
+// Featured inventory rail: every matching property, numbered progress and large arrows.
 (function initV23PropertyRail() {
   const grid = document.getElementById("propertyGrid");
   const previous = document.getElementById("v23PropertyPrevious");
@@ -190,8 +190,7 @@ initPropertySliders();
   if (!grid || !previous || !next) return;
 
   const cards = () => [...grid.querySelectorAll(".property-card")]
-    .filter(card => getComputedStyle(card).display !== "none")
-    .slice(0, 5);
+    .filter(card => getComputedStyle(card).display !== "none");
   const nearestIndex = items => items.reduce((best, card, index) =>
     Math.abs(card.offsetLeft - grid.scrollLeft) < Math.abs(items[best].offsetLeft - grid.scrollLeft) ? index : best, 0);
   const update = () => {
@@ -249,7 +248,7 @@ function filterProperties() {
     return categoryMatches && purposeMatches;
   });
 
-  const visibleCards = matchingCards.slice(0, 5);
+  const visibleCards = matchingCards;
   const visibleSet = new Set(visibleCards);
   cards.forEach(card => {
     const show = visibleSet.has(card);
@@ -266,11 +265,9 @@ function filterProperties() {
 
   const inventoryText = document.getElementById("propertyInventoryText");
   if (inventoryText) {
-    inventoryText.textContent = matchingCards.length > 5
-      ? `Showing 5 of ${matchingCards.length} matching properties`
-      : matchingCards.length
-        ? `${matchingCards.length} matching ${matchingCards.length === 1 ? "property" : "properties"}`
-        : "No exact match — try another filter";
+    inventoryText.textContent = matchingCards.length
+      ? `${matchingCards.length} matching ${matchingCards.length === 1 ? "property" : "properties"} • Newest first`
+      : "No exact match — try another filter";
   }
 
   if (grid && visibleCards.length) grid.scrollTo({ left: 0, behavior: "auto" });
