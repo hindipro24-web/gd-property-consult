@@ -1,0 +1,284 @@
+/* V25.9 — mobile contrast, client-success slider and scroll-gap quality pass */
+
+.v25-polish #testimonials,
+.v25-polish #blog,
+.v25-polish #faq{
+  scroll-margin-top:100px;
+}
+
+/* These sections use the light editorial surface introduced by V21/V23.
+   Keep their inherited text palette aligned with that surface. */
+.v25-polish .gd-testimonial-section{
+  background:
+    radial-gradient(circle at 12% 10%,rgba(184,146,77,.10),transparent 31%),
+    linear-gradient(180deg,#f2ede4 0%,#f8f5ef 100%)!important;
+  color:#171815!important;
+}
+
+.v25-polish .gd-testimonial-section::before{
+  opacity:.42;
+  background-image:
+    linear-gradient(rgba(23,24,21,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(23,24,21,.035) 1px,transparent 1px);
+}
+
+.v25-polish .gd-testimonial-section .confidence-top h2{
+  color:#171815!important;
+}
+
+.v25-polish .testimonial-section-intro{
+  color:#60635d!important;
+}
+
+.v25-polish .testimonial-gallery-status,
+.v25-polish .testimonial-swipe-hint{
+  color:#666961!important;
+}
+
+.v25-polish .testimonial-trust-strip{
+  border-color:rgba(23,24,21,.14)!important;
+  background:rgba(255,253,250,.72)!important;
+  box-shadow:0 18px 50px rgba(23,24,21,.06);
+}
+
+.v25-polish .testimonial-trust-strip>div{
+  border-color:rgba(23,24,21,.10)!important;
+}
+
+.v25-polish .testimonial-trust-strip strong{
+  color:#a97927!important;
+}
+
+.v25-polish .testimonial-trust-strip span{
+  color:#545750!important;
+}
+
+.v25-polish .faq-section{
+  background:
+    radial-gradient(circle at 92% 12%,rgba(184,146,77,.13),transparent 30%),
+    linear-gradient(180deg,#f8f5ef 0%,#f0eadf 100%)!important;
+  color:#171815!important;
+}
+
+.v25-polish .faq-section::after{
+  opacity:.46;
+  pointer-events:none;
+}
+
+.v25-polish .faq-section .faq-grid{
+  position:relative;
+  z-index:1;
+}
+
+.v25-polish .faq-copy h2{
+  color:#171815!important;
+}
+
+.v25-polish .faq-copy p{
+  color:#5b5e57!important;
+}
+
+.v25-polish .faq-section .btn-outline-light{
+  border-color:#171815!important;
+  background:transparent!important;
+  color:#171815!important;
+}
+
+.v25-polish .faq-section .btn-outline-light:hover,
+.v25-polish .faq-section .btn-outline-light:focus-visible{
+  background:#171815!important;
+  color:#fffdfa!important;
+}
+
+.v25-polish .faq-section .accordion{
+  border-color:rgba(23,24,21,.18)!important;
+}
+
+.v25-polish .faq-section .accordion details{
+  border-color:rgba(23,24,21,.16)!important;
+}
+
+.v25-polish .faq-section .accordion summary{
+  color:#242521!important;
+}
+
+.v25-polish .faq-section .accordion summary span{
+  color:#108f83!important;
+}
+
+.v25-polish .faq-section .accordion p{
+  color:#5d6059!important;
+}
+
+/* Embedded/mobile browsers occasionally miss the reveal observer while a
+   large image is decoding. Critical reading sections must never become gaps. */
+.v25-polish .gd-testimonial-section .reveal,
+.v25-polish .insights-section .reveal,
+.v25-polish .faq-section .reveal{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none!important;
+  filter:none!important;
+}
+
+/* Keep testimonial media inside the shell on every viewport. */
+.v25-polish .testimonial-gallery-shell{
+  max-width:100%;
+  overflow:hidden!important;
+}
+
+.v25-polish .testimonial-poster-grid{
+  max-width:100%!important;
+  overscroll-behavior-x:contain;
+  touch-action:pan-x pan-y;
+}
+
+.v25-polish .testimonial-poster-card{
+  box-sizing:border-box;
+  min-width:0!important;
+}
+
+.v25-polish .testimonial-poster-card img{
+  width:100%;
+  height:auto;
+  aspect-ratio:941/1672;
+  object-fit:cover;
+}
+
+@media(max-width:640px){
+  .v25-polish #testimonials,
+  .v25-polish #blog,
+  .v25-polish #faq{
+    scroll-margin-top:84px;
+  }
+
+  .v25-polish .gd-testimonial-section{
+    padding-top:44px!important;
+    padding-bottom:48px!important;
+  }
+
+  .v25-polish .gd-testimonial-section .confidence-top{
+    margin:0 auto 24px!important;
+  }
+
+  .v25-polish .gd-testimonial-section .confidence-top h2{
+    max-width:100%;
+    font-size:clamp(38px,11vw,48px)!important;
+    line-height:1!important;
+  }
+
+  .v25-polish .testimonial-section-intro{
+    margin-top:12px;
+    font-size:13px;
+  }
+
+  .v25-polish .testimonial-gallery-shell{
+    position:relative;
+    width:100%;
+    padding:0!important;
+  }
+
+  .v25-polish .testimonial-poster-grid{
+    --testimonial-gap:12px;
+    width:100%!important;
+    margin:0!important;
+    padding:0!important;
+    gap:var(--testimonial-gap)!important;
+    scroll-padding-inline:0;
+  }
+
+  .v25-polish .testimonial-poster-card{
+    flex:0 0 100%!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:100%!important;
+    scroll-snap-align:start!important;
+  }
+
+  .v25-polish .testimonial-gallery-shell.has-pages .testimonial-gallery-nav{
+    position:absolute!important;
+    z-index:7;
+    top:50%!important;
+    bottom:auto!important;
+    display:grid!important;
+    width:44px!important;
+    height:44px!important;
+    border:1px solid rgba(255,255,255,.48)!important;
+    border-radius:50%!important;
+    background:rgba(12,14,13,.82)!important;
+    color:#fffdfa!important;
+    box-shadow:0 10px 28px rgba(0,0,0,.2);
+    transform:translateY(-50%)!important;
+    backdrop-filter:blur(12px);
+  }
+
+  .v25-polish .testimonial-gallery-nav.previous{
+    left:10px!important;
+  }
+
+  .v25-polish .testimonial-gallery-nav.next{
+    right:10px!important;
+  }
+
+  .v25-polish .testimonial-gallery-dots.visible{
+    display:flex!important;
+    margin-top:14px;
+  }
+
+  .v25-polish .testimonial-gallery-dots button{
+    background:rgba(23,24,21,.22);
+  }
+
+  .v25-polish .testimonial-gallery-dots button.active{
+    background:#a97927;
+  }
+
+  .v25-polish .testimonial-gallery-status{
+    margin-top:14px;
+    padding-top:13px!important;
+  }
+
+  .v25-polish .testimonial-swipe-hint{
+    margin-top:10px;
+  }
+
+  .v25-polish .testimonial-trust-strip{
+    margin-top:20px!important;
+  }
+
+  .v25-polish .testimonial-trust-strip>div{
+    padding:16px 10px;
+  }
+
+  .v25-polish .insights-section{
+    margin-top:0!important;
+    padding-top:42px!important;
+    padding-bottom:50px!important;
+  }
+
+  .v25-polish .faq-section{
+    padding-top:50px!important;
+    padding-bottom:54px!important;
+  }
+
+  .v25-polish .faq-grid{
+    gap:26px!important;
+  }
+}
+
+@media(max-width:380px){
+  .v25-polish .gd-testimonial-section .confidence-top h2{
+    font-size:36px!important;
+  }
+
+  .v25-polish .testimonial-gallery-shell.has-pages .testimonial-gallery-nav{
+    width:40px!important;
+    height:40px!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .v25-polish .testimonial-poster-grid{
+    scroll-behavior:auto!important;
+  }
+}
