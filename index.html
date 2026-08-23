@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="v24-international.css" />
   <link rel="stylesheet" href="v25-polish.css?v=25.4" />
   <link rel="stylesheet" href="v25-9-mobile-quality.css?v=25.9" />
+  <link rel="stylesheet" href="v26-cinematic-loader.css?v=26" />
   <link rel="preload" as="image" href="assets/gd-property-consult/gd-hero-wide.jpg">
   <link rel="preload" as="image" href="assets/gd-property-consult/gd-about-dhoot-brothers.jpg">
   <script>
@@ -24,16 +25,34 @@
       document.getElementById('gdSiteLoader')?.classList.add('finished');
     };
     window.addEventListener('keyassets:cms-ready', window.__revealGDWebsite, { once:true });
-    window.setTimeout(window.__revealGDWebsite, 2300);
+    window.setTimeout(window.__revealGDWebsite, 1800);
   </script>
 </head>
 <body class="cms-pending v21-luxury v23-signature v24-international v25-polish">
   <div class="gd-site-loader" id="gdSiteLoader" role="status" aria-live="polite">
+    <div class="gd-site-loader-grid" aria-hidden="true"></div>
+    <div class="gd-site-loader-rail gd-site-loader-rail-top" aria-hidden="true">
+      <span>GD / SIGNATURE EXPERIENCE</span>
+      <span>SURAT · GUJARAT · INDIA</span>
+    </div>
     <div class="gd-site-loader-card">
-      <img src="assets/gd-property-consult/gd-logo.png" alt="GD Property Consult">
-      <strong>GD Property Consult</strong>
-      <span>Preparing your property experience…</span>
-      <i aria-hidden="true"></i>
+      <div class="gd-site-loader-mark" aria-hidden="true">
+        <span></span><span></span>
+        <img src="assets/gd-property-consult/gd-logo.png" alt="">
+      </div>
+      <small>PRIVATE PROPERTY ADVISORY</small>
+      <strong>Curating your <em>next address.</em></strong>
+      <p>GD Property Consult · Since 2011</p>
+      <div class="gd-site-loader-progress" aria-hidden="true"><i></i></div>
+      <div class="gd-site-loader-steps" aria-hidden="true">
+        <span><b>01</b> Discover</span>
+        <span><b>02</b> Evaluate</span>
+        <span><b>03</b> Acquire</span>
+      </div>
+    </div>
+    <div class="gd-site-loader-rail gd-site-loader-rail-bottom" aria-hidden="true">
+      <span>RESIDENTIAL · COMMERCIAL · INVESTMENT</span>
+      <span>PREPARING PRIVATE COLLECTION</span>
     </div>
   </div>
 
