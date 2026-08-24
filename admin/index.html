@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-  <meta name="theme-color" content="#050d13">
-  <title>GD Property | Intelligence CRM</title>
+  <meta name="theme-color" content="#02080d">
+  <title>GD Property | V28 Executive OS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="admin-v26-command-center.css?v=26.1">
   <link rel="stylesheet" href="admin-v26-dual-mode.css?v=26.2">
   <link rel="stylesheet" href="admin-v27-intelligence-crm.css?v=27.0">
+  <link rel="stylesheet" href="admin-v28-executive-os.css?v=28.0">
   <style>
     body.auth-pending #authView,
     body.auth-pending #dashboardView,
@@ -21,8 +22,8 @@
     }
   </style>
 </head>
-<body class="auth-pending admin-v26 admin-v27">
-  <div id="setupNotice" class="setup-notice hidden">Run <code>backend/super-admin-schema.sql</code> in Supabase SQL Editor, then refresh this page.</div>
+<body class="auth-pending admin-v26 admin-v27 admin-v28">
+  <div id="setupNotice" class="setup-notice hidden">Configure Supabase with <code>supabase-setup.sql</code>, then refresh this page.</div>
 
   <div id="adminAuthLoader" class="admin-auth-loader" role="status" aria-live="polite">
     <div class="admin-auth-loader-card">
@@ -43,14 +44,14 @@
   <main class="auth-shell hidden" id="authView">
     <section class="auth-card">
       <div class="auth-orb"></div>
-      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>SUPER ADMIN</small></div></div>
-      <p class="auth-kicker">CONTROL CENTER</p>
-      <h1>Full website command.</h1>
-      <p>Manage branding, logo, homepage, properties, leads, testimonials, blog, footer, SEO and media.</p>
+      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>SECURE ADMIN ACCESS</small></div></div>
+      <p class="auth-kicker">V28 / EXECUTIVE OPERATING SYSTEM</p>
+      <h1>Your business.<br>One command layer.</h1>
+      <p>Secure access to website operations, property inventory and real-time CRM intelligence.</p>
       <form id="loginForm">
         <label>Email<input id="email" type="email" required autocomplete="email" placeholder="admin@email.com"></label>
         <label>Password<input id="password" type="password" required autocomplete="current-password" placeholder="••••••••"></label>
-        <button type="submit">Enter Super Admin <span>↗</span></button>
+        <button type="submit">Enter Admin OS <span>↗</span></button>
         <div id="loginMessage" class="message"></div>
       </form>
     </section>
@@ -58,7 +59,7 @@
 
   <div id="dashboardView" class="dashboard hidden">
     <aside class="sidebar">
-      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>COMMAND CENTER</small></div></div>
+      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>EXECUTIVE OS / V28</small></div></div>
       <div class="role-pill"><i></i><span id="roleText">Super Admin</span></div>
       <nav id="adminNav">
         <span class="admin-nav-label">OPERATIONS</span>
@@ -89,7 +90,7 @@
         </button>
         <div class="topbar-actions advanced-topbar-actions">
           <button id="adminModeToggle" class="admin-mode-toggle" type="button" aria-pressed="false" aria-label="Activate GD Intelligence command mode" hidden>
-            <span class="admin-mode-toggle-copy"><small>SECURE LAYER</small><strong id="adminModeToggleLabel">Admin mode</strong></span>
+            <span class="admin-mode-toggle-copy"><small>OPERATING LAYER</small><strong id="adminModeToggleLabel">Admin mode</strong></span>
             <span class="admin-mode-toggle-track" aria-hidden="true"><i></i></span>
           </button>
           <div class="admin-live-time"><strong id="adminClock">--:--</strong><small id="adminDate">Loading date</small></div>
@@ -99,12 +100,18 @@
       </header>
 
       <section class="admin-panel active" data-admin-panel="overview">
+        <section class="v28-command-ribbon command-mode-only" aria-label="Command system status">
+          <div><span>GD / 28</span><strong>Executive command layer</strong></div>
+          <div><small>CRM ENGINE</small><b><i></i> LIVE</b></div>
+          <div><small>ACCESS</small><b>SUPER ADMIN</b></div>
+          <div><small>DATA</small><b>SUPABASE SYNC</b></div>
+        </section>
         <section class="standard-admin-workspace standard-mode-only">
           <div class="standard-admin-heading">
             <span><i></i> WEBSITE MANAGEMENT WORKSPACE</span>
             <h2>Everything needed to keep the website current.</h2>
             <p>Manage inventory, homepage content, client stories and media from one focused workspace.</p>
-            <button id="standardCommandLaunch" class="standard-command-launch" type="button" hidden><span>⌁</span><strong>Activate GD Intelligence</strong><small>Open secure CRM command layer</small><b>→</b></button>
+            <button id="standardCommandLaunch" class="standard-command-launch" type="button" hidden><span>⌁</span><strong>Activate GD Intelligence</strong><small>Open the CRM operating workspace</small><b>→</b></button>
           </div>
           <div class="standard-workspace-grid">
             <button type="button" data-go-panel="properties"><span>01</span><strong>Property inventory</strong><small>Add, edit, publish and arrange listings</small><b>▦</b></button>
@@ -282,7 +289,7 @@ Ravet | Value"></textarea></label>
 
         <section class="crm-v27-workspace" id="crmWorkspaceView">
           <div class="crm-v27-workspace-head">
-            <div><span><i></i> TODAY'S OPERATING PICTURE</span><h3>What needs attention now.</h3><p>Priority is calculated from lead stage, score and latest activity.</p></div>
+            <div><span><i></i> TODAY'S OPERATING PICTURE</span><h3>What needs attention now.</h3><p>Priority uses lead stage, score and verified recent activity.</p></div>
             <div class="crm-v27-sync"><small>LIVE DATA</small><strong><i></i> Synchronized</strong><span id="crmWorkspaceSyncTime">Updated now</span></div>
           </div>
 
@@ -294,7 +301,7 @@ Ravet | Value"></textarea></label>
 
             <aside class="crm-v27-operations-rail">
               <section class="crm-v27-health-card">
-                <div><small>PIPELINE HEALTH</small><strong id="crmHealthScore">0</strong><span>/ 100</span></div>
+                <div><small>PIPELINE READINESS</small><strong id="crmHealthScore">0</strong><span>/ 100</span></div>
                 <div class="crm-v27-health-ring" id="crmHealthRing"><i></i></div>
                 <p id="crmHealthMessage">Waiting for CRM records.</p>
               </section>
@@ -648,6 +655,7 @@ Ravet | Value"></textarea></label>
           <label class="wide">Interested property<select id="newLeadProperty"><option value="">General enquiry / not selected</option></select></label>
           <label>Status<select id="newLeadStatus"><option>NEW</option><option>HOT</option><option>WARM</option><option>CONTACTED</option><option>VISIT BOOKED</option></select></label>
           <label>Source<select id="newLeadSource"><option>Phone Call</option><option>WhatsApp</option><option>Walk-in</option><option>Referral</option><option>Instagram</option><option>Manual CRM Entry</option></select></label>
+          <label class="wide">Follow-up / visit schedule<input id="newLeadContactTime" placeholder="25 August 2026 • 11:00 AM"></label>
           <label class="wide">Requirement / internal note<textarea id="newLeadRequirements" rows="4" placeholder="Customer requirement, preferred time or context…"></textarea></label>
         </div>
         <div class="modal-actions"><button class="secondary" type="button" data-close="leadCreateModal">Cancel</button><button id="createLeadSubmit" class="primary" type="submit">Create lead & open profile</button></div>
@@ -753,7 +761,7 @@ Ravet | Value"></textarea></label>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../backend/supabase-config.js"></script>
-  <script src="admin.js?v=27.0"></script>
+  <script src="admin.js?v=28.0"></script>
   <script src="../responsive-fix.js"></script>
 </body>
 </html>

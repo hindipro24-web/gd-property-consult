@@ -794,7 +794,28 @@ function leadPriorityWeight(lead = {}) {
     HOT: 100, VISIT_BOOKED: 92, NEW: 82, WARM: 72,
     CONTACTED: 58, COLD: 30, WON: 15, LOST: 0
   }[String(lead.status || 'NEW').replace(' ', '_')] || 40;
-  return statusWeight + Number(lead.lead_score || 0);
+  const activityDate = new Date(lead.updated_at || lead.created_at || 0);
+  const ageHours = Number.isNaN(activityDate.getTime())
+    ? 720
+    : Math.max(0,(Date.now() - activityDate.getTime()) / 36e5);
+  const recencyWeight = Math.max(0,28 - Math.min(28,ageHours / 4));
+  return statusWeight + Number(lead.lead_score || 0) + recencyWeight;
+}
+
+function leadAgeHours(lead = {}) {
+  const value = new Date(lead.updated_at || lead.created_at || 0);
+  return Number.isNaN(value.getTime()) ? Infinity : Math.max(0,(Date.now() - value.getTime()) / 36e5);
+}
+
+function visitScheduleDate(lead = {}) {
+  const schedule = String(lead.contact_time || '').split('•')[0].trim();
+  const match = schedule.match(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/);
+  if (!match) return null;
+  const months = {january:0,february:1,march:2,april:3,may:4,june:5,july:6,august:7,september:8,october:9,november:10,december:11};
+  const month = months[match[2].toLowerCase()];
+  if (month === undefined) return null;
+  const date = new Date(Number(match[3]),month,Number(match[1]));
+  return Number.isNaN(date.getTime()) ? null : date;
 }
 
 function leadNextActionText(lead = {}) {
@@ -915,6 +936,11 @@ function pruneLeadSelection() {
 }
 
 async function loadLeads(options = {}) {
+  if (!isSuperAdminProfile()) {
+    leads = [];
+    selectedLeadIds.clear();
+    return;
+  }
   const { preserveSelection = false } = options;
   const { data, error } = await client
     .from("leads")
@@ -1113,7 +1139,9 @@ function renderExecutiveDashboard() {
   if (byId('statVisits')) byId('statVisits').textContent = visits.length;
   if (byId('statWon')) byId('statWon').textContent = won.length;
   if (byId('statConversion')) byId('statConversion').textContent = `${conversion}%`;
-  if (byId('overviewSystemText')) byId('overviewSystemText').textContent = `${active.length} CRM records synchronized`;
+  if (byId('overviewSystemText')) byId('overviewSystemText').textContent = isSuperAdminProfile()
+    ? `${active.length} CRM records synchronized`
+    : 'Website content synchronized';
 
   const stages = [
     ['NEW', active.filter(lead => lead.status === 'NEW').length],
@@ -1152,16 +1180,31 @@ function crmStatusClass(value='') {
 function renderCrmWorkspace() {
   const active = leads.filter(lead => !isDeletedLead(lead));
   const actionable = active
-    .filter(lead => !['WON','LOST'].includes(lead.status))
+    .filter(lead => ['NEW','HOT','WARM','CONTACTED','VISIT BOOKED'].includes(lead.status))
     .sort((a,b) => leadPriorityWeight(b) - leadPriorityWeight(a));
   const won = active.filter(lead => lead.status === 'WON');
-  const visits = active.filter(lead => isVisitLead(lead) && !['WON','LOST'].includes(lead.status)).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const visits = active
+    .filter(lead => isVisitLead(lead) && !['WON','LOST'].includes(lead.status))
+    .map(lead => ({lead,date:visitScheduleDate(lead)}))
+    .filter(item => !item.date || item.date >= today)
+    .sort((a,b) => {
+      if (a.date && b.date) return a.date - b.date;
+      if (a.date) return -1;
+      if (b.date) return 1;
+      return new Date(b.lead.created_at) - new Date(a.lead.created_at);
+    })
+    .map(item => item.lead);
   const averageScore = active.length
     ? active.reduce((total,lead) => total + Number(lead.lead_score || 0),0) / active.length
     : 0;
   const conversion = active.length ? (won.length / active.length) * 100 : 0;
-  const visitMomentum = active.length ? Math.min(20,(visits.length / active.length) * 50) : 0;
-  const health = active.length ? Math.min(99,Math.round(38 + averageScore * .34 + conversion * .25 + visitMomentum)) : 0;
+  const open = active.filter(lead => !['WON','LOST'].includes(lead.status));
+  const stale = open.filter(lead => ['NEW','HOT','WARM'].includes(lead.status) && leadAgeHours(lead) > 72);
+  const followUpCoverage = open.length ? 1 - (stale.length / open.length) : 1;
+  const visitMomentum = open.length ? Math.min(12,(visits.length / open.length) * 30) : 0;
+  const health = active.length ? Math.min(99,Math.max(0,Math.round(20 + averageScore * .35 + conversion * .2 + followUpCoverage * 30 + visitMomentum))) : 0;
 
   if (byId('crmAttentionCount')) byId('crmAttentionCount').textContent = `${actionable.length} actionable`;
   if (byId('crmHealthScore')) byId('crmHealthScore').textContent = health;
@@ -1195,7 +1238,7 @@ function renderCrmWorkspace() {
 }
 
 function propertyMatchScore(lead={},property={}) {
-  let score = 18;
+  let score = 5;
   const leadType = String(lead.property_type || '').toLowerCase();
   const propertyType = String(property.property_type || '').toLowerCase();
   const leadLocation = String(lead.location || '').toLowerCase();
@@ -1204,20 +1247,32 @@ function propertyMatchScore(lead={},property={}) {
   const propertyBhk = String(property.bhk || '').toLowerCase();
   const lookingFor = String(lead.looking_for || '').toLowerCase();
   const listingPurpose = String(property.listing_purpose || '').toLowerCase();
-  if (lead.property_id && lead.property_id === property.id) score += 65;
+  const budgetText = String(lead.budget || '').toLowerCase();
+  const budgetValues = [...budgetText.matchAll(/(\d+(?:\.\d+)?)\s*(crore|cr|lakh|lac|lakhs|lacs)?/g)].map(match => {
+    const value = Number(match[1]);
+    const unit = match[2] || '';
+    if (unit === 'crore' || unit === 'cr') return value * 10000000;
+    if (unit.startsWith('la')) return value * 100000;
+    return value;
+  }).filter(Number.isFinite);
+  const maxBudget = budgetValues.length ? Math.max(...budgetValues) : 0;
+  const propertyPrice = Number(property.price_amount || 0);
+  if (lead.property_id && lead.property_id === property.id) score += 70;
   if (leadType && propertyType && (leadType === propertyType || propertyType.includes(leadType) || leadType.includes(propertyType))) score += 26;
   if (leadBhk && propertyBhk && (leadBhk.includes(propertyBhk) || propertyBhk.includes(leadBhk))) score += 20;
   if (leadLocation && propertyLocation && leadLocation.split(/[\s,/-]+/).filter(word => word.length > 2).some(word => propertyLocation.includes(word))) score += 24;
   if ((lookingFor.includes('rent') && listingPurpose.includes('rent')) || (lookingFor.includes('buy') && listingPurpose.includes('sale'))) score += 12;
+  if (maxBudget && propertyPrice) score += propertyPrice <= maxBudget * 1.1 ? 18 : -12;
   if (property.featured) score += 3;
   if (property.verified) score += 3;
-  return Math.min(99,score);
+  return Math.max(0,Math.min(99,score));
 }
 
 function matchingPropertiesForLead(lead) {
   return properties
-    .filter(property => property.published !== false)
+    .filter(property => property.published !== false && !/sold|unavailable/i.test(String(property.status_label || '')))
     .map(property => ({property,score:propertyMatchScore(lead,property)}))
+    .filter(item => item.score >= 24 || lead.property_id === item.property.id)
     .sort((a,b) => b.score - a.score)
     .slice(0,3);
 }
@@ -1330,10 +1385,11 @@ async function createManualLead(event) {
     location:byId('newLeadLocation').value.trim(),
     budget:byId('newLeadBudget').value.trim(),
     propertyId:property?.id || null,
-    requirements:byId('newLeadRequirements').value.trim()
+    requirements:byId('newLeadRequirements').value.trim(),
+    contactTime:byId('newLeadContactTime').value.trim()
   };
   const payload = {
-    lead_id:`GD${Date.now().toString().slice(-10)}`,
+    lead_id:`GDM${Date.now().toString(36).toUpperCase()}${crypto.randomUUID().slice(0,4).toUpperCase()}`,
     full_name:byId('newLeadName').value.trim(),
     mobile:`+91 ${phone}`,
     email:values.email || null,
@@ -1348,6 +1404,7 @@ async function createManualLead(event) {
     property_price:property?.price_label || null,
     property_area:property?.area || null,
     requirements:values.requirements || null,
+    contact_time:values.contactTime || null,
     source:byId('newLeadSource').value,
     page_url:'Admin CRM / Manual Entry',
     lead_score:manualLeadScore(status,values),
@@ -2313,7 +2370,18 @@ byId('adminCommandResults')?.addEventListener('click',event=>{
 
 byId('overviewAddProperty')?.addEventListener('click',()=>{openPanel('properties');openProperty()});
 
-async function loadAll(){setStatus('Loading…','saving');await Promise.all([loadSettings(),loadProperties(),loadLeads(),loadTestimonials(),loadPosts()]);renderExecutiveDashboard();renderKanbanBoard();renderCrmWorkspace();setCrmView('workspace');setStatus('Ready')}
+async function loadAll(){
+  setStatus('Loading…','saving');
+  const tasks=[loadSettings(),loadProperties(),loadTestimonials(),loadPosts()];
+  if(isSuperAdminProfile()) tasks.push(loadLeads());
+  else {leads=[];selectedLeadIds.clear()}
+  await Promise.all(tasks);
+  renderExecutiveDashboard();
+  renderKanbanBoard();
+  renderCrmWorkspace();
+  setCrmView('workspace');
+  setStatus('Ready');
+}
 
 (async()=>{
   showAuthLoading('Checking secure admin session…');
