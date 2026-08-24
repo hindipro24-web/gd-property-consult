@@ -3,19 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-  <meta name="theme-color" content="#061426">
-  <title>GD Property | V30 Executive CRM</title>
+  <meta name="theme-color" content="#0f172a">
+  <title>GD Property | V31 Business Operations</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
   <link rel="stylesheet" href="responsive-admin.css">
-  <link rel="stylesheet" href="admin-v26-command-center.css?v=26.1">
-  <link rel="stylesheet" href="admin-v26-dual-mode.css?v=26.2">
-  <link rel="stylesheet" href="admin-v27-intelligence-crm.css?v=27.0">
-  <link rel="stylesheet" href="admin-v28-executive-os.css?v=28.0">
-  <link rel="stylesheet" href="admin-v29-business-crm.css?v=29.0">
-  <link rel="stylesheet" href="admin-v30-luxury-executive.css?v=30.0">
+  <link rel="stylesheet" href="admin-v31-business-operations.css?v=31.0">
   <style>
     body.auth-pending #authView,
     body.auth-pending #dashboardView,
@@ -24,7 +19,7 @@
     }
   </style>
 </head>
-<body class="auth-pending admin-v26 admin-v27 admin-v28 admin-v29 admin-v30">
+<body class="auth-pending admin-v31">
   <div id="setupNotice" class="setup-notice hidden">Configure Supabase with <code>supabase-setup.sql</code>, then refresh this page.</div>
 
   <div id="adminAuthLoader" class="admin-auth-loader" role="status" aria-live="polite">
@@ -47,7 +42,7 @@
     <section class="auth-card">
       <div class="auth-orb"></div>
       <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>SECURE ADMIN ACCESS</small></div></div>
-      <p class="auth-kicker">GD PROPERTY EXECUTIVE CRM</p>
+      <p class="auth-kicker">GD PROPERTY BUSINESS OPERATIONS</p>
       <h1>Welcome back.</h1>
       <p>Sign in to manage sales, properties, customer enquiries and website performance.</p>
       <form id="loginForm">
@@ -61,13 +56,14 @@
 
   <div id="dashboardView" class="dashboard hidden">
     <aside class="sidebar">
-      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>EXECUTIVE CRM</small></div></div>
+      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>BUSINESS OPERATIONS</small></div></div>
       <div class="role-pill"><i></i><span id="roleText">Super Admin</span></div>
       <nav id="adminNav">
         <span class="admin-nav-label">OPERATIONS</span>
         <button class="nav-active" data-panel="overview"><span>◈</span> Overview</button>
-        <button class="command-mode-only" data-panel="leads"><span>◎</span> Intelligence CRM</button>
+        <button class="command-mode-only" data-panel="leads"><span>◎</span> Leads &amp; CRM</button>
         <button data-panel="properties"><span>▦</span> Properties</button>
+        <button class="command-mode-only" data-panel="automation"><span>⌁</span> Automation</button>
         <span class="admin-nav-label">WEBSITE</span>
         <button data-panel="homepage"><span>⌂</span> Homepage</button>
         <button data-panel="branding"><span>◉</span> Branding & Theme</button>
@@ -91,10 +87,6 @@
           <span>⌕</span><b>Search leads, properties, pages…</b><kbd>Ctrl K</kbd>
         </button>
         <div class="topbar-actions advanced-topbar-actions">
-          <button id="adminModeToggle" class="admin-mode-toggle" type="button" aria-pressed="false" aria-label="Activate GD Intelligence command mode" hidden>
-            <span class="admin-mode-toggle-copy"><small>OPERATING LAYER</small><strong id="adminModeToggleLabel">Admin mode</strong></span>
-            <span class="admin-mode-toggle-track" aria-hidden="true"><i></i></span>
-          </button>
           <div class="admin-live-time"><strong id="adminClock">--:--</strong><small id="adminDate">Loading date</small></div>
           <span id="saveStatus" class="save-status">Ready</span>
           <a href="../index.html" target="_blank" class="preview-btn">Live website ↗</a>
@@ -169,6 +161,38 @@
             <section class="v29-panel v29-quick-panel"><header><div><h3>Executive Actions</h3><p>Essential business controls</p></div></header><div class="quick-actions advanced-quick-actions"><button data-go-panel="properties" id="quickAddProperty"><span>＋</span><b>Add property</b><small>Create a listing</small></button><button data-go-panel="leads"><span>◎</span><b>Open CRM</b><small>Manage enquiries</small></button><button data-go-panel="homepage"><span>⌂</span><b>Edit website</b><small>Homepage content</small></button><button data-go-panel="media"><span>▣</span><b>Media library</b><small>Images and files</small></button></div></section>
           </div>
         </section>
+      </section>
+
+      <section class="admin-panel command-mode-only" data-admin-panel="automation">
+        <div class="v31-module-heading">
+          <div><small>BUSINESS OPERATIONS</small><h2>Automation Center</h2><p>Monitor how website enquiries move into the CRM and where manual follow-up is still required.</p></div>
+          <button type="button" class="primary" data-go-panel="leads">Open lead pipeline</button>
+        </div>
+
+        <div class="v31-automation-stats">
+          <article><span class="healthy">LIVE</span><small>Website capture</small><strong>Active</strong><p>Enquiry and site-visit forms</p></article>
+          <article><span class="healthy">SYNC</span><small>CRM database</small><strong id="automationBackendStatus">Checking</strong><p>Secure Supabase records</p></article>
+          <article><span>LEADS</span><small>Captured records</small><strong id="automationLeadCount">0</strong><p>Available to your team</p></article>
+          <article><span>VISITS</span><small>Visit requests</small><strong id="automationVisitCount">0</strong><p>Scheduled from the website</p></article>
+        </div>
+
+        <section class="v31-workflow-card">
+          <header><div><small>PRIMARY WORKFLOW</small><h3>Lead capture and follow-up</h3></div><span class="v31-live-badge"><i></i> System monitored</span></header>
+          <div class="v31-workflow-line">
+            <article><span>01</span><div><strong>Website form</strong><small>Customer submits an enquiry or visit request</small></div></article>
+            <b>→</b>
+            <article><span>02</span><div><strong>Secure database</strong><small>Lead is stored in Supabase with source details</small></div></article>
+            <b>→</b>
+            <article><span>03</span><div><strong>CRM pipeline</strong><small>Team reviews priority, status and next action</small></div></article>
+            <b>→</b>
+            <article><span>04</span><div><strong>Agent follow-up</strong><small>Call, WhatsApp and visit coordination</small></div></article>
+          </div>
+        </section>
+
+        <div class="v31-automation-grid">
+          <section class="v31-operation-card"><header><div><small>CONNECTED SYSTEMS</small><h3>Integration status</h3></div></header><div class="v31-status-list"><div><span><i class="ok"></i>Website forms</span><strong>Connected</strong></div><div><span><i class="ok"></i>Supabase CRM</span><strong id="automationDatabaseLabel">Connected</strong></div><div><span><i class="manual"></i>Agent notifications</span><strong>Manual setup</strong></div><div><span><i class="manual"></i>WhatsApp automation</span><strong>Not connected</strong></div></div></section>
+          <section class="v31-operation-card"><header><div><small>OPERATION NOTE</small><h3>Current automation level</h3></div></header><div class="v31-operation-note"><strong>Lead capture is automated.</strong><p id="automationNotice">Customer records reach the CRM automatically. Agent notification and follow-up actions remain manual until an external workflow is connected.</p><button type="button" class="secondary" data-go-panel="leads">Review CRM records</button></div></section>
+        </div>
       </section>
 
       <section class="admin-panel" data-admin-panel="branding">
@@ -761,7 +785,7 @@ Ravet | Value"></textarea></label>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../backend/supabase-config.js"></script>
-  <script src="admin.js?v=30.0"></script>
+  <script src="admin.js?v=31.0"></script>
   <script src="../responsive-fix.js"></script>
 </body>
 </html>

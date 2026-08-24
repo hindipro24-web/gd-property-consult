@@ -18,7 +18,7 @@ let commandModeHideTimer = null;
 let commandModeNavigationTimer = null;
 
 const panelMeta = {
-  overview:['COMMAND CENTER','Overview'], branding:['IDENTITY SYSTEM','Branding & Theme'], homepage:['PAGE BUILDER','Homepage'], properties:['INVENTORY CONTROL','Properties'], leads:['CRM PIPELINE','Leads CRM'], testimonials:['SOCIAL PROOF','Testimonials'], blog:['CONTENT ENGINE','Blog / Insights'], footer:['CONTACT SYSTEM','Footer & Contact'], seo:['ADVANCED CONTROL','SEO & Custom CSS'], media:['ASSET STORAGE','Media Library']
+  overview:['BUSINESS OPERATIONS','Overview'], branding:['IDENTITY SYSTEM','Branding & Theme'], homepage:['PAGE BUILDER','Homepage'], properties:['INVENTORY CONTROL','Properties'], leads:['SALES OPERATIONS','Leads & CRM'], automation:['WORKFLOW OPERATIONS','Automation Center'], testimonials:['SOCIAL PROOF','Testimonials'], blog:['CONTENT ENGINE','Blog / Insights'], footer:['CONTACT SYSTEM','Footer & Contact'], seo:['ADVANCED CONTROL','SEO & Custom CSS'], media:['ASSET STORAGE','Media Library']
 };
 
 function setStatus(text, type='') {
@@ -46,7 +46,6 @@ function finishAuthLoading(){
 function showAuth(){
   currentProfile = null;
   document.body.classList.remove('super-admin-capable','super-command-mode');
-  if (byId('adminModeToggle')) byId('adminModeToggle').hidden = true;
   if (byId('standardCommandLaunch')) byId('standardCommandLaunch').hidden = true;
   byId('authView').classList.remove('hidden');
   byId('dashboardView').classList.add('hidden');
@@ -83,12 +82,6 @@ function runCommandModeTransition(active){
 function setAdminCommandMode(enabled,{animate=true,navigate=true}={}){
   const active = Boolean(enabled && isSuperAdminProfile());
   document.body.classList.toggle('super-command-mode',active);
-  const toggle = byId('adminModeToggle');
-  if (toggle){
-    toggle.setAttribute('aria-pressed',String(active));
-    toggle.setAttribute('aria-label',active ? 'Return to standard admin mode' : 'Activate GD Intelligence command mode');
-  }
-  if (byId('adminModeToggleLabel')) byId('adminModeToggleLabel').textContent = active ? 'Executive CRM' : 'Website admin';
   if (animate) runCommandModeTransition(active);
   window.clearTimeout(commandModeNavigationTimer);
   if (navigate){
@@ -129,7 +122,6 @@ async function ensureAdmin() {
   byId('roleText').textContent = profile.role === 'super_admin' ? 'Super Admin' : profile.role;
   const superAdmin = profile.role === 'super_admin';
   document.body.classList.toggle('super-admin-capable',superAdmin);
-  if (byId('adminModeToggle')) byId('adminModeToggle').hidden = !superAdmin;
   if (byId('standardCommandLaunch')) byId('standardCommandLaunch').hidden = !superAdmin;
   setAdminCommandMode(superAdmin,{animate:false,navigate:false});
   openPanel('overview');
@@ -174,17 +166,12 @@ byId('logoutBtn').addEventListener('click',async()=>{
   showAuth();
 });
 
-byId('adminModeToggle')?.addEventListener('click',()=>{
-  if (!isSuperAdminProfile()) return;
-  setAdminCommandMode(!document.body.classList.contains('super-command-mode'));
-});
-
 byId('standardCommandLaunch')?.addEventListener('click',()=>{
   if (isSuperAdminProfile()) setAdminCommandMode(true);
 });
 
 function openPanel(name){
-  if (['leads','seo'].includes(name) && (!isSuperAdminProfile() || !document.body.classList.contains('super-command-mode'))) return;
+  if (['leads','automation','seo'].includes(name) && (!isSuperAdminProfile() || !document.body.classList.contains('super-command-mode'))) return;
   $$('[data-admin-panel]').forEach(panel=>panel.classList.toggle('active',panel.dataset.adminPanel===name));
   $$('#adminNav button').forEach(button=>button.classList.toggle('nav-active',button.dataset.panel===name));
   const standardOverview = name === 'overview' && !document.body.classList.contains('super-command-mode');
@@ -1178,7 +1165,7 @@ function renderExecutiveDashboard() {
     const line = points.map(point => `${point.x},${point.y}`).join(' ');
     const area = `M ${chartLeft} ${chartBottom} L ${points.map(point => `${point.x} ${point.y}`).join(' L ')} L ${chartRight} ${chartBottom} Z`;
     chartHost.innerHTML = `<svg viewBox="0 0 ${chartWidth} ${chartHeight}" role="img" aria-label="Lead stages performance">
-      <defs><linearGradient id="v30AreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a947" stop-opacity=".48"/><stop offset="1" stop-color="#d9a947" stop-opacity=".02"/></linearGradient></defs>
+      <defs><linearGradient id="v30AreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60a5fa" stop-opacity=".42"/><stop offset="1" stop-color="#60a5fa" stop-opacity=".02"/></linearGradient></defs>
       <line class="v30-chart-grid" x1="${chartLeft}" y1="50" x2="${chartRight}" y2="50"/>
       <line class="v30-chart-grid" x1="${chartLeft}" y1="102" x2="${chartRight}" y2="102"/>
       <line class="v30-chart-grid" x1="${chartLeft}" y1="${chartBottom}" x2="${chartRight}" y2="${chartBottom}"/>
@@ -1225,6 +1212,11 @@ function renderExecutiveDashboard() {
       <span class="v30-visit-time">${escapeHtml(scheduleParts[1] || 'Time pending')}</span>
     </button>`;
   }).join('') || '<div class="empty">No upcoming site visits.</div>';
+
+  if (byId('automationBackendStatus')) byId('automationBackendStatus').textContent = configured ? 'Connected' : 'Not configured';
+  if (byId('automationDatabaseLabel')) byId('automationDatabaseLabel').textContent = configured ? 'Connected' : 'Not configured';
+  if (byId('automationLeadCount')) byId('automationLeadCount').textContent = active.length;
+  if (byId('automationVisitCount')) byId('automationVisitCount').textContent = visits.length;
 }
 
 function crmStatusClass(value='') {
@@ -2387,7 +2379,7 @@ document.addEventListener('click',event=>{
 function commandEntries(query='') {
   const normalized=query.trim().toLowerCase();
   const panels=[
-    ['overview','Overview','Command center and live metrics'],['leads','Leads CRM','Enquiries, site visits and pipeline'],['properties','Properties','Inventory and listings'],['homepage','Homepage','Hero, sections and About image'],['testimonials','Testimonials','Client success posters'],['media','Media Library','Images and documents'],['branding','Branding & Theme','Logo and brand colors'],['footer','Footer & Contact','Phone and WhatsApp'],['seo','SEO & Custom CSS','Search visibility and website mode']
+    ['overview','Overview','Business metrics and performance'],['leads','Leads & CRM','Enquiries, site visits and pipeline'],['automation','Automation Center','Workflow and integration status'],['properties','Properties','Inventory and listings'],['homepage','Homepage','Hero, sections and About image'],['testimonials','Testimonials','Client success posters'],['media','Media Library','Images and documents'],['branding','Branding & Theme','Logo and brand colors'],['footer','Footer & Contact','Phone and WhatsApp'],['seo','SEO & Custom CSS','Search visibility and website mode']
   ].map(([panel,title,meta])=>({type:'panel',panel,title,meta}));
   const leadEntries=leads.slice(0,80).map(item=>({type:'lead',id:item.id,title:item.full_name||item.lead_id||'Lead',meta:[item.mobile,item.property_name,item.status].filter(Boolean).join(' • ')}));
   const propertyEntries=properties.slice(0,60).map(item=>({type:'property',id:item.id,title:item.title||'Property',meta:[item.location,item.price_label].filter(Boolean).join(' • ')}));
