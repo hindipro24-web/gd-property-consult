@@ -88,7 +88,7 @@ function setAdminCommandMode(enabled,{animate=true,navigate=true}={}){
     toggle.setAttribute('aria-pressed',String(active));
     toggle.setAttribute('aria-label',active ? 'Return to standard admin mode' : 'Activate GD Intelligence command mode');
   }
-  if (byId('adminModeToggleLabel')) byId('adminModeToggleLabel').textContent = active ? 'Business CRM' : 'Website admin';
+  if (byId('adminModeToggleLabel')) byId('adminModeToggleLabel').textContent = active ? 'Executive CRM' : 'Website admin';
   if (animate) runCommandModeTransition(active);
   window.clearTimeout(commandModeNavigationTimer);
   if (navigate){
@@ -1159,6 +1159,35 @@ function renderExecutiveDashboard() {
       <strong>${count}</strong>
     </button>`).join('');
 
+  if (byId('v30PerformanceTotal')) byId('v30PerformanceTotal').textContent = active.length;
+  if (byId('v30PerformanceChange')) byId('v30PerformanceChange').textContent = `${actionable.length} opportunities currently need action`;
+  const chartHost = byId('v30PerformanceChart');
+  if (chartHost) {
+    const chartWidth = 720;
+    const chartHeight = 190;
+    const chartBottom = 154;
+    const chartTop = 18;
+    const chartLeft = 28;
+    const chartRight = 692;
+    const chartMax = Math.max(1,...stages.map(([,count]) => count));
+    const points = stages.map(([,count],index) => {
+      const x = chartLeft + ((chartRight - chartLeft) * index / Math.max(1,stages.length - 1));
+      const y = chartBottom - ((chartBottom - chartTop) * count / chartMax);
+      return {x,y,count};
+    });
+    const line = points.map(point => `${point.x},${point.y}`).join(' ');
+    const area = `M ${chartLeft} ${chartBottom} L ${points.map(point => `${point.x} ${point.y}`).join(' L ')} L ${chartRight} ${chartBottom} Z`;
+    chartHost.innerHTML = `<svg viewBox="0 0 ${chartWidth} ${chartHeight}" role="img" aria-label="Lead stages performance">
+      <defs><linearGradient id="v30AreaGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a947" stop-opacity=".48"/><stop offset="1" stop-color="#d9a947" stop-opacity=".02"/></linearGradient></defs>
+      <line class="v30-chart-grid" x1="${chartLeft}" y1="50" x2="${chartRight}" y2="50"/>
+      <line class="v30-chart-grid" x1="${chartLeft}" y1="102" x2="${chartRight}" y2="102"/>
+      <line class="v30-chart-grid" x1="${chartLeft}" y1="${chartBottom}" x2="${chartRight}" y2="${chartBottom}"/>
+      <path class="v30-chart-area" d="${area}"/>
+      <polyline class="v30-chart-line" points="${line}"/>
+      ${points.map((point,index) => `<circle class="v30-chart-dot" cx="${point.x}" cy="${point.y}" r="4"/><text class="v30-chart-label" x="${point.x}" y="180">${escapeHtml(stages[index][0])}</text>`).join('')}
+    </svg>`;
+  }
+
   const priority = [...active]
     .filter(lead => !['WON','LOST'].includes(lead.status))
     .sort((a,b) => leadPriorityWeight(b) - leadPriorityWeight(a))
@@ -1171,6 +1200,31 @@ function renderExecutiveDashboard() {
       <span class="priority-score">${Number(lead.lead_score || 0)}</span>
       ${leadBadge(lead.status)}
     </button>`).join('') || '<div class="empty">No active priority leads.</div>';
+
+  const todayStart = new Date();
+  todayStart.setHours(0,0,0,0);
+  const upcomingVisits = active
+    .filter(lead => isVisitLead(lead) && !['WON','LOST'].includes(lead.status))
+    .map(lead => ({lead,date:visitScheduleDate(lead)}))
+    .filter(item => !item.date || item.date >= todayStart)
+    .sort((a,b) => {
+      if (a.date && b.date) return a.date - b.date;
+      if (a.date) return -1;
+      if (b.date) return 1;
+      return new Date(b.lead.created_at || 0) - new Date(a.lead.created_at || 0);
+    })
+    .slice(0,4);
+  const visitsHost = byId('overviewVisits');
+  if (visitsHost) visitsHost.innerHTML = upcomingVisits.map(({lead,date}) => {
+    const scheduleParts = String(lead.contact_time || '').split('•').map(part => part.trim()).filter(Boolean);
+    const day = date ? String(date.getDate()).padStart(2,'0') : '--';
+    const month = date ? date.toLocaleDateString('en-IN',{month:'short'}).toUpperCase() : 'TBD';
+    return `<button type="button" class="v30-visit-item" data-overview-lead="${lead.id}">
+      <span class="v30-visit-date"><strong>${day}</strong><small>${month}</small></span>
+      <span class="v30-visit-copy"><strong>${escapeHtml(lead.property_name || 'Property visit')}</strong><small>${escapeHtml(lead.full_name || 'Customer')} • ${escapeHtml(lead.location || 'Location pending')}</small></span>
+      <span class="v30-visit-time">${escapeHtml(scheduleParts[1] || 'Time pending')}</span>
+    </button>`;
+  }).join('') || '<div class="empty">No upcoming site visits.</div>';
 }
 
 function crmStatusClass(value='') {
@@ -2258,7 +2312,7 @@ function updateAdminClock() {
   if (byId('adminClock')) byId('adminClock').textContent = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   if (byId('adminDate')) byId('adminDate').textContent = now.toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short'});
   const hour = now.getHours();
-  if (byId('adminGreeting')) byId('adminGreeting').textContent = `${hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'}, Super Admin.`;
+  if (byId('adminGreeting')) byId('adminGreeting').textContent = `${hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'}, Super Admin. Here is today’s property business performance.`;
 }
 updateAdminClock();
 setInterval(updateAdminClock, 30000);

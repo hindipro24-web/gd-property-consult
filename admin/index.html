@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-  <meta name="theme-color" content="#02080d">
-  <title>GD Property | Business CRM</title>
+  <meta name="theme-color" content="#061426">
+  <title>GD Property | V30 Executive CRM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
   <link rel="stylesheet" href="responsive-admin.css">
   <link rel="stylesheet" href="admin-v26-command-center.css?v=26.1">
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="admin-v27-intelligence-crm.css?v=27.0">
   <link rel="stylesheet" href="admin-v28-executive-os.css?v=28.0">
   <link rel="stylesheet" href="admin-v29-business-crm.css?v=29.0">
+  <link rel="stylesheet" href="admin-v30-luxury-executive.css?v=30.0">
   <style>
     body.auth-pending #authView,
     body.auth-pending #dashboardView,
@@ -23,7 +24,7 @@
     }
   </style>
 </head>
-<body class="auth-pending admin-v26 admin-v27 admin-v28 admin-v29">
+<body class="auth-pending admin-v26 admin-v27 admin-v28 admin-v29 admin-v30">
   <div id="setupNotice" class="setup-notice hidden">Configure Supabase with <code>supabase-setup.sql</code>, then refresh this page.</div>
 
   <div id="adminAuthLoader" class="admin-auth-loader" role="status" aria-live="polite">
@@ -46,7 +47,7 @@
     <section class="auth-card">
       <div class="auth-orb"></div>
       <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>SECURE ADMIN ACCESS</small></div></div>
-      <p class="auth-kicker">GD PROPERTY BUSINESS CRM</p>
+      <p class="auth-kicker">GD PROPERTY EXECUTIVE CRM</p>
       <h1>Welcome back.</h1>
       <p>Sign in to manage sales, properties, customer enquiries and website performance.</p>
       <form id="loginForm">
@@ -60,7 +61,7 @@
 
   <div id="dashboardView" class="dashboard hidden">
     <aside class="sidebar">
-      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>BUSINESS CRM</small></div></div>
+      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>EXECUTIVE CRM</small></div></div>
       <div class="role-pill"><i></i><span id="roleText">Super Admin</span></div>
       <nav id="adminNav">
         <span class="admin-nav-label">OPERATIONS</span>
@@ -123,42 +124,49 @@
           </div>
         </section>
 
-        <section class="v29-analytics-dashboard command-mode-only">
+        <section class="v29-analytics-dashboard v30-executive-dashboard command-mode-only">
           <header class="v29-dashboard-header">
-            <div><p>BUSINESS OVERVIEW</p><h2 id="adminGreeting">Good evening, Super Admin.</h2><span>Here’s what is happening with your property business today.</span></div>
-            <div class="v29-header-actions"><button type="button" class="secondary" data-go-panel="properties" id="overviewAddProperty">＋ Add property</button><button type="button" class="primary" data-go-panel="leads">View leads</button></div>
+            <div><p>PRIVATE BUSINESS INTELLIGENCE</p><h2>Executive Overview</h2><span id="adminGreeting">Good evening, Super Admin. Here is today’s property business performance.</span></div>
+            <div class="v29-header-actions"><button type="button" class="secondary" data-go-panel="properties" id="overviewAddProperty">＋ Add property</button><button type="button" class="primary" data-go-panel="leads">View CRM</button></div>
           </header>
 
           <div class="v29-system-strip">
             <span><i></i> All systems operational</span>
             <span>Website <b id="statMode">LIVE</b></span>
+            <span><b id="statProperties">0</b> live properties</span>
             <span><b id="statPosts">0</b> published insights</span>
             <span id="overviewSystemText">Synchronizing CRM data</span>
           </div>
 
           <div class="v29-kpi-grid">
-            <article><div class="v29-kpi-icon blue">▦</div><span>Total properties</span><strong id="statProperties">0</strong><small>Live inventory</small></article>
-            <article><div class="v29-kpi-icon orange">◎</div><span>Active leads</span><strong id="statLeads">0</strong><small>Open opportunities</small></article>
-            <article><div class="v29-kpi-icon violet">↗</div><span>New today</span><strong id="statNewToday">0</strong><small>Fresh enquiries</small></article>
-            <article><div class="v29-kpi-icon green">⌖</div><span>Site visits</span><strong id="statVisits">0</strong><small>Scheduled pipeline</small></article>
-            <article><div class="v29-kpi-icon teal">✓</div><span>Deals won</span><strong id="statWon">0</strong><small>Closed business</small></article>
-            <article><div class="v29-kpi-icon pink">%</div><span>Conversion rate</span><strong id="statConversion">0%</strong><small>Overall performance</small></article>
+            <article><div class="v29-kpi-icon orange">◎</div><div><span>Active leads</span><strong id="statLeads">0</strong><small><b id="statNewToday">0</b> new today</small></div></article>
+            <article><div class="v29-kpi-icon green">⌖</div><div><span>Site visits</span><strong id="statVisits">0</strong><small>Scheduled pipeline</small></div></article>
+            <article><div class="v29-kpi-icon teal">✓</div><div><span>Deals closed</span><strong id="statWon">0</strong><small>Successful opportunities</small></div></article>
+            <article><div class="v29-kpi-icon pink">%</div><div><span>Conversion rate</span><strong id="statConversion">0%</strong><small>Overall performance</small></div></article>
           </div>
 
           <div class="v29-main-grid">
-            <section class="v29-panel v29-pipeline-panel">
-              <header><div><h3>Sales pipeline</h3><p>Lead movement across every stage</p></div><button type="button" data-go-panel="leads">View pipeline</button></header>
-              <div id="overviewPipeline" class="overview-pipeline"></div>
+            <section class="v29-panel v30-performance-panel">
+              <header><div><h3>Lead Performance</h3><p>Live opportunity distribution across the sales journey</p></div><button type="button" data-go-panel="leads">View Report</button></header>
+              <div class="v30-performance-body">
+                <div class="v30-performance-value"><small>TOTAL OPPORTUNITIES</small><strong id="v30PerformanceTotal">0</strong><span id="v30PerformanceChange">Live CRM intelligence</span></div>
+                <div id="v30PerformanceChart" class="v30-performance-chart" aria-label="Lead performance chart"></div>
+              </div>
             </section>
             <section class="v29-panel v29-priority-panel">
-              <header><div><h3>Priority follow-ups</h3><p>Leads that need your attention</p></div><span><i></i> Live</span></header>
+              <header><div><h3>Priority Leads</h3><p>Highest-value follow-ups requiring attention</p></div><span><i></i> Live</span></header>
               <div id="priorityLeads" class="priority-lead-list"></div>
             </section>
           </div>
 
           <div class="v29-lower-grid">
-            <section class="v29-panel v29-activity-panel"><header><div><h3>Recent activity</h3><p>Latest enquiries and customer actions</p></div><button data-go-panel="leads">All activity</button></header><div id="recentLeads" class="activity-list advanced-activity-list"></div></section>
-            <section class="v29-panel v29-quick-panel"><header><div><h3>Quick actions</h3><p>Common business tasks</p></div></header><div class="quick-actions advanced-quick-actions"><button data-go-panel="properties" id="quickAddProperty"><span>＋</span><b>Add property</b><small>Create a listing</small></button><button data-go-panel="leads"><span>◎</span><b>Open CRM</b><small>Manage enquiries</small></button><button data-go-panel="homepage"><span>⌂</span><b>Edit website</b><small>Homepage content</small></button><button data-go-panel="media"><span>▣</span><b>Media library</b><small>Images and files</small></button></div></section>
+            <section class="v29-panel v29-pipeline-panel"><header><div><h3>Sales Pipeline</h3><p>Lead movement across every business stage</p></div><button type="button" data-go-panel="leads">View Pipeline</button></header><div id="overviewPipeline" class="overview-pipeline"></div></section>
+            <section class="v29-panel v30-visits-panel"><header><div><h3>Upcoming Visits</h3><p>Next scheduled property appointments</p></div><button data-go-panel="leads">View All</button></header><div id="overviewVisits" class="v30-visit-list"></div></section>
+          </div>
+
+          <div class="v30-bottom-grid">
+            <section class="v29-panel v29-activity-panel"><header><div><h3>Recent Activity</h3><p>Latest enquiries and customer actions</p></div><button data-go-panel="leads">All Activity</button></header><div id="recentLeads" class="activity-list advanced-activity-list"></div></section>
+            <section class="v29-panel v29-quick-panel"><header><div><h3>Executive Actions</h3><p>Essential business controls</p></div></header><div class="quick-actions advanced-quick-actions"><button data-go-panel="properties" id="quickAddProperty"><span>＋</span><b>Add property</b><small>Create a listing</small></button><button data-go-panel="leads"><span>◎</span><b>Open CRM</b><small>Manage enquiries</small></button><button data-go-panel="homepage"><span>⌂</span><b>Edit website</b><small>Homepage content</small></button><button data-go-panel="media"><span>▣</span><b>Media library</b><small>Images and files</small></button></div></section>
           </div>
         </section>
       </section>
@@ -753,7 +761,7 @@ Ravet | Value"></textarea></label>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../backend/supabase-config.js"></script>
-  <script src="admin.js?v=29.0"></script>
+  <script src="admin.js?v=30.0"></script>
   <script src="../responsive-fix.js"></script>
 </body>
 </html>
