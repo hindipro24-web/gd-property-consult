@@ -12,13 +12,17 @@ let leads = [];
 let testimonials = [];
 let posts = [];
 let currentProfile = null;
+let salesAgents = [];
+let automationRules = [];
+let automationJobs = [];
+let salesAutomationAvailable = false;
 let pendingGalleryUrls = [];
 let commandModeTransitionTimer = null;
 let commandModeHideTimer = null;
 let commandModeNavigationTimer = null;
 
 const panelMeta = {
-  overview:['BUSINESS OPERATIONS','Overview'], branding:['IDENTITY SYSTEM','Branding & Theme'], homepage:['PAGE BUILDER','Homepage'], properties:['INVENTORY CONTROL','Properties'], leads:['SALES OPERATIONS','Leads & CRM'], automation:['WORKFLOW OPERATIONS','Automation Center'], testimonials:['SOCIAL PROOF','Testimonials'], blog:['CONTENT ENGINE','Blog / Insights'], footer:['CONTACT SYSTEM','Footer & Contact'], seo:['ADVANCED CONTROL','SEO & Custom CSS'], media:['ASSET STORAGE','Media Library']
+  overview:['SALES MANAGER OS','Command Center'], branding:['IDENTITY SYSTEM','Branding & Theme'], homepage:['PAGE BUILDER','Homepage'], properties:['INVENTORY CONTROL','Properties'], leads:['SALES OPERATIONS','Leads & CRM'], automation:['REVENUE OPERATIONS','Sales Automation'], testimonials:['SOCIAL PROOF','Testimonials'], blog:['CONTENT ENGINE','Blog / Insights'], footer:['CONTACT SYSTEM','Footer & Contact'], seo:['ADVANCED CONTROL','SEO & Custom CSS'], media:['ASSET STORAGE','Media Library']
 };
 
 function setStatus(text, type='') {
@@ -95,6 +99,89 @@ function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,c=>({'&':'
 function slugify(value=''){return String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
 function arrayFromLines(value=''){return String(value).split(/[\n,]/).map(x=>x.trim()).filter(Boolean)}
 function formatDate(value){return value?new Intl.DateTimeFormat('en-IN',{dateStyle:'medium',timeStyle:'short'}).format(new Date(value)):'—'}
+function toDateTimeLocal(value){
+  if(!value)return '';
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return '';
+  const local=new Date(date.getTime()-date.getTimezoneOffset()*60000);
+  return local.toISOString().slice(0,16);
+}
+function automationSchemaMissing(error){
+  const message=String(error?.message||'');
+  return ['42P01','42703','PGRST204','PGRST205'].includes(error?.code)||/automation_(rules|jobs)|assigned_to|follow_up_at|next_action|schema cache|does not exist/i.test(message);
+}
+function agentDisplayName(agent={}){
+  return agent.full_name||agent.email||(agent.user_id===currentProfile?.user_id?'Super Admin':`${String(agent.team_role||agent.role||'sales').replace(/_/g,' ')} agent`);
+}
+function populateLeadAgentSelect(selected=''){
+  const select=byId('leadAssignedTo');
+  if(!select)return;
+  select.innerHTML=`<option value="">Unassigned</option>${salesAgents.map(agent=>`<option value="${escapeHtml(agent.user_id)}">${escapeHtml(agentDisplayName(agent))}</option>`).join('')}`;
+  select.value=selected||'';
+}
+
+function renderSalesAutomation(){
+  const active=leads.filter(lead=>!isDeletedLead(lead)&&!['WON','LOST'].includes(lead.status));
+  const now=new Date();
+  const endToday=new Date(now);endToday.setHours(23,59,59,999);
+  const due=active.filter(lead=>lead.follow_up_at&&new Date(lead.follow_up_at)>=now&&new Date(lead.follow_up_at)<=endToday);
+  const overdue=active.filter(lead=>lead.follow_up_at&&new Date(lead.follow_up_at)<now);
+  const queued=automationJobs.filter(job=>['queued','processing'].includes(job.status));
+  if(byId('automationBackendStatus'))byId('automationBackendStatus').textContent=salesAutomationAvailable?'Live':'Setup required';
+  if(byId('automationDueCount'))byId('automationDueCount').textContent=due.length;
+  if(byId('automationOverdueCount'))byId('automationOverdueCount').textContent=overdue.length;
+  if(byId('automationQueueCount'))byId('automationQueueCount').textContent=queued.length;
+  if(byId('automationDatabaseLabel'))byId('automationDatabaseLabel').textContent=salesAutomationAvailable?'Queue online':'Migration pending';
+  byId('automationMigrationNotice')?.classList.toggle('hidden',salesAutomationAvailable);
+
+  const enabled=automationRules.filter(rule=>rule.enabled).length;
+  if(byId('automationRuleCount'))byId('automationRuleCount').textContent=`${enabled} enabled`;
+  const rulesHost=byId('automationRules');
+  if(rulesHost)rulesHost.innerHTML=automationRules.map(rule=>`<button type="button" class="v32-rule ${rule.enabled?'active':''}" data-automation-rule="${escapeHtml(rule.id)}" aria-pressed="${Boolean(rule.enabled)}">
+    <span class="v32-rule-icon">${rule.channel==='whatsapp'?'WA':rule.channel==='email'?'@':'↻'}</span>
+    <span><strong>${escapeHtml(rule.name)}</strong><small>${escapeHtml(rule.description||`${rule.channel} automation`)}</small></span>
+    <i>${rule.enabled?'ON':'OFF'}</i>
+  </button>`).join('')||'<div class="v32-empty">Run the V32 database migration to install sales rules.</div>';
+
+  if(byId('automationAgentCount'))byId('automationAgentCount').textContent=`${salesAgents.length} agents`;
+  const agentsHost=byId('automationAgents');
+  if(agentsHost)agentsHost.innerHTML=salesAgents.map(agent=>{
+    const owned=active.filter(lead=>lead.assigned_to===agent.user_id);
+    const late=owned.filter(lead=>lead.follow_up_at&&new Date(lead.follow_up_at)<now).length;
+    const initials=agentDisplayName(agent).split(/\s+/).map(part=>part[0]).join('').slice(0,2).toUpperCase();
+    return `<article class="v32-agent"><span>${escapeHtml(initials||'SA')}</span><div><strong>${escapeHtml(agentDisplayName(agent))}</strong><small>${escapeHtml(agent.team_role||'Sales agent')} • ${owned.length} open leads</small></div><b class="${late?'warning':''}">${late?`${late} late`:'On track'}</b></article>`;
+  }).join('')||'<div class="v32-empty">Add active sales agents in admin_profiles.</div>';
+
+  const failed=automationJobs.filter(job=>job.status==='failed').length;
+  if(byId('automationJobSummary'))byId('automationJobSummary').textContent=automationJobs.length?`${queued.length} queued • ${failed} failed`:'No jobs';
+  const jobsHost=byId('automationJobs');
+  if(jobsHost)jobsHost.innerHTML=automationJobs.slice(0,18).map(job=>`<article class="v32-job">
+    <span class="v32-job-channel">${job.channel==='whatsapp'?'WA':job.channel==='email'?'@':'↻'}</span>
+    <div><strong>${escapeHtml(job.rule_key||job.template_name||'Sales automation')}</strong><small>${escapeHtml(job.recipient||'Recipient pending')} • ${formatDate(job.created_at)}</small></div>
+    <em class="status-${escapeHtml(job.status||'queued')}">${escapeHtml(job.status||'queued')}</em>
+    ${job.status==='failed'?`<button type="button" data-retry-job="${escapeHtml(job.id)}">Retry</button>`:''}
+  </article>`).join('')||'<div class="v32-empty">Outbound WhatsApp and email jobs will appear here.</div>';
+}
+
+async function loadSalesAutomation(){
+  if(!client||!isSuperAdminProfile())return;
+  let agentsResult=await client.from('admin_profiles').select('user_id,role,active,full_name,email,phone,team_role').eq('active',true);
+  if(automationSchemaMissing(agentsResult.error))agentsResult=await client.from('admin_profiles').select('user_id,role,active').eq('active',true);
+  salesAgents=(agentsResult.data||[]).filter(agent=>['super_admin','admin'].includes(agent.role));
+  const [rulesResult,jobsResult]=await Promise.all([
+    client.from('automation_rules').select('*').order('sort_order',{ascending:true}),
+    client.from('automation_jobs').select('*').order('created_at',{ascending:false}).limit(40)
+  ]);
+  if(rulesResult.error||jobsResult.error){
+    const error=rulesResult.error||jobsResult.error;
+    if(!automationSchemaMissing(error))console.warn('Sales automation unavailable:',error.message);
+    automationRules=[];automationJobs=[];salesAutomationAvailable=false;
+  }else{
+    automationRules=rulesResult.data||[];automationJobs=jobsResult.data||[];salesAutomationAvailable=true;
+  }
+  populateLeadAgentSelect();
+  renderSalesAutomation();
+}
 
 async function uploadFile(file, folder='general') {
   if (!file) return '';
@@ -1224,10 +1311,7 @@ function renderExecutiveDashboard() {
     </button>`;
   }).join('') || '<div class="empty">No upcoming site visits.</div>';
 
-  if (byId('automationBackendStatus')) byId('automationBackendStatus').textContent = configured ? 'Connected' : 'Not configured';
-  if (byId('automationDatabaseLabel')) byId('automationDatabaseLabel').textContent = configured ? 'Connected' : 'Not configured';
-  if (byId('automationLeadCount')) byId('automationLeadCount').textContent = active.length;
-  if (byId('automationVisitCount')) byId('automationVisitCount').textContent = visits.length;
+  renderSalesAutomation();
 }
 
 function crmStatusClass(value='') {
@@ -1506,6 +1590,9 @@ function configureLeadDetailTrashActions(lead) {
   byId("leadDetailSave").disabled = deleted;
   byId("leadDetailStatus").disabled = deleted;
   byId("leadDetailNotes").disabled = deleted;
+  byId("leadAssignedTo").disabled = deleted;
+  byId("leadFollowUpAt").disabled = deleted;
+  byId("leadNextActionInput").disabled = deleted;
 }
 
 function openLeadDetail(lead) {
@@ -1559,13 +1646,16 @@ function openLeadDetail(lead) {
   byId("leadVisitSection").classList.toggle("hidden", !visit);
   byId("leadDetailStatus").value = lead.status || "NEW";
   byId("leadDetailNotes").value = lead.notes || "";
+  populateLeadAgentSelect(lead.assigned_to||'');
+  byId("leadFollowUpAt").value = toDateTimeLocal(lead.follow_up_at);
+  byId("leadNextActionInput").value = lead.next_action || leadNextActionText(lead);
   byId("leadDetailMessage").textContent = "";
 
   const score = Math.max(0, Math.min(100, Number(lead.lead_score || 0)));
   const scoreMeter = byId("leadScoreMeter");
   if (scoreMeter) scoreMeter.style.setProperty('--lead-score', `${score * 3.6}deg`);
   if (byId("leadScoreLabel")) byId("leadScoreLabel").textContent = score >= 75 ? 'High-conversion opportunity' : score >= 45 ? 'Qualified opportunity' : 'Early-stage opportunity';
-  if (byId("leadNextBestAction")) byId("leadNextBestAction").textContent = leadNextActionText(lead);
+  if (byId("leadNextBestAction")) byId("leadNextBestAction").textContent = lead.next_action || leadNextActionText(lead);
   const timeline = byId("leadDetailActivityTimeline");
   if (timeline) timeline.innerHTML = [
     ['Lead received', formatDate(lead.created_at)],
@@ -1841,12 +1931,20 @@ byId("leadDetailSave").addEventListener("click", async () => {
       notes:byId("leadDetailNotes").value.trim(),
       updated_at:new Date().toISOString()
     };
+    if(salesAutomationAvailable){
+      const followUp=byId('leadFollowUpAt').value;
+      payload.assigned_to=byId('leadAssignedTo').value||null;
+      payload.follow_up_at=followUp?new Date(followUp).toISOString():null;
+      payload.next_action=byId('leadNextActionInput').value.trim()||null;
+      if(payload.status==='CONTACTED')payload.last_contacted_at=new Date().toISOString();
+    }
 
     const { error } = await client.from("leads").update(payload).eq("id", activeLeadId);
     if (error) throw error;
 
     byId("leadDetailMessage").textContent = "CRM changes saved.";
     await loadLeads({ preserveSelection:true });
+    await loadSalesAutomation();
   } catch (error) {
     byId("leadDetailMessage").textContent = error.message;
   } finally {
@@ -2315,7 +2413,7 @@ function updateAdminClock() {
   if (byId('adminClock')) byId('adminClock').textContent = now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
   if (byId('adminDate')) byId('adminDate').textContent = now.toLocaleDateString('en-IN',{weekday:'short',day:'2-digit',month:'short'});
   const hour = now.getHours();
-  if (byId('adminGreeting')) byId('adminGreeting').textContent = `${hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'}, Super Admin. Here is today’s property business performance.`;
+  if (byId('adminGreeting')) byId('adminGreeting').textContent = `${hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'}, Sales Manager. Here is today’s revenue plan and follow-up pressure.`;
 }
 updateAdminClock();
 setInterval(updateAdminClock, 30000);
@@ -2390,7 +2488,7 @@ document.addEventListener('click',event=>{
 function commandEntries(query='') {
   const normalized=query.trim().toLowerCase();
   const panels=[
-    ['overview','Overview','Business metrics and performance'],['leads','Leads & CRM','Enquiries, site visits and pipeline'],['automation','Automation Center','Workflow and integration status'],['properties','Properties','Inventory and listings'],['homepage','Homepage','Hero, sections and About image'],['testimonials','Testimonials','Client success posters'],['media','Media Library','Images and documents'],['branding','Branding & Theme','Logo and brand colors'],['footer','Footer & Contact','Phone and WhatsApp'],['seo','SEO & Custom CSS','Search visibility and website mode']
+    ['overview','Sales Command Center','Revenue metrics and daily execution'],['leads','Leads & CRM','Enquiries, site visits and pipeline'],['automation','Sales Automation','WhatsApp, email and follow-up queue'],['properties','Properties','Inventory and listings'],['homepage','Homepage','Hero, sections and About image'],['testimonials','Testimonials','Client success posters'],['media','Media Library','Images and documents'],['branding','Branding & Theme','Logo and brand colors'],['footer','Footer & Contact','Phone and WhatsApp'],['seo','SEO & Custom CSS','Search visibility and website mode']
   ].map(([panel,title,meta])=>({type:'panel',panel,title,meta}));
   const leadEntries=leads.slice(0,80).map(item=>({type:'lead',id:item.id,title:item.full_name||item.lead_id||'Lead',meta:[item.mobile,item.property_name,item.status].filter(Boolean).join(' • ')}));
   const propertyEntries=properties.slice(0,60).map(item=>({type:'property',id:item.id,title:item.title||'Property',meta:[item.location,item.price_label].filter(Boolean).join(' • ')}));
@@ -2426,6 +2524,31 @@ byId('adminCommandResults')?.addEventListener('click',event=>{
 });
 
 byId('overviewAddProperty')?.addEventListener('click',()=>{openPanel('properties');openProperty()});
+byId('refreshSalesAutomation')?.addEventListener('click',async event=>{
+  const button=event.currentTarget;
+  button.disabled=true;button.textContent='Refreshing…';
+  try{await loadLeads({preserveSelection:true});await loadSalesAutomation()}
+  catch(error){alert(error.message)}
+  finally{button.disabled=false;button.textContent='↻ Refresh'}
+});
+byId('automationRules')?.addEventListener('click',async event=>{
+  const button=event.target.closest('[data-automation-rule]');
+  if(!button||!salesAutomationAvailable)return;
+  const rule=automationRules.find(item=>item.id===button.dataset.automationRule);
+  if(!rule)return;
+  button.disabled=true;
+  const {error}=await client.from('automation_rules').update({enabled:!rule.enabled,updated_at:new Date().toISOString()}).eq('id',rule.id);
+  if(error)alert(error.message);
+  await loadSalesAutomation();
+});
+byId('automationJobs')?.addEventListener('click',async event=>{
+  const button=event.target.closest('[data-retry-job]');
+  if(!button||!salesAutomationAvailable)return;
+  button.disabled=true;
+  const {error}=await client.from('automation_jobs').update({status:'queued',scheduled_for:new Date().toISOString(),last_error:null,updated_at:new Date().toISOString()}).eq('id',button.dataset.retryJob).eq('status','failed');
+  if(error)alert(error.message);
+  await loadSalesAutomation();
+});
 
 async function loadAll(){
   setStatus('Loading…','saving');
@@ -2433,6 +2556,7 @@ async function loadAll(){
   if(isSuperAdminProfile()) tasks.push(loadLeads());
   else {leads=[];selectedLeadIds.clear()}
   await Promise.all(tasks);
+  if(isSuperAdminProfile())await loadSalesAutomation();
   renderExecutiveDashboard();
   renderKanbanBoard();
   renderCrmWorkspace();

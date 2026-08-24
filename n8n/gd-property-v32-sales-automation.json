@@ -1,0 +1,129 @@
+{
+  "name": "GD Property V32 - Sales Automation Queue",
+  "nodes": [
+    {
+      "parameters": {"rule":{"interval":[{"field":"minutes","minutesInterval":1}]}},
+      "id": "v32-1",
+      "name": "Every Minute",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0,0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL + '/rest/v1/rpc/claim_automation_jobs' }}",
+        "sendHeaders": true,
+        "headerParameters": {"parameters":[
+          {"name":"apikey","value":"={{ $env.SUPABASE_SERVICE_ROLE_KEY }}"},
+          {"name":"Authorization","value":"={{ 'Bearer ' + $env.SUPABASE_SERVICE_ROLE_KEY }}"},
+          {"name":"Content-Type","value":"application/json"}
+        ]},
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "{\"p_limit\":20}",
+        "options": {}
+      },
+      "id": "v32-2",
+      "name": "Claim Due Jobs",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [230,0]
+    },
+    {
+      "parameters": {"jsCode":"const jobs = $input.all().flatMap(item => {\n  const value = item.json;\n  if (Array.isArray(value)) return value;\n  if (Array.isArray(value?.body)) return value.body;\n  return value?.id ? [value] : [];\n});\nreturn jobs.map(job => ({ json: job }));"},
+      "id": "v32-3",
+      "name": "Split Claimed Jobs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460,0]
+    },
+    {
+      "parameters": {
+        "rules": {"values":[
+          {"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict"},"conditions":[{"leftValue":"={{ $json.channel }}","rightValue":"email","operator":{"type":"string","operation":"equals"}}],"combinator":"and"},"renameOutput":true,"outputKey":"Email"},
+          {"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict"},"conditions":[{"leftValue":"={{ $json.channel }}","rightValue":"whatsapp","operator":{"type":"string","operation":"equals"}}],"combinator":"and"},"renameOutput":true,"outputKey":"WhatsApp"}
+        ]},
+        "options": {}
+      },
+      "id": "v32-4",
+      "name": "Route Channel",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [690,0]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.recipient }}",
+        "subject": "={{ 'GD Property Sales Action — ' + ($json.payload.full_name || $json.payload.lead_reference || 'New lead') }}",
+        "emailType": "html",
+        "message": "=<h2>GD Property Sales Action</h2><p><b>Customer:</b> {{ $json.payload.full_name || 'Not provided' }}</p><p><b>Mobile:</b> {{ $json.payload.mobile || 'Not provided' }}</p><p><b>Property:</b> {{ $json.payload.property_name || 'General enquiry' }}</p><p><b>Status:</b> {{ $json.payload.status || 'NEW' }}</p><p><b>Next action:</b> {{ $json.payload.next_action || 'Contact customer' }}</p><p><b>Follow-up:</b> {{ $json.payload.follow_up_at || 'Now' }}</p>",
+        "options": {}
+      },
+      "id": "v32-5",
+      "name": "Send Agent Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [940,-110],
+      "credentials": {"gmailOAuth2":{"id":"CONNECT_GMAIL","name":"GD Property Gmail"}}
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://graph.facebook.com/v21.0/' + $env.META_WHATSAPP_PHONE_NUMBER_ID + '/messages' }}",
+        "sendHeaders": true,
+        "headerParameters": {"parameters":[
+          {"name":"Authorization","value":"={{ 'Bearer ' + $env.META_WHATSAPP_ACCESS_TOKEN }}"},
+          {"name":"Content-Type","value":"application/json"}
+        ]},
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ messaging_product:'whatsapp', to:String($json.recipient || '').replace(/\\D/g,''), type:'template', template:{ name:$json.template_name, language:{ code:'en' }, components:[{ type:'body', parameters:[{type:'text',text:$json.payload.full_name || 'Customer'},{type:'text',text:$json.payload.property_name || 'your property request'}] }] } }) }}",
+        "options": {}
+      },
+      "id": "v32-6",
+      "name": "Send WhatsApp Template",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [940,110]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL + '/rest/v1/rpc/complete_automation_job' }}",
+        "sendHeaders": true,
+        "headerParameters": {"parameters":[
+          {"name":"apikey","value":"={{ $env.SUPABASE_SERVICE_ROLE_KEY }}"},
+          {"name":"Authorization","value":"={{ 'Bearer ' + $env.SUPABASE_SERVICE_ROLE_KEY }}"},
+          {"name":"Content-Type","value":"application/json"}
+        ]},
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({p_job_id:$('Split Claimed Jobs').item.json.id,p_success:true,p_response:$json,p_error:null}) }}",
+        "options": {}
+      },
+      "id": "v32-8",
+      "name": "Mark Job Sent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1190,0]
+    }
+  ],
+  "connections": {
+    "Every Minute":{"main":[[{"node":"Claim Due Jobs","type":"main","index":0}]]},
+    "Claim Due Jobs":{"main":[[{"node":"Split Claimed Jobs","type":"main","index":0}]]},
+    "Split Claimed Jobs":{"main":[[{"node":"Route Channel","type":"main","index":0}]]},
+    "Route Channel":{"main":[[{"node":"Send Agent Email","type":"main","index":0}],[{"node":"Send WhatsApp Template","type":"main","index":0}]]},
+    "Send Agent Email":{"main":[[{"node":"Mark Job Sent","type":"main","index":0}]]},
+    "Send WhatsApp Template":{"main":[[{"node":"Mark Job Sent","type":"main","index":0}]]}
+  },
+  "pinData": {},
+  "settings": {"executionOrder":"v1","timezone":"Asia/Kolkata"},
+  "active": false,
+  "versionId": "9d7f27f9-467f-4b4c-baf5-e0d8273f3200",
+  "meta": {"templateCredsSetupCompleted":false},
+  "tags": []
+}

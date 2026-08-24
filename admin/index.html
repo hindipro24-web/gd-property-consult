@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
   <meta name="theme-color" content="#0f172a">
-  <title>GD Property | V31 Business Operations</title>
+  <title>GD Property | V32 Sales Manager OS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
   <link rel="stylesheet" href="responsive-admin.css">
-  <link rel="stylesheet" href="admin-v31-business-operations.css?v=31.2">
+  <link rel="stylesheet" href="admin-v31-business-operations.css?v=32.0">
   <style>
     body.auth-pending #authView,
     body.auth-pending #dashboardView,
@@ -42,7 +42,7 @@
     <section class="auth-card">
       <div class="auth-orb"></div>
       <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>SECURE ADMIN ACCESS</small></div></div>
-      <p class="auth-kicker">GD PROPERTY BUSINESS OPERATIONS</p>
+      <p class="auth-kicker">GD PROPERTY SALES MANAGER OS</p>
       <h1>Welcome back.</h1>
       <p>Sign in to manage sales, properties, customer enquiries and website performance.</p>
       <form id="loginForm">
@@ -56,14 +56,14 @@
 
   <div id="dashboardView" class="dashboard hidden">
     <aside class="sidebar">
-      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>BUSINESS OPERATIONS</small></div><button id="mobileAdminMenu" class="mobile-admin-menu" type="button" aria-expanded="false" aria-label="Open admin navigation"><i></i><i></i><i></i></button></div>
+      <div class="admin-brand"><span><img src="../assets/gd-property-consult/gd-logo.png" alt="GD Property Consult"></span><div><strong>GD Property</strong><small>SALES MANAGER OS</small></div><button id="mobileAdminMenu" class="mobile-admin-menu" type="button" aria-expanded="false" aria-label="Open admin navigation"><i></i><i></i><i></i></button></div>
       <div class="role-pill"><i></i><span id="roleText">Super Admin</span></div>
       <nav id="adminNav">
         <span class="admin-nav-label">OPERATIONS</span>
         <button class="nav-active" data-panel="overview"><span>◈</span> Overview</button>
         <button class="command-mode-only" data-panel="leads"><span>◎</span> Leads &amp; CRM</button>
         <button data-panel="properties"><span>▦</span> Properties</button>
-        <button class="command-mode-only" data-panel="automation"><span>⌁</span> Automation</button>
+        <button class="command-mode-only" data-panel="automation"><span>⌁</span> Sales Automation</button>
         <span class="admin-nav-label">WEBSITE</span>
         <button data-panel="homepage"><span>⌂</span> Homepage</button>
         <button data-panel="branding"><span>◉</span> Branding & Theme</button>
@@ -118,7 +118,7 @@
 
         <section class="v29-analytics-dashboard v30-executive-dashboard command-mode-only">
           <header class="v29-dashboard-header">
-            <div><p>PRIVATE BUSINESS INTELLIGENCE</p><h2>Executive Overview</h2><span id="adminGreeting">Good evening, Super Admin. Here is today’s property business performance.</span></div>
+            <div><p>SALES MANAGER / LIVE OPERATIONS</p><h2>Sales Command Center</h2><span id="adminGreeting">Good evening, Super Admin. Here is today’s sales performance and action plan.</span></div>
             <div class="v29-header-actions"><button type="button" class="secondary" data-go-panel="properties" id="overviewAddProperty">＋ Add property</button><button type="button" class="primary" data-go-panel="leads">View CRM</button></div>
           </header>
 
@@ -164,34 +164,38 @@
       </section>
 
       <section class="admin-panel command-mode-only" data-admin-panel="automation">
-        <div class="v31-module-heading">
-          <div><small>BUSINESS OPERATIONS</small><h2>Automation Center</h2><p>Monitor how website enquiries move into the CRM and where manual follow-up is still required.</p></div>
-          <button type="button" class="primary" data-go-panel="leads">Open lead pipeline</button>
+        <div class="v31-module-heading v32-automation-heading">
+          <div><small>SALES MANAGER OS / AUTOMATION</small><h2>Revenue Automation Center</h2><p>Assign every lead, protect follow-up SLAs and send approved WhatsApp and email journeys through one monitored queue.</p></div>
+          <div class="v32-heading-actions"><button id="refreshSalesAutomation" type="button" class="secondary">↻ Refresh</button><button type="button" class="primary" data-go-panel="leads">Open sales pipeline</button></div>
         </div>
 
-        <div class="v31-automation-stats">
-          <article><span class="healthy">LIVE</span><small>Website capture</small><strong>Active</strong><p>Enquiry and site-visit forms</p></article>
-          <article><span class="healthy">SYNC</span><small>CRM database</small><strong id="automationBackendStatus">Checking</strong><p>Secure Supabase records</p></article>
-          <article><span>LEADS</span><small>Captured records</small><strong id="automationLeadCount">0</strong><p>Available to your team</p></article>
-          <article><span>VISITS</span><small>Visit requests</small><strong id="automationVisitCount">0</strong><p>Scheduled from the website</p></article>
+        <div id="automationMigrationNotice" class="v32-migration-notice hidden"><strong>Automation database setup required</strong><span>Run <code>backend/admin-v32-sales-automation.sql</code> in Supabase before activating rules.</span></div>
+
+        <div class="v31-automation-stats v32-automation-stats">
+          <article><span class="healthy">LIVE</span><small>Lead capture</small><strong id="automationBackendStatus">Checking</strong><p>Website → secure CRM</p></article>
+          <article><span class="healthy">DUE</span><small>Follow-ups today</small><strong id="automationDueCount">0</strong><p>Assigned sales actions</p></article>
+          <article><span class="warning">SLA</span><small>Overdue actions</small><strong id="automationOverdueCount">0</strong><p>Requires manager attention</p></article>
+          <article><span>QUEUE</span><small>Outbound jobs</small><strong id="automationQueueCount">0</strong><p>WhatsApp and email</p></article>
         </div>
 
-        <section class="v31-workflow-card">
-          <header><div><small>PRIMARY WORKFLOW</small><h3>Lead capture and follow-up</h3></div><span class="v31-live-badge"><i></i> System monitored</span></header>
-          <div class="v31-workflow-line">
-            <article><span>01</span><div><strong>Website form</strong><small>Customer submits an enquiry or visit request</small></div></article>
-            <b>→</b>
-            <article><span>02</span><div><strong>Secure database</strong><small>Lead is stored in Supabase with source details</small></div></article>
-            <b>→</b>
-            <article><span>03</span><div><strong>CRM pipeline</strong><small>Team reviews priority, status and next action</small></div></article>
-            <b>→</b>
-            <article><span>04</span><div><strong>Agent follow-up</strong><small>Call, WhatsApp and visit coordination</small></div></article>
+        <section class="v31-workflow-card v32-flow-card">
+          <header><div><small>LIVE REVENUE WORKFLOW</small><h3>Lead-to-visit automation</h3></div><span class="v31-live-badge"><i></i> Queue monitored</span></header>
+          <div class="v31-workflow-line v32-workflow-line">
+            <article><span>01</span><div><strong>Capture & score</strong><small>Website lead enters CRM with source and priority score</small></div></article><b>→</b>
+            <article><span>02</span><div><strong>Auto assign</strong><small>Lead routes to an active sales agent using balanced assignment</small></div></article><b>→</b>
+            <article><span>03</span><div><strong>Instant response</strong><small>Approved WhatsApp acknowledgement and agent email enter queue</small></div></article><b>→</b>
+            <article><span>04</span><div><strong>SLA follow-up</strong><small>Manager sees due, overdue and visit-confirmation actions</small></div></article>
           </div>
         </section>
 
-        <div class="v31-automation-grid">
-          <section class="v31-operation-card"><header><div><small>CONNECTED SYSTEMS</small><h3>Integration status</h3></div></header><div class="v31-status-list"><div><span><i class="ok"></i>Website forms</span><strong>Connected</strong></div><div><span><i class="ok"></i>Supabase CRM</span><strong id="automationDatabaseLabel">Connected</strong></div><div><span><i class="manual"></i>Agent notifications</span><strong>Manual setup</strong></div><div><span><i class="manual"></i>WhatsApp automation</span><strong>Not connected</strong></div></div></section>
-          <section class="v31-operation-card"><header><div><small>OPERATION NOTE</small><h3>Current automation level</h3></div></header><div class="v31-operation-note"><strong>Lead capture is automated.</strong><p id="automationNotice">Customer records reach the CRM automatically. Agent notification and follow-up actions remain manual until an external workflow is connected.</p><button type="button" class="secondary" data-go-panel="leads">Review CRM records</button></div></section>
+        <div class="v32-sales-grid">
+          <section class="v31-operation-card v32-rules-card"><header><div><small>AUTOMATION POLICY</small><h3>Active sales rules</h3></div><span id="automationRuleCount">0 enabled</span></header><div id="automationRules" class="v32-rule-list"></div></section>
+          <section class="v31-operation-card v32-team-card"><header><div><small>SALES TEAM</small><h3>Ownership & workload</h3></div><span id="automationAgentCount">0 agents</span></header><div id="automationAgents" class="v32-agent-list"></div></section>
+        </div>
+
+        <div class="v31-automation-grid v32-automation-lower">
+          <section class="v31-operation-card"><header><div><small>CONNECTED SYSTEMS</small><h3>Delivery readiness</h3></div></header><div class="v31-status-list"><div><span><i class="ok"></i>Website forms</span><strong>Connected</strong></div><div><span><i class="ok"></i>Supabase CRM</span><strong id="automationDatabaseLabel">Connected</strong></div><div><span><i class="manual"></i>Agent email via n8n</span><strong>Credentials required</strong></div><div><span><i class="manual"></i>Meta WhatsApp Cloud</span><strong>Template approval required</strong></div></div></section>
+          <section class="v31-operation-card v32-log-card"><header><div><small>AUTOMATION LOG</small><h3>Recent outbound jobs</h3></div><span id="automationJobSummary">No jobs</span></header><div id="automationJobs" class="v32-job-list"></div></section>
         </div>
       </section>
 
@@ -640,6 +644,9 @@ Ravet | Value"></textarea></label>
               <div class="lead-score-meter" id="leadScoreMeter"><div><strong id="leadDetailScore">0</strong><small>SCORE</small></div><span id="leadScoreLabel">Standard opportunity</span></div>
               <div class="lead-meta-card"><small>SOURCE</small><strong id="leadDetailSource">—</strong></div>
               <div class="lead-next-action"><small>NEXT BEST ACTION</small><strong id="leadNextBestAction">Contact customer</strong></div>
+              <label>Assigned sales agent<select id="leadAssignedTo"><option value="">Unassigned</option></select></label>
+              <label>Follow-up due<input id="leadFollowUpAt" type="datetime-local"></label>
+              <label class="lead-next-action-field">Next action<input id="leadNextActionInput" maxlength="180" placeholder="Call customer, share shortlist…"></label>
               <div class="lead-quick-statuses"><small>QUICK STATUS</small><div><button type="button" data-detail-quick-status="HOT">HOT</button><button type="button" data-detail-quick-status="CONTACTED">CONTACTED</button><button type="button" data-detail-quick-status="VISIT BOOKED">VISIT</button><button type="button" data-detail-quick-status="WON">WON</button></div></div>
               <label class="lead-notes-field">Internal notes<textarea id="leadDetailNotes" rows="4" placeholder="Add follow-up notes visible only to admin…"></textarea></label>
               <div class="lead-activity-timeline"><small>ACTIVITY SNAPSHOT</small><div id="leadDetailActivityTimeline"></div></div>
@@ -785,7 +792,7 @@ Ravet | Value"></textarea></label>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../backend/supabase-config.js"></script>
-  <script src="admin.js?v=31.2"></script>
+  <script src="admin.js?v=32.0"></script>
   <script src="../responsive-fix.js"></script>
 </body>
 </html>
