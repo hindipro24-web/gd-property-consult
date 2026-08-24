@@ -179,7 +179,18 @@ function openPanel(name){
   byId('panelKicker').textContent=kicker;byId('panelTitle').textContent=title;
   if (name==='media') loadMedia();
 }
-byId('adminNav').addEventListener('click',event=>{const button=event.target.closest('[data-panel]');if(button)openPanel(button.dataset.panel)});
+byId('mobileAdminMenu')?.addEventListener('click',()=>{
+  const open=document.body.classList.toggle('mobile-admin-menu-open');
+  byId('mobileAdminMenu').setAttribute('aria-expanded',String(open));
+  byId('mobileAdminMenu').setAttribute('aria-label',open?'Close admin navigation':'Open admin navigation');
+});
+byId('adminNav').addEventListener('click',event=>{
+  const button=event.target.closest('[data-panel]');
+  if(!button)return;
+  openPanel(button.dataset.panel);
+  document.body.classList.remove('mobile-admin-menu-open');
+  byId('mobileAdminMenu')?.setAttribute('aria-expanded','false');
+});
 document.addEventListener('click',event=>{const button=event.target.closest('[data-go-panel]');if(button)openPanel(button.dataset.goPanel)});
 
 const settingFields = {
