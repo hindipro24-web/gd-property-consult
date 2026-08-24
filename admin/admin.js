@@ -88,7 +88,7 @@ function setAdminCommandMode(enabled,{animate=true,navigate=true}={}){
     toggle.setAttribute('aria-pressed',String(active));
     toggle.setAttribute('aria-label',active ? 'Return to standard admin mode' : 'Activate GD Intelligence command mode');
   }
-  if (byId('adminModeToggleLabel')) byId('adminModeToggleLabel').textContent = active ? 'Command mode' : 'Admin mode';
+  if (byId('adminModeToggleLabel')) byId('adminModeToggleLabel').textContent = active ? 'Business CRM' : 'Website admin';
   if (animate) runCommandModeTransition(active);
   window.clearTimeout(commandModeNavigationTimer);
   if (navigate){
@@ -131,7 +131,7 @@ async function ensureAdmin() {
   document.body.classList.toggle('super-admin-capable',superAdmin);
   if (byId('adminModeToggle')) byId('adminModeToggle').hidden = !superAdmin;
   if (byId('standardCommandLaunch')) byId('standardCommandLaunch').hidden = !superAdmin;
-  setAdminCommandMode(false,{animate:false,navigate:false});
+  setAdminCommandMode(superAdmin,{animate:false,navigate:false});
   openPanel('overview');
   return true;
 }
